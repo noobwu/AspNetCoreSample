@@ -4,7 +4,7 @@
 // Created          : 2019-02-12
 //
 // Last Modified By : Administrator
-// Last Modified On : 2019-02-12
+// Last Modified On : 2020-02-26
 // ***********************************************************************
 // <copyright file="Startup.cs" company="AuthorizationSample">
 //     Copyright (c) NoobCore.com. All rights reserved.
@@ -33,7 +33,7 @@ namespace AuthorizationSample
     public class Startup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// Initializes a new instance of the <see cref="Startup" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)

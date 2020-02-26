@@ -1,4 +1,17 @@
-﻿using AuthorizationSample.Data;
+﻿// ***********************************************************************
+// Assembly         : AuthorizationSample
+// Author           : Administrator
+// Created          : 2019-02-12
+//
+// Last Modified By : Administrator
+// Last Modified On : 2019-02-12
+// ***********************************************************************
+// <copyright file="AccountController.cs" company="AuthorizationSample">
+//     Copyright (c) NoobCore.com. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using AuthorizationSample.Data;
 using AuthorizationSample.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -7,24 +20,52 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The Controllers namespace.
+/// </summary>
 namespace AuthorizationSample.Controllers
 {
+    /// <summary>
+    /// Class AccountController.
+    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Authorize]
     public class AccountController : Controller
     {
+        /// <summary>
+        /// The user store
+        /// </summary>
         private readonly UserStore _userStore;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<AccountController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="userStore">The user store.</param>
+        /// <param name="logger">The logger.</param>
         public AccountController(UserStore userStore, ILogger<AccountController> logger)
         {
             _userStore = userStore;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets or sets the error message.
+        /// </summary>
+        /// <value>The error message.</value>
         [TempData]
         public string ErrorMessage { get; set; }
 
 
+        /// <summary>
+        /// Logins the specified return URL.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
@@ -33,6 +74,12 @@ namespace AuthorizationSample.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Logins the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -63,6 +110,10 @@ namespace AuthorizationSample.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Logouts this instance.
+        /// </summary>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -72,6 +123,10 @@ namespace AuthorizationSample.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        /// <summary>
+        /// Accesses the denied.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult AccessDenied()
         {
@@ -79,6 +134,11 @@ namespace AuthorizationSample.Controllers
         }
 
 
+        /// <summary>
+        /// Redirects to local.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>IActionResult.</returns>
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
