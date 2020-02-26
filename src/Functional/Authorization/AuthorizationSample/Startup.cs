@@ -1,4 +1,17 @@
-﻿using AuthorizationSample.Authorization;
+﻿// ***********************************************************************
+// Assembly         : AuthorizationSample
+// Author           : Administrator
+// Created          : 2019-02-12
+//
+// Last Modified By : Administrator
+// Last Modified On : 2019-02-12
+// ***********************************************************************
+// <copyright file="Startup.cs" company="AuthorizationSample">
+//     Copyright (c) NoobCore.com. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using AuthorizationSample.Authorization;
 using AuthorizationSample.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -7,19 +20,38 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
+/// <summary>
+/// The AuthorizationSample namespace.
+/// </summary>
 namespace AuthorizationSample
 {
+    /// <summary>
+    /// Class Startup.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>The configuration.</value>
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(options =>
@@ -28,7 +60,7 @@ namespace AuthorizationSample
             })
             .AddCookie();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews();
 
             // services.AddAuthorization(options =>
             // {
@@ -45,12 +77,16 @@ namespace AuthorizationSample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        /// <summary>
+        /// Configures the specified application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
@@ -61,11 +97,13 @@ namespace AuthorizationSample
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
+            app.UseAuthentication();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                      name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
