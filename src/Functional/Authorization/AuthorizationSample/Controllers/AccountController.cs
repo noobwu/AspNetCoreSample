@@ -100,7 +100,8 @@ namespace AuthorizationSample.Controllers
                     claimIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
                     claimIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
                     claimIdentity.AddClaim(new Claim(ClaimTypes.Role, user.Role));
-                    await HttpContext.SignInAsync(new ClaimsPrincipal(claimIdentity), new AuthenticationProperties { IsPersistent = model.RememberMe });
+                    await HttpContext.SignInAsync(new ClaimsPrincipal(claimIdentity), 
+                        new AuthenticationProperties { IsPersistent = model.RememberMe });
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
