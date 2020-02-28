@@ -49,16 +49,18 @@ namespace Aliyun.RocketSample
         /// <summary>
         /// Consumes the specified value.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="message">The value.</param>
         /// <param name="context">The context.</param>
         /// <returns>ons.Action.</returns>
-        public override ons.Action consume(Message value, ConsumeContext context)
+        public override ons.Action consume(Message message, ConsumeContext context)
         {
+            // 根据业务唯一标识的 Key 做幂等处理
+            string key = message.getKey();
             //byte[] text = Convert.FromBase64String(value.getBody());//中文decode
             //string body = Encoding.UTF8.GetString(text);
-            Byte[] text = Encoding.Default.GetBytes(value.getBody());
+            Byte[] text = Encoding.Default.GetBytes(message.getBody());
             Console.WriteLine(Encoding.UTF8.GetString(text));
-            Console.WriteLine("Receive message:{0}", value.getMsgID());
+            Console.WriteLine("Receive message:{0}", key);
             return ons.Action.CommitMessage;
         }
     }
@@ -89,12 +91,14 @@ namespace Aliyun.RocketSample
         /// <summary>
         /// Consumes the specified value.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="message">The value.</param>
         /// <param name="context">The context.</param>
         /// <returns>ons.OrderAction.</returns>
-        public override ons.OrderAction consume(Message value, ConsumeOrderContext context)
+        public override ons.OrderAction consume(Message message, ConsumeOrderContext context)
         {
-            Byte[] text = Encoding.Default.GetBytes(value.getBody());
+            // 根据业务唯一标识的 Key 做幂等处理
+            string key = message.getKey();
+            Byte[] text = Encoding.Default.GetBytes(message.getBody());
             Console.WriteLine(Encoding.UTF8.GetString(text));
             return ons.OrderAction.Success;
         }
