@@ -1,12 +1,12 @@
 // ***********************************************************************
-// Assembly         : Aliyun.RocketSample.NETCore
+// Assembly         : Aliyun.RocketMQSample.NETCore
 // Author           : Administrator
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
 // Last Modified On : 2020-02-28
 // ***********************************************************************
-// <copyright file="SWIGTYPE_p_std__string.cs" company="Aliyun.RocketSample.NETCore">
+// <copyright file="SWIGTYPE_p_std__string.cs" company="Aliyun.RocketMQSample.NETCore">
 //     Copyright (c) NoobCore.com. All rights reserved.
 // </copyright>
 // <summary></summary>
