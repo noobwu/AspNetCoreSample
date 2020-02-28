@@ -157,7 +157,8 @@ namespace Aliyun.RocketSample
         /// <summary>
         /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
-        private static string Ons_NameSrv = "http://MQ_INST_1747983802895635_BcIcHhW0.mq-internet-access.mq-internet.aliyuncs.com:80";
+        private static string Ons_NameSrv = "http://MQ_INST_1747983802895635_BcMs9Jh0.cn-shenzhen.mq-internal.aliyuncs.com:8080";
+        // "http://MQ_INST_1747983802895635_BcIcHhW0.mq-internet-access.mq-internet.aliyuncs.com:80";
 
         /// <summary>
         /// Sends the message.
@@ -167,7 +168,7 @@ namespace Aliyun.RocketSample
         public static void SendMessage(string msgBody, String tag = "RegisterLog")
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
-            msg.setKey(Guid.NewGuid().ToString());
+            msg.setKey(Guid.NewGuid().ToString("N"));
             try
             {
                 SendResultONS sendResult = _producer.send(msg);
