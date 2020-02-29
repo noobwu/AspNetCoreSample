@@ -51,7 +51,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
         {
             this.queueName = queueName;
-            this.Start();
+            this.Start();//多线程的问题
         }
         /// <summary>
         /// 执行与释放或重置非托管资源关联的应用程序定义的任务。
