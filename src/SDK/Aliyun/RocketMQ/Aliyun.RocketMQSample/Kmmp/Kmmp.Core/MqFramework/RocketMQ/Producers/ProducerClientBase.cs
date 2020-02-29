@@ -60,9 +60,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             var bodyBytes = Encoding.UTF8.GetBytes(strBody);
             message.setBody(bodyBytes, bodyBytes.Length);
 
-            message.putSystemProperties("BodyTypeFullName", body.GetType().AssemblyQualifiedName);
+            string bodyTypeFullName = body.GetType().AssemblyQualifiedName;
+            message.putSystemProperties("BodyTypeFullName", bodyTypeFullName);
 
             message.setKey(key);
+            Console.WriteLine($"BodyTypeFullName:{JsonHelper.JsonConvertSerialize(message.getSystemProperties("BodyTypeFullName"))}");
+
             return message;
         }
     }

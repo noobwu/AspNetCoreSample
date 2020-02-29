@@ -71,7 +71,7 @@ namespace Aliyun.RocketMQSample.Consumer
             receiver.Received += (sender, args) =>
             {
                 //Execute(q.Value<string>("Method"), args.Message);
-                Console.WriteLine($"args:JsonHelper.JsonConvertSerialize(args)");
+                Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
             };
             receiver.Start();
         }

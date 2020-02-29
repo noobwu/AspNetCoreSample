@@ -9,71 +9,67 @@ using System.Threading.Tasks;
 
 namespace Aliyun.RocketMQSample.Producer
 {
+
     /// <summary>
     /// Class Program.
     /// </summary>
     class Program
     {
         /// <summary>
-        /// Class Program.
+        /// Defines the entry point of the application.
         /// </summary>
-        class Program
+        /// <param name="args">The arguments.</param>
+        static void Main(string[] args)
         {
-            /// <summary>
-            /// Defines the entry point of the application.
-            /// </summary>
-            /// <param name="args">The arguments.</param>
-            static void Main(string[] args)
+            //OnscSharp.CreateProducer();
+            //OnscSharp.CreatePushConsumer();
+            //OnscSharp.StartPushConsumer();
+            //OnscSharp.StartProducer();
+            //System.DateTime beforDt = System.DateTime.Now;
+            //for (int i = 0; i < 10; ++i)
+            //{
+            //    //byte[] bytes = Encoding.UTF8.GetBytes("中文messages");//中文encode
+            //    //String body = Convert.ToBase64String(bytes);
+            //    OnscSharp.SendMessage("This is test message");
+            //    Thread.Sleep(1000 * 1);
+            //}
+            //System.DateTime endDt = System.DateTime.Now;
+            //System.TimeSpan ts = endDt.Subtract(beforDt);
+            //Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
+            //Thread.Sleep(1000 * 100);
+            //Console.ReadKey();
+            //OnscSharp.ShutdownProducer();
+            //OnscSharp.shutdownPushConsumer();
+            //Console.WriteLine("end");
+
+            try
             {
-                //OnscSharp.CreateProducer();
-                //OnscSharp.CreatePushConsumer();
-                //OnscSharp.StartPushConsumer();
-                //OnscSharp.StartProducer();
-                //System.DateTime beforDt = System.DateTime.Now;
-                //for (int i = 0; i < 10; ++i)
-                //{
-                //    //byte[] bytes = Encoding.UTF8.GetBytes("中文messages");//中文encode
-                //    //String body = Convert.ToBase64String(bytes);
-                //    OnscSharp.SendMessage("This is test message");
-                //    Thread.Sleep(1000 * 1);
-                //}
-                //System.DateTime endDt = System.DateTime.Now;
-                //System.TimeSpan ts = endDt.Subtract(beforDt);
-                //Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
-                //Thread.Sleep(1000 * 100);
-                //Console.ReadKey();
-                //OnscSharp.ShutdownProducer();
-                //OnscSharp.shutdownPushConsumer();
-                //Console.WriteLine("end");
-
-                try
-                {
-                    KmmpMQTest();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-
-                Console.ReadKey();
+                KmmpMQTest();
             }
-            static void KmmpMQTest()
+            catch (Exception ex)
             {
-                System.DateTime startTime = System.DateTime.Now;
-                string queueName = "CateringVipType";
-                KmmpMQPublisherTest(queueName);
-                System.DateTime endTime = System.DateTime.Now;
-                System.TimeSpan ts = endTime.Subtract(startTime);
-                Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
+                Console.WriteLine(ex);
             }
 
-            /// <summary>
-            /// KMMPs the mq publisher test.
-            /// </summary>
-            static void KmmpMQPublisherTest(string queueName)
-            {
+            Console.ReadKey();
+        }
+        static void KmmpMQTest()
+        {
+            System.DateTime startTime = System.DateTime.Now;
+            string queueName = "CateringVipType";
+            KmmpMQPublisherTest(queueName);
+            System.DateTime endTime = System.DateTime.Now;
+            System.TimeSpan ts = endTime.Subtract(startTime);
+            Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
+        }
 
-                var strJson = @"[
+        /// <summary>
+        /// KMMPs the mq publisher test.
+        /// </summary>
+        static void KmmpMQPublisherTest(string queueName)
+        {
+
+            var strJson = @"[
   {
     ""CustId"": 994323,
     ""CardTypeNo"": ""04"",
@@ -128,43 +124,44 @@ namespace Aliyun.RocketMQSample.Producer
   }
 ]";
 
-                var data = JsonHelper.JsonConvertDeserialize<List<Temp_VipType>>(strJson);
-                string messageId = Guid.NewGuid().ToString("N");
-                int custId = 994323;
-                string branchNo = "000";
-                string productionType = "18";
+            var data = JsonHelper.JsonConvertDeserialize<List<Temp_VipType>>(strJson);
+            string messageId = Guid.NewGuid().ToString("N");
+            int custId = 994323;
+            string branchNo = "000";
+            string productionType = "18";
 
-                //SysLogHelper.Debug("入列VIPType数据", JsonHelper.JsonConvertSerialize(list));
-                using (IMessagePublisher m_publisher = GetPublisher(queueName))
-                {
-                    MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
-                    {
-                        Name = messageId,
-                        custid = custId,
-                        branchNo = branchNo,
-                        ProductionType = productionType,
-                        data = data
-                    };
-                    m_publisher.Put(mqData);//永远不过期
-                }
-
-            }
-
-            /// <summary>
-            /// 获取消息队列对象
-            /// </summary>
-            /// <param name="queueName">Name of the queue.</param>
-            /// <returns>IMessagePublisher.</returns>
-            /// <exception cref="Exception">0006</exception>
-            public static IMessagePublisher GetPublisher(string queueName)
+            //SysLogHelper.Debug("入列VIPType数据", JsonHelper.JsonConvertSerialize(list));
+            using (IMessagePublisher m_publisher = GetPublisher(queueName))
             {
-                var messageQueue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
-                IMessagePublisher _publisher = messageQueue.GetMessagePublisher(queueName);
-                if (_publisher == null)
+                MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
                 {
-                    throw new Exception("0006");
-                }
-                return _publisher;
+                    Name = messageId,
+                    custid = custId,
+                    branchNo = branchNo,
+                    ProductionType = productionType,
+                    data = data
+                };
+                m_publisher.Put(mqData);//永远不过期
             }
+
+        }
+
+        /// <summary>
+        /// 获取消息队列对象
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <returns>IMessagePublisher.</returns>
+        /// <exception cref="Exception">0006</exception>
+        public static IMessagePublisher GetPublisher(string queueName)
+        {
+            var messageQueue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
+            IMessagePublisher _publisher = messageQueue.GetMessagePublisher(queueName);
+            if (_publisher == null)
+            {
+                throw new Exception("0006");
+            }
+            return _publisher;
         }
     }
+}
+

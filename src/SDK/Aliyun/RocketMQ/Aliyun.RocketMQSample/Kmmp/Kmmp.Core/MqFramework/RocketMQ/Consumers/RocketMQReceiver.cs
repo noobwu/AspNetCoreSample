@@ -19,6 +19,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
     /// <seealso cref="Kmmp.Core.Imps.IMessageReceiver" />
     public class RocketMQReceiver : PushConsumerClient, IMessageReceiver, IBroadcastReceiver
     {
+        Type bodyType;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -32,6 +33,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         public RocketMQReceiver(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, string queueName, int consumerThreadCount = 5)
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId, queueName, consumerThreadCount)
         {
+            //this.bodyType = bodyType;
         }
 
         /// <summary>
@@ -90,16 +92,18 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             /// <exception cref="ArgumentNullException"></exception>
             public override ons.Action consume(Message message, ConsumeContext context)
             {
-                // 内部只处理 ITextMessage，其它消息全部丢弃
                 var typeFullName = message.getSystemProperties("BodyTypeFullName");
-                var bodyType = Type.GetType(typeFullName);
-                if (bodyType == null)
+                if (!string.IsNullOrWhiteSpace(typeFullName))
                 {
-                    throw new ArgumentNullException(typeFullName);
+                    var bodyType = Type.GetType(typeFullName);
+                    if (bodyType == null)
+                    {
+                        throw new ArgumentNullException("bodyType is null");
+                    }
+                    var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
+                    Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
                 }
                 Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, 内容为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getBody());
-                var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
-                Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
                 return ons.Action.CommitMessage;
             }
             /// <summary>
