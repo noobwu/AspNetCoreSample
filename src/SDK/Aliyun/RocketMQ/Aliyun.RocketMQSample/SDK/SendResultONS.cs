@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SendResultONS"/> class.
+        /// Initializes a new instance of the <see cref="SendResultONS" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="SendResultONS"/> class.
+        /// Finalizes an instance of the <see cref="SendResultONS" /> class.
         /// </summary>
         ~SendResultONS()
         {
@@ -84,7 +84,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SendResultONS"/> class.
+        /// Initializes a new instance of the <see cref="SendResultONS" /> class.
         /// </summary>
         public SendResultONS() : this(ONSClient4CPPPINVOKE.new_SendResultONS(), true)
         {

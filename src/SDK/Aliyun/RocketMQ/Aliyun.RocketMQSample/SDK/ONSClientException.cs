@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ONSClientException"/> class.
+        /// Initializes a new instance of the <see cref="ONSClientException" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="ONSClientException"/> class.
+        /// Finalizes an instance of the <see cref="ONSClientException" /> class.
         /// </summary>
         ~ONSClientException()
         {
@@ -84,14 +84,14 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ONSClientException"/> class.
+        /// Initializes a new instance of the <see cref="ONSClientException" /> class.
         /// </summary>
         public ONSClientException() : this(ONSClient4CPPPINVOKE.new_ONSClientException__SWIG_0(), true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ONSClientException"/> class.
+        /// Initializes a new instance of the <see cref="ONSClientException" /> class.
         /// </summary>
         /// <param name="msg">The MSG.</param>
         /// <param name="error">The error.</param>

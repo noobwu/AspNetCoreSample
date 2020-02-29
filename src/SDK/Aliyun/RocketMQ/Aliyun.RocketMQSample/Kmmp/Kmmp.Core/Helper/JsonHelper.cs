@@ -27,12 +27,15 @@ namespace Kmmp.Core.Helper
     /// <summary>
     /// 创建人:吴廷有
     /// 创建时间:2015-09-25
-    /// 功能描述:Json操作帮助类    
+    /// 功能描述:Json操作帮助类
     /// </summary>
     public class JsonHelper
     {
         #region "  变量定义  "
 
+        /// <summary>
+        /// The m default settings
+        /// </summary>
         private static JsonSerializerSettings m_defaultSettings = null;
 
 
@@ -40,6 +43,9 @@ namespace Kmmp.Core.Helper
 
         #region "  构造函数  "
 
+        /// <summary>
+        /// Initializes static members of the <see cref="JsonHelper"/> class.
+        /// </summary>
         static JsonHelper()
         {
             //Json格式化默认设置

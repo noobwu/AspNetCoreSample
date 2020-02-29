@@ -4,7 +4,7 @@
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-02-28
+// Last Modified On : 2020-02-29
 // ***********************************************************************
 // <copyright file="Message.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="Message"/> class.
+        /// Finalizes an instance of the <see cref="Message" /> class.
         /// </summary>
         ~Message()
         {
@@ -84,14 +84,14 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         public Message() : this(ONSClient4CPPPINVOKE.new_Message__SWIG_0(), true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         /// <param name="topic">The topic.</param>
         /// <param name="tags">The tags.</param>
@@ -102,7 +102,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         /// <param name="topic">The topic.</param>
         /// <param name="topic_size">Size of the topic.</param>
@@ -115,7 +115,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         /// <param name="topic">The topic.</param>
         /// <param name="tags">The tags.</param>
@@ -126,7 +126,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
         /// <param name="other">The other.</param>
         public Message(Message other) : this(ONSClient4CPPPINVOKE.new_Message__SWIG_5(Message.getCPtr(other)), true)

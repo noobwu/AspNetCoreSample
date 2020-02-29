@@ -4,7 +4,7 @@
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-02-28
+// Last Modified On : 2020-02-29
 // ***********************************************************************
 // <copyright file="OrderProducer.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderProducer"/> class.
+        /// Initializes a new instance of the <see cref="OrderProducer" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="OrderProducer"/> class.
+        /// Finalizes an instance of the <see cref="OrderProducer" /> class.
         /// </summary>
         ~OrderProducer()
         {
@@ -84,7 +84,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderProducer"/> class.
+        /// Initializes a new instance of the <see cref="OrderProducer" /> class.
         /// </summary>
         public OrderProducer() : this(ONSClient4CPPPINVOKE.new_OrderProducer(), true)
         {

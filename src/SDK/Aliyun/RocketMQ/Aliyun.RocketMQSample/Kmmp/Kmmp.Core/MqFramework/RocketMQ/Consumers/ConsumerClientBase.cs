@@ -1,25 +1,45 @@
-﻿using ons;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-02-29
+// ***********************************************************************
+// <copyright file="ConsumerClientBase.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using ons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The Consumers namespace.
+/// </summary>
 namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
 {
     /// <summary>
     /// Class ConsumerBase.
+    /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.RocketMQClientBase" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.RocketMQClientBase" />
     public abstract class ConsumerClientBase : RocketMQClientBase
     {
         /// <summary>
         /// 子表达式, Tag的过滤，全部使用*, 多个TagA||TagB
         /// </summary>
+        /// <value>The sub expression.</value>
         protected string SubExpression { get; private set; }
 
         /// <summary>
         /// Consumer 实例的消费线程数，默认值：5
         /// </summary>
+        /// <value>The consumer thread count.</value>
         protected int ConsumerThreadCount { get; set; } = 5;
         /// <summary>
         /// 构造函数

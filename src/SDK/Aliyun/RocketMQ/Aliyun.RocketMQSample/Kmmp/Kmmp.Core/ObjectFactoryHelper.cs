@@ -55,7 +55,7 @@ namespace Kmmp.Core.Helper
         #region "  构造函数  "
 
         /// <summary>
-        /// Initializes static members of the <see cref="ObjectFactoryHelper"/> class.
+        /// Initializes static members of the <see cref="ObjectFactoryHelper" /> class.
         /// </summary>
         static ObjectFactoryHelper()
         {

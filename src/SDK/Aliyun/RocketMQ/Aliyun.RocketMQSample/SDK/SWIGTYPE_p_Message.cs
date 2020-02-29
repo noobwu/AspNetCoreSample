@@ -24,7 +24,7 @@ public class SWIGTYPE_p_Message
     private global::System.Runtime.InteropServices.HandleRef swigCPtr;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SWIGTYPE_p_Message"/> class.
+    /// Initializes a new instance of the <see cref="SWIGTYPE_p_Message" /> class.
     /// </summary>
     /// <param name="cPtr">The c PTR.</param>
     /// <param name="futureUse">if set to <c>true</c> [future use].</param>
@@ -34,7 +34,7 @@ public class SWIGTYPE_p_Message
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SWIGTYPE_p_Message"/> class.
+    /// Initializes a new instance of the <see cref="SWIGTYPE_p_Message" /> class.
     /// </summary>
     protected SWIGTYPE_p_Message()
     {

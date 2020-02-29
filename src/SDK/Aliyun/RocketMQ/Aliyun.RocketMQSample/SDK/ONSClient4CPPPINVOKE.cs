@@ -4,7 +4,7 @@
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-02-28
+// Last Modified On : 2020-02-29
 // ***********************************************************************
 // <copyright file="ONSClient4CPPPINVOKE.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -262,7 +262,7 @@ namespace ons
             }
 
             /// <summary>
-            /// Initializes static members of the <see cref="SWIGExceptionHelper"/> class.
+            /// Initializes static members of the <see cref="SWIGExceptionHelper" /> class.
             /// </summary>
             static SWIGExceptionHelper()
             {
@@ -307,7 +307,7 @@ namespace ons
             private static int numExceptionsPending = 0;
 
             /// <summary>
-            /// Gets a value indicating whether this <see cref="SWIGPendingException"/> is pending.
+            /// Gets a value indicating whether this <see cref="SWIGPendingException" /> is pending.
             /// </summary>
             /// <value><c>true</c> if pending; otherwise, <c>false</c>.</value>
             public static bool Pending
@@ -397,7 +397,7 @@ namespace ons
             }
 
             /// <summary>
-            /// Initializes static members of the <see cref="SWIGStringHelper"/> class.
+            /// Initializes static members of the <see cref="SWIGStringHelper" /> class.
             /// </summary>
             static SWIGStringHelper()
             {
@@ -412,7 +412,7 @@ namespace ons
 
 
         /// <summary>
-        /// Initializes static members of the <see cref="ONSClient4CPPPINVOKE"/> class.
+        /// Initializes static members of the <see cref="ONSClient4CPPPINVOKE" /> class.
         /// </summary>
         static ONSClient4CPPPINVOKE()
         {

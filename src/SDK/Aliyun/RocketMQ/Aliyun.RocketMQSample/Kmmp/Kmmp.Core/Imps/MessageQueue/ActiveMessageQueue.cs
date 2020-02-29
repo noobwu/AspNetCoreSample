@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-02-29
+// ***********************************************************************
+// <copyright file="ActiveMessageQueue.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,49 +22,61 @@ using Kmmp.Core.Extension;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+/// <summary>
+/// The MessageQueue namespace.
+/// </summary>
 namespace Kmmp.Core.Imps.MessageQueue
 {
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：消息通道
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：消息通道
     /// </summary>
     public class ActiveMessageQueueChannel
     {
         #region "  属性定义  "
 
         /// <summary>
-        ///     连接URL
+        /// 连接URL
         /// </summary>
+        /// <value>The URI.</value>
         /// <example>
-        ///     tcp://activemqhost:61616
+        /// tcp://activemqhost:61616
         /// </example>
         public string Uri { get; set; }
 
         /// <summary>
-        ///     brocker 用户名, 不填用户名，则不使用用户名密码进行验证
+        /// brocker 用户名, 不填用户名，则不使用用户名密码进行验证
         /// </summary>
+        /// <value>The name of the user.</value>
         public string UserName { get; set; }
 
         /// <summary>
-        ///     brocker 密码
+        /// brocker 密码
         /// </summary>
+        /// <value>The password.</value>
         public string Password { get; set; }
 
         #endregion
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：ActiveMQ 消息队列包装
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：ActiveMQ 消息队列包装
+    /// Implements the <see cref="Kmmp.Core.Imps.IMessageQueue" />
+    /// Implements the <see cref="Kmmp.Core.Imps.IComponent" />
+    /// Implements the <see cref="System.IDisposable" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.Imps.IMessageQueue" />
+    /// <seealso cref="Kmmp.Core.Imps.IComponent" />
+    /// <seealso cref="System.IDisposable" />
     public class ActiveMessageQueue : IMessageQueue, IComponent, IDisposable
     {
         #region "  常量定义  "
 
         /// <summary>
-        ///     消息完成类名变量
+        /// 消息完成类名变量
         /// </summary>
         public const string ExternPropertyNameMessageTypeName = "_messageType";
 
@@ -60,17 +85,17 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  变量定义  "
 
         /// <summary>
-        ///     mq 连接实例, channel name => mq connection of channel.
+        /// mq 连接实例, channel name =&gt; mq connection of channel.
         /// </summary>
         private readonly Dictionary<string, IConnection> m_connections = new Dictionary<string, IConnection>();
 
         /// <summary>
-        ///     通道分发器
+        /// 通道分发器
         /// </summary>
         private IActiveMqChannelDeliver m_channelDeliver;
 
         /// <summary>
-        ///     接收者分发器
+        /// 接收者分发器
         /// </summary>
         private IActiveMQReceiverDeliver m_receiverDeliver;
 
@@ -79,28 +104,33 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  属性定义  "
 
         /// <summary>
-        ///     所有的通道
+        /// 所有的通道
         /// </summary>
+        /// <value>The channels.</value>
         public Dictionary<string, ActiveMessageQueueChannel> Channels { get; set; }
 
         /// <summary>
-        ///     通道分发器
+        /// 通道分发器
         /// </summary>
+        /// <value>The channel delivers.</value>
         public JArray ChannelDelivers { get; set; }
 
         /// <summary>
-        ///     接收者分发器
+        /// 接收者分发器
         /// </summary>
+        /// <value>The receiver delivers.</value>
         public JArray ReceiverDelivers { get; set; }
 
         /// <summary>
-        ///     默认队列名
+        /// 默认队列名
         /// </summary>
+        /// <value>The default name of the queue.</value>
         public string DefaultQueueName { get; set; }
 
         /// <summary>
-        ///     是否启用异步
+        /// 是否启用异步
         /// </summary>
+        /// <value><c>true</c> if this instance is asynchronous; otherwise, <c>false</c>.</value>
         public bool IsAsync { get; set; }
 
         #endregion
@@ -108,9 +138,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  构造函数  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：构建一个 <see cref="ActiveMessageQueue" /> 对象
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：构建一个 <see cref="ActiveMessageQueue" /> 对象
         /// </summary>
         public ActiveMessageQueue()
         {
@@ -122,9 +152,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
@@ -137,116 +167,116 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取一个消息发布者
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取一个消息发布者
         /// </summary>
-        /// <param name="queue"></param>
-        /// <returns></returns>
+        /// <param name="queue">The queue.</param>
+        /// <returns>IMessagePublisher.</returns>
         public IMessagePublisher GetMessagePublisher(string queue)
         {
             return new ActiveMessageQueueMessagePublishers(this, "queue://" + queue);
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取一个广播消息发布者
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取一个广播消息发布者
         /// </summary>
         /// <param name="queue">队列名称</param>
-        /// <returns></returns>
+        /// <returns>IBroadcastPublisher.</returns>
         public IBroadcastPublisher GetBroadcastPublisher(string queue)
         {
             return new ActiveMessageQueueMessagePublishers(this, "topic://" + queue);
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取一个消息接收者对象
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取一个消息接收者对象
         /// </summary>
         /// <param name="queue">列表名称</param>
         /// <param name="receiverId">接收器名称</param>
-        /// <returns></returns>
+        /// <returns>IMessageReceiver.</returns>
         public IMessageReceiver GetMessageReceiver(string queue, string receiverId)
         {
             return new ActiveMessageQueueMessageReceivers(this, "queue://" + queue, receiverId);
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取一个广播消息接收器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取一个广播消息接收器
         /// </summary>
         /// <param name="broadcastName">通道名称</param>
         /// <param name="receiverId">接收器名称</param>
-        /// <returns></returns>
+        /// <returns>IBroadcastReceiver.</returns>
         public IBroadcastReceiver GetBroadcastReceiver(string broadcastName, string receiverId)
         {
             return new ActiveMessageQueueMessageReceivers(this, "topic://" + broadcastName, receiverId);
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取内部连接
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取内部连接
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Dictionary&lt;System.String, IConnection&gt;.</returns>
         public Dictionary<string, IConnection> GetConnections()
         {
             return m_connections.ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取队列分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取队列分发器
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IActiveMqChannelDeliver.</returns>
         public IActiveMqChannelDeliver GetChannelDeliver()
         {
             return m_channelDeliver ?? new DefaultChannelDeliver();
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：设置队列分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：设置队列分发器
         /// </summary>
-        /// <param name="channelDeliver"></param>
+        /// <param name="channelDeliver">The channel deliver.</param>
         public void SetChannelDeliver(IActiveMqChannelDeliver channelDeliver)
         {
             m_channelDeliver = channelDeliver;
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取接收者分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取接收者分发器
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IActiveMQReceiverDeliver.</returns>
         public IActiveMQReceiverDeliver GetReceiverDeliver()
         {
             return m_receiverDeliver ?? new DefaultReceiverDeliver();
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：设置接收者分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：设置接收者分发器
         /// </summary>
-        /// <param name="receiverDeliver"></param>
+        /// <param name="receiverDeliver">The receiver deliver.</param>
         public void SetReceiverDeliver(IActiveMQReceiverDeliver receiverDeliver)
         {
             m_receiverDeliver = receiverDeliver;
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取默认队列名
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取默认队列名
         /// </summary>
-        /// <returns></returns>
+        /// <returns>System.String.</returns>
         public string GetDefaultChannelName()
         {
             if (string.IsNullOrWhiteSpace(DefaultQueueName))
@@ -259,9 +289,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region 实现接口 IComponent
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：初始化组件
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：初始化组件
         /// </summary>
         void IComponent.Init()
         {
@@ -309,12 +339,13 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个消息分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个消息分发器
         /// </summary>
         /// <param name="channelDeliver">分发器配置</param>
-        /// <returns></returns>
+        /// <returns>IActiveMqChannelDeliver.</returns>
+        /// <exception cref="Exception">无法解析类别: " + typeName</exception>
         private IActiveMqChannelDeliver CreateChannelDeliver(JObject channelDeliver)
         {
             var typeName = channelDeliver["_type"].ToString();
@@ -327,12 +358,13 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个接收者分发器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个接收者分发器
         /// </summary>
         /// <param name="channelDeliver">接收者分发器参数</param>
-        /// <returns></returns>
+        /// <returns>IActiveMQReceiverDeliver.</returns>
+        /// <exception cref="Exception">无法解析类别: " + typeName</exception>
         private IActiveMQReceiverDeliver CreateReceiverDeliver(JObject channelDeliver)
         {
             var typeName = channelDeliver["_type"].ToString();
@@ -345,16 +377,18 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：混合接收者分发器，将多个接收者分发器混合到一起
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：混合接收者分发器，将多个接收者分发器混合到一起
+        /// Implements the <see cref="Kmmp.Core.Imps.MessageQueue.IActiveMQReceiverDeliver" />
         /// </summary>
+        /// <seealso cref="Kmmp.Core.Imps.MessageQueue.IActiveMQReceiverDeliver" />
         public class CompositeReceiverDeliver : IActiveMQReceiverDeliver
         {
             #region "  变量定义  "
 
             /// <summary>
-            ///     接收者分发器集合
+            /// 接收者分发器集合
             /// </summary>
             private readonly List<IActiveMQReceiverDeliver> m_delivers = new List<IActiveMQReceiverDeliver>();
 
@@ -363,12 +397,12 @@ namespace Kmmp.Core.Imps.MessageQueue
             #region "  方法定义  "
 
             /// <summary>
-            ///     作者：吴廷有
-            ///     时间：2015-10-23
-            ///     功能：获取消息接收者的 Id
+            /// 作者：吴廷有
+            /// 时间：2015-10-23
+            /// 功能：获取消息接收者的 Id
             /// </summary>
-            /// <param name="target"></param>
-            /// <returns></returns>
+            /// <param name="target">消息</param>
+            /// <returns>System.String.</returns>
             public string GetReceiverId(object target)
             {
                 foreach (var channelDeliver in m_delivers)
@@ -383,9 +417,9 @@ namespace Kmmp.Core.Imps.MessageQueue
             }
 
             /// <summary>
-            ///     作者：吴廷有
-            ///     时间：2015-10-23
-            ///     功能：添加一个消息接收者分发器
+            /// 作者：吴廷有
+            /// 时间：2015-10-23
+            /// 功能：添加一个消息接收者分发器
             /// </summary>
             /// <param name="deliver">消息接收者分发器</param>
             public void Add(IActiveMQReceiverDeliver deliver)
@@ -397,16 +431,18 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：混合通道分发器，将多个通道分发器混合到一起
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：混合通道分发器，将多个通道分发器混合到一起
+        /// Implements the <see cref="Kmmp.Core.Imps.MessageQueue.IActiveMqChannelDeliver" />
         /// </summary>
+        /// <seealso cref="Kmmp.Core.Imps.MessageQueue.IActiveMqChannelDeliver" />
         public class CompositeChannelDeliver : IActiveMqChannelDeliver
         {
             #region "  变量定义  "
 
             /// <summary>
-            ///     消息分发器集合
+            /// 消息分发器集合
             /// </summary>
             private readonly List<IActiveMqChannelDeliver> m_channelDelivers = new List<IActiveMqChannelDeliver>();
 
@@ -415,12 +451,12 @@ namespace Kmmp.Core.Imps.MessageQueue
             #region "  方法定义  "
 
             /// <summary>
-            ///     作者：吴廷有
-            ///     时间：2015-10-23
-            ///     功能：获取队列的名称
+            /// 作者：吴廷有
+            /// 时间：2015-10-23
+            /// 功能：获取队列的名称
             /// </summary>
-            /// <param name="target"></param>
-            /// <returns></returns>
+            /// <param name="target">The target.</param>
+            /// <returns>System.String.</returns>
             public string GetChannelName(object target)
             {
                 foreach (var channelDeliver in m_channelDelivers)
@@ -435,9 +471,9 @@ namespace Kmmp.Core.Imps.MessageQueue
             }
 
             /// <summary>
-            ///     作者：吴廷有
-            ///     时间：2015-10-23
-            ///     功能：添加一个消息通道分发器
+            /// 作者：吴廷有
+            /// 时间：2015-10-23
+            /// 功能：添加一个消息通道分发器
             /// </summary>
             /// <param name="channelDeliver">消息通道分发器</param>
             public void Add(IActiveMqChannelDeliver channelDeliver)
@@ -452,21 +488,23 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：默认接收者分发器，不标记接收者属性
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：默认接收者分发器，不标记接收者属性
+    /// Implements the <see cref="Kmmp.Core.Imps.MessageQueue.IActiveMQReceiverDeliver" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.Imps.MessageQueue.IActiveMQReceiverDeliver" />
     internal class DefaultReceiverDeliver : IActiveMQReceiverDeliver
     {
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取消息接收者的 Id
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取消息接收者的 Id
         /// </summary>
         /// <param name="target">消息</param>
-        /// <returns></returns>
+        /// <returns>System.String.</returns>
         public string GetReceiverId(object target)
         {
             return null;
@@ -476,21 +514,23 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：默认通道分发器，发送给第一个通道
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：默认通道分发器，发送给第一个通道
+    /// Implements the <see cref="Kmmp.Core.Imps.MessageQueue.IActiveMqChannelDeliver" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.Imps.MessageQueue.IActiveMqChannelDeliver" />
     internal class DefaultChannelDeliver : IActiveMqChannelDeliver
     {
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取队列的名称
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取队列的名称
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
+        /// <param name="target">The target.</param>
+        /// <returns>System.String.</returns>
         public string GetChannelName(object target)
         {
             return null;
@@ -500,18 +540,20 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：ActiveMQ 消息发送器
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：ActiveMQ 消息发送器
+    /// Implements the <see cref="System.IDisposable" />
     /// </summary>
+    /// <seealso cref="System.IDisposable" />
     internal class ActiveMessageQueueMessagePublisher : IDisposable
     {
         #region "  构造函数  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个 Publisher 实例
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个 Publisher 实例
         /// </summary>
         /// <param name="connection">mq 连接</param>
         /// <param name="queue">队列名称</param>
@@ -528,9 +570,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
@@ -538,9 +580,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：发送一个消息，将消息发入队列
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：发送一个消息，将消息发入队列
         /// </summary>
         /// <param name="target">被发送的消息</param>
         /// <param name="receiverId">接收者Id</param>
@@ -553,14 +595,15 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：发送一个消息，将消息发入队列 (异步方式)
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：发送一个消息，将消息发入队列 (异步方式)
         /// </summary>
         /// <param name="target">被发送的消息</param>
         /// <param name="receiverId">接收者Id</param>
         /// <param name="timeOut">过期时间</param>
         /// <param name="delay">消息延迟投递时间(秒)</param>
+        /// <returns>Task.</returns>
         public Task PutAsync(object target, string receiverId, DateTime? timeOut = null, int? delay = null)
         {
             var request = BuildMessage(target, receiverId, timeOut, delay);
@@ -568,15 +611,15 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：构建一个消息对象
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：构建一个消息对象
         /// </summary>
         /// <param name="target">实际要传输的内容</param>
         /// <param name="receiverId">接收者ID</param>
         /// <param name="timeOut">过期时间</param>
         /// <param name="delay">消息延迟投递时间(秒)</param>
-        /// <returns></returns>
+        /// <returns>ITextMessage.</returns>
         private ITextMessage BuildMessage(object target, string receiverId, DateTime? timeOut = null, int? delay = null)
         {
             var messageStr = JsonConvert.SerializeObject(target);
@@ -612,9 +655,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：回收资源
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：回收资源
         /// </summary>
         /// <param name="disposing">是否使用 Dispose 回收</param>
         private void Dispose(bool disposing)
@@ -632,9 +675,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #endregion
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
         /// </summary>
         ~ActiveMessageQueueMessagePublisher()
         {
@@ -644,12 +687,12 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  字段变量  "
 
         /// <summary>
-        ///     ActiveMQ 消息生产者
+        /// ActiveMQ 消息生产者
         /// </summary>
         private readonly IMessageProducer m_producer;
 
         /// <summary>
-        ///     会话实例
+        /// 会话实例
         /// </summary>
         private readonly ISession m_session;
 
@@ -657,21 +700,25 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：ActiveMQ 消息发送者集合
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：ActiveMQ 消息发送者集合
+    /// Implements the <see cref="Kmmp.Core.Imps.IMessagePublisher" />
+    /// Implements the <see cref="Kmmp.Core.Imps.IBroadcastPublisher" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.Imps.IMessagePublisher" />
+    /// <seealso cref="Kmmp.Core.Imps.IBroadcastPublisher" />
     internal class ActiveMessageQueueMessagePublishers : IMessagePublisher, IBroadcastPublisher
     {
         #region "  变量定义  "
 
         /// <summary>
-        ///     通道分发器
+        /// 通道分发器
         /// </summary>
         private readonly IActiveMqChannelDeliver m_channelDeliver;
 
         /// <summary>
-        ///     消息队列
+        /// 消息队列
         /// </summary>
         private readonly ActiveMessageQueue m_messageQueue;
 
@@ -680,9 +727,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  构造函数  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个 Publisher 实例
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个 Publisher 实例
         /// </summary>
         /// <param name="messageQueue">mq 连接</param>
         /// <param name="queueName">队列名称</param>
@@ -704,9 +751,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
@@ -714,12 +761,12 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：发送一个消息，将消息发入队列
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：发送一个消息，将消息发入队列
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="timeOut"></param>
+        /// <param name="target">The target.</param>
+        /// <param name="timeOut">The time out.</param>
         /// <param name="delay">消息延迟投递时间(秒)</param>
         public void Put(object target, DateTime? timeOut = null, int? delay = null)
         {
@@ -731,13 +778,14 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：发送一个消息，将消息发入队列
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：发送一个消息，将消息发入队列
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="timeOut"></param>
+        /// <param name="target">The target.</param>
+        /// <param name="timeOut">The time out.</param>
         /// <param name="delay">消息延迟投递时间(秒)</param>
+        /// <returns>Task.</returns>
         public Task PutAsync(object target, DateTime? timeOut = null, int? delay = null)
         {
             string channelName = m_channelDeliver.GetChannelName(target);
@@ -748,12 +796,13 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取指定通道名的消息发送器
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取指定通道名的消息发送器
         /// </summary>
         /// <param name="channelName">消息通道名称</param>
-        /// <returns></returns>
+        /// <returns>ActiveMessageQueueMessagePublisher.</returns>
+        /// <exception cref="Exception">未能找到指定队列: " + channelName</exception>
         private ActiveMessageQueueMessagePublisher GetPublisher(string channelName)
         {
             if (string.IsNullOrWhiteSpace(channelName))
@@ -770,9 +819,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：回收资源
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：回收资源
         /// </summary>
         /// <param name="disposing">是否使用 Dispose 回收</param>
         private void Dispose(bool disposing)
@@ -790,9 +839,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #endregion
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
         /// </summary>
         ~ActiveMessageQueueMessagePublishers()
         {
@@ -802,12 +851,12 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  字段变量  "
 
         /// <summary>
-        ///     MQ发布者列表
+        /// MQ发布者列表
         /// </summary>
         private readonly IDictionary<string, ActiveMessageQueueMessagePublisher> m_publishers;
 
         /// <summary>
-        ///     消息接收者分发器
+        /// 消息接收者分发器
         /// </summary>
         private readonly IActiveMQReceiverDeliver m_receiverDeliver;
 
@@ -815,52 +864,56 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：消息接收者分发器
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：消息接收者分发器
     /// </summary>
     public interface IActiveMQReceiverDeliver
     {
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取消息接收者的 Id
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取消息接收者的 Id
         /// </summary>
         /// <param name="target">消息</param>
-        /// <returns></returns>
+        /// <returns>System.String.</returns>
         string GetReceiverId(object target);
 
         #endregion
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：消息接收者实现
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：消息接收者实现
+    /// Implements the <see cref="Kmmp.Core.Imps.IMessageReceiver" />
+    /// Implements the <see cref="Kmmp.Core.Imps.IBroadcastReceiver" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.Imps.IMessageReceiver" />
+    /// <seealso cref="Kmmp.Core.Imps.IBroadcastReceiver" />
     internal class ActiveMessageQueueMessageReceivers : IMessageReceiver, IBroadcastReceiver
     {
         #region "  变量定义  "
 
         /// <summary>
-        ///     消息队列
+        /// 消息队列
         /// </summary>
         private readonly ActiveMessageQueue m_messageQueue;
 
         /// <summary>
-        ///     队列名称
+        /// 队列名称
         /// </summary>
         private readonly string m_queueName;
 
         /// <summary>
-        ///     接收者ID
+        /// 接收者ID
         /// </summary>
         private readonly string m_receiverId;
 
         /// <summary>
-        ///     消息接收者集合
+        /// 消息接收者集合
         /// </summary>
         private List<ActiveMessageQueueMessageReceiver> m_receivers;
 
@@ -869,13 +922,13 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  构造函数  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个消息接收者集合
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个消息接收者集合
         /// </summary>
-        /// <param name="messageQueue"></param>
-        /// <param name="queueName"></param>
-        /// <param name="receiverId"></param>
+        /// <param name="messageQueue">The message queue.</param>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <param name="receiverId">The receiver identifier.</param>
         public ActiveMessageQueueMessageReceivers(ActiveMessageQueue messageQueue, string queueName, string receiverId)
         {
             m_messageQueue = messageQueue;
@@ -888,9 +941,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
@@ -898,14 +951,14 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     接收消息事件
+        /// 接收消息事件
         /// </summary>
         public event EventHandler<MessageEventArgs> Received = delegate { };
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：启动监听
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：启动监听
         /// </summary>
         public void Start()
         {
@@ -922,9 +975,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：收到消息事件
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：收到消息事件
         /// </summary>
         /// <param name="sender">发送者</param>
         /// <param name="e">消息参数</param>
@@ -938,9 +991,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         /// <param name="disposing">是否通过 .Dispose 方法释放资源</param>
         private void Dispose(bool disposing)
@@ -958,9 +1011,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #endregion
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
         /// </summary>
         ~ActiveMessageQueueMessageReceivers()
         {
@@ -969,31 +1022,33 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：消息接收器
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：消息接收器
+    /// Implements the <see cref="System.IDisposable" />
     /// </summary>
+    /// <seealso cref="System.IDisposable" />
     internal class ActiveMessageQueueMessageReceiver : IDisposable
     {
         #region "  变量定义  "
 
         /// <summary>
-        ///     队列名称
+        /// 队列名称
         /// </summary>
         private readonly string m_channelName;
 
         /// <summary>
-        ///     连接实例
+        /// 连接实例
         /// </summary>
         private readonly IConnection m_connection;
 
         /// <summary>
-        ///     消息接收者
+        /// 消息接收者
         /// </summary>
         private readonly IMessageConsumer m_receiver;
 
         /// <summary>
-        ///     当前会话
+        /// 当前会话
         /// </summary>
         private readonly ISession m_session;
 
@@ -1002,14 +1057,14 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  构造函数  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：创建一个 ActiveMessageQueueMessageReceiver
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：创建一个 ActiveMessageQueueMessageReceiver
         /// </summary>
         /// <param name="channelName">通道名称</param>
-        /// <param name="connection"></param>
-        /// <param name="queue"></param>
-        /// <param name="receiverId"></param>
+        /// <param name="connection">The connection.</param>
+        /// <param name="queue">The queue.</param>
+        /// <param name="receiverId">The receiver identifier.</param>
         public ActiveMessageQueueMessageReceiver(string channelName, IConnection connection, string queue,
             string receiverId)
         {
@@ -1026,6 +1081,9 @@ namespace Kmmp.Core.Imps.MessageQueue
             var selector = selectorBuilder.ToString();
             m_receiver = m_session.CreateConsumer(q, string.IsNullOrEmpty(selector) ? null : selector);
         }
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         public void Start()
         {
             m_receiver.Listener += m_receiver_Listener;
@@ -1035,9 +1093,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
@@ -1045,11 +1103,11 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：处理接收到的消息
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：处理接收到的消息
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The message.</param>
         private void m_receiver_Listener(IMessage message)
         {
             ITextMessage textMessage = message as ITextMessage;
@@ -1071,9 +1129,9 @@ namespace Kmmp.Core.Imps.MessageQueue
         }
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         /// <param name="disposing">是否通过 .Dispose 方法释放资源</param>
         private void Dispose(bool disposing)
@@ -1091,14 +1149,14 @@ namespace Kmmp.Core.Imps.MessageQueue
         #endregion
 
         /// <summary>
-        ///     接收到消息事件
+        /// 接收到消息事件
         /// </summary>
         public event EventHandler<MessageEventArgs> Received = delegate { };
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：允许对象在“垃圾回收”回收之前尝试释放资源并执行其他清理操作。
         /// </summary>
         ~ActiveMessageQueueMessageReceiver()
         {
@@ -1108,21 +1166,21 @@ namespace Kmmp.Core.Imps.MessageQueue
     }
 
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：通道分发器
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：通道分发器
     /// </summary>
     public interface IActiveMqChannelDeliver
     {
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：获取队列的名称
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：获取队列的名称
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
+        /// <param name="target">The target.</param>
+        /// <returns>System.String.</returns>
         string GetChannelName(object target);
 
         #endregion

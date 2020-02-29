@@ -1,15 +1,33 @@
-﻿using ons;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-02-29
+// ***********************************************************************
+// <copyright file="PushConsumerClient.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using ons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The Consumers namespace.
+/// </summary>
 namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
 {
     /// <summary>
     /// 消费者客户端(push模式)
+    /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Consumers.ConsumerClientBase" />
     /// </summary>
+    /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.Consumers.ConsumerClientBase" />
     public class PushConsumerClient : ConsumerClientBase
     {
         /// <summary>
@@ -40,7 +58,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <summary>
         /// 启动
         /// </summary>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">没有找到消息监控器</exception>
         public override void Start()
         {
             if (this.listener == null)
@@ -63,7 +81,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <summary>
         /// 设置消息监听器
         /// </summary>
-        /// <param name="listener"></param>
+        /// <param name="listener">The listener.</param>
         public void SetMessageListener(MessageListener listener)
         {
             this.listener = listener;

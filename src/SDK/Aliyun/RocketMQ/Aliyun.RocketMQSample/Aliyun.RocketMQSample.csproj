@@ -115,7 +115,11 @@
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\OrderConsumerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\PushConsumerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\DefaultProducerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ExtendedLocalTransactionChecker.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ExtendedLocalTransactionExecuter.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\OrderProducerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ProducerClientBase.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\TransactionProducerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\RocketMQClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ObjectFactoryHelper.cs" />
     <Compile Include="Program.cs" />

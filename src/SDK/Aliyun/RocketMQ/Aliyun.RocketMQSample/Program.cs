@@ -4,7 +4,7 @@
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-02-28
+// Last Modified On : 2020-02-29
 // ***********************************************************************
 // <copyright file="Program.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -58,6 +58,9 @@ namespace Aliyun.RocketMQSample
             OnscSharp.shutdownPushConsumer();
             Console.WriteLine("end");
         }
+        /// <summary>
+        /// KMMPs the mq publisher test.
+        /// </summary>
         static void KmmpMQPublisherTest()
         {
             var strJson = @"[

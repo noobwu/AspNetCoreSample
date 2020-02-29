@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-02-29
+// ***********************************************************************
+// <copyright file="ComponentLoader.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +21,30 @@ using Kmmp.Core.Imps;
 using Kmmp.Core.Models;
 using Newtonsoft.Json;
 
+/// <summary>
+/// The Core namespace.
+/// </summary>
 namespace Kmmp.Core
 {
     /// <summary>
-    ///     作者：吴廷有
-    ///     时间：2015-10-23
-    ///     功能：组件加载类
+    /// 作者：吴廷有
+    /// 时间：2015-10-23
+    /// 功能：组件加载类
     /// </summary>
     public class ComponentLoader
     {
         #region "  方法定义  "
 
         /// <summary>
-        ///     作者：吴廷有
-        ///     时间：2015-10-23
-        ///     功能：加载组件
+        /// 作者：吴廷有
+        /// 时间：2015-10-23
+        /// 功能：加载组件
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="configInfo"></param>
-        /// <returns></returns>
+        /// <param name="configInfo">The configuration information.</param>
+        /// <returns>T.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// </exception>
         public static T Load<T>(JsonConfigInfo configInfo)
         {
             var componentTypeName = configInfo.GetString("_type");

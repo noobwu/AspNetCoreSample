@@ -29,7 +29,7 @@ namespace ons
         private global::System.Runtime.InteropServices.HandleRef swigCPtr;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SWIGTYPE_p_MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="SWIGTYPE_p_MessageQueueONS" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="futureUse">if set to <c>true</c> [future use].</param>
@@ -39,7 +39,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SWIGTYPE_p_MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="SWIGTYPE_p_MessageQueueONS" /> class.
         /// </summary>
         protected SWIGTYPE_p_MessageQueueONS()
         {

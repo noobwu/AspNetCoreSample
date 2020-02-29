@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="MessageQueueONS" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="MessageQueueONS"/> class.
+        /// Finalizes an instance of the <see cref="MessageQueueONS" /> class.
         /// </summary>
         ~MessageQueueONS()
         {
@@ -84,14 +84,14 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="MessageQueueONS" /> class.
         /// </summary>
         public MessageQueueONS() : this(ONSClient4CPPPINVOKE.new_MessageQueueONS__SWIG_0(), true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="MessageQueueONS" /> class.
         /// </summary>
         /// <param name="topic">The topic.</param>
         /// <param name="brokerName">Name of the broker.</param>
@@ -102,7 +102,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageQueueONS"/> class.
+        /// Initializes a new instance of the <see cref="MessageQueueONS" /> class.
         /// </summary>
         /// <param name="other">The other.</param>
         public MessageQueueONS(MessageQueueONS other) : this(ONSClient4CPPPINVOKE.new_MessageQueueONS__SWIG_2(MessageQueueONS.getCPtr(other)), true)

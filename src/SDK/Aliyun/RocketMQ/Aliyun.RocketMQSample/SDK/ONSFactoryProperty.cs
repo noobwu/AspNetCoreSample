@@ -4,7 +4,7 @@
 // Created          : 2020-02-28
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-02-28
+// Last Modified On : 2020-02-29
 // ***********************************************************************
 // <copyright file="ONSFactoryProperty.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ONSFactoryProperty"/> class.
+        /// Initializes a new instance of the <see cref="ONSFactoryProperty" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="ONSFactoryProperty"/> class.
+        /// Finalizes an instance of the <see cref="ONSFactoryProperty" /> class.
         /// </summary>
         ~ONSFactoryProperty()
         {
@@ -84,7 +84,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ONSFactoryProperty"/> class.
+        /// Initializes a new instance of the <see cref="ONSFactoryProperty" /> class.
         /// </summary>
         public ONSFactoryProperty() : this(ONSClient4CPPPINVOKE.new_ONSFactoryProperty(), true)
         {
@@ -507,9 +507,9 @@ namespace ons
         }
 
         /// <summary>
-        ///设置 Consumer 实例的消费模式，取值说明如下：
-        ///CLUSTERING（默认值）：表示集群消费
-        ///BROADCASTING：表示广播消费
+        /// 设置 Consumer 实例的消费模式，取值说明如下：
+        /// CLUSTERING（默认值）：表示集群消费
+        /// BROADCASTING：表示广播消费
         /// </summary>
         /// <value>The message model.</value>
         public static string MessageModel

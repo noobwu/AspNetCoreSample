@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PullResultONS"/> class.
+        /// Initializes a new instance of the <see cref="PullResultONS" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="PullResultONS"/> class.
+        /// Finalizes an instance of the <see cref="PullResultONS" /> class.
         /// </summary>
         ~PullResultONS()
         {
@@ -84,7 +84,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PullResultONS"/> class.
+        /// Initializes a new instance of the <see cref="PullResultONS" /> class.
         /// </summary>
         /// <param name="status">The status.</param>
         public PullResultONS(ONSPullStatus status) : this(ONSClient4CPPPINVOKE.new_PullResultONS__SWIG_0((int)status), true)
@@ -92,7 +92,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PullResultONS"/> class.
+        /// Initializes a new instance of the <see cref="PullResultONS" /> class.
         /// </summary>
         /// <param name="pullStatus">The pull status.</param>
         /// <param name="nextBeginOffset">The next begin offset.</param>

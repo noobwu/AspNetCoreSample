@@ -65,7 +65,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <summary>
         /// 启动
         /// </summary>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">没有找到消息监控器</exception>
         public override void Start()
         {
             if (this.listener == null)

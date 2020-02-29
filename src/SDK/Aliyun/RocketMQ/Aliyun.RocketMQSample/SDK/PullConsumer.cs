@@ -35,7 +35,7 @@ namespace ons
         protected bool swigCMemOwn;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PullConsumer"/> class.
+        /// Initializes a new instance of the <see cref="PullConsumer" /> class.
         /// </summary>
         /// <param name="cPtr">The c PTR.</param>
         /// <param name="cMemoryOwn">if set to <c>true</c> [c memory own].</param>
@@ -56,7 +56,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="PullConsumer"/> class.
+        /// Finalizes an instance of the <see cref="PullConsumer" /> class.
         /// </summary>
         ~PullConsumer()
         {
@@ -84,7 +84,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PullConsumer"/> class.
+        /// Initializes a new instance of the <see cref="PullConsumer" /> class.
         /// </summary>
         public PullConsumer() : this(ONSClient4CPPPINVOKE.new_PullConsumer(), true)
         {

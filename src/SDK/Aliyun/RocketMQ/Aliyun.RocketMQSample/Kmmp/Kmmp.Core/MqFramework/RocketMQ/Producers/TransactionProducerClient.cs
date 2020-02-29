@@ -6,7 +6,7 @@
 // Last Modified By : Administrator
 // Last Modified On : 2020-02-29
 // ***********************************************************************
-// <copyright file="DefaultProducerClient.cs" company="NoobCore.com">
+// <copyright file="TransactionProducerClient.cs" company="NoobCore.com">
 //     Copyright ©  2020
 // </copyright>
 // <summary></summary>
@@ -25,19 +25,16 @@ using System.Threading.Tasks;
 namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 {
     /// <summary>
-    /// 普通消息生产者
-    /// Implements the <see cref="ProducerClientBase" />
+    /// 事务消息生产者
     /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     /// </summary>
     /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
-    /// <seealso cref="ProducerClientBase" />
-    public class DefaultProducerClient : ProducerClientBase
+    public class TransactionProducerClient : ProducerClientBase
     {
         /// <summary>
-        /// 生产者
+        /// 消息生产者
         /// </summary>
-        private Producer producer;
-
+        private readonly TransactionProducer producer;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -46,9 +43,11 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="nameSrvAddr">设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取</param>
         /// <param name="topic">您在控制台创建的消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。</param>
         /// <param name="groupId">一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。</param>
-        public DefaultProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId)
+        /// <param name="checkFunc">The check function.</param>
+        public TransactionProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, Func<Message, TransactionStatus> checkFunc)
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
         {
+            producer = ONSFactory.getInstance().createTransactionProducer(this.FactoryProperty, new ExtendedLocalTransactionChecker(checkFunc));
         }
 
         /// <summary>
@@ -56,7 +55,6 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// </summary>
         public override void Start()
         {
-            producer = ONSFactory.getInstance().createProducer(this.FactoryProperty);
             producer.start();
         }
 
@@ -69,59 +67,39 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         }
 
         /// <summary>
-        /// 使用oneway方式发送
-        /// </summary>
-        /// <param name="content">发送内容</param>
-        /// <param name="tag">标签</param>
-        /// <param name="key">消息key, 要做到局唯一</param>
-        public void SendOnewayMessage(string content, string tag = "", string key = "")
-        {
-            var message = ComposeMessage(content, tag, key);
-            producer.sendOneway(message);
-        }
-
-        /// <summary>
-        /// 发送单向定时消息
+        /// 发送普通消息
         /// </summary>
         /// <param name="content">内容</param>
-        /// <param name="deliveryTime">投送时间</param>
-        /// <param name="tag">标签</param>
+        /// <param name="bizFunc">业务方法</param>
+        /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
-        public void SendOnewayAndTimingMessage(string content, DateTime deliveryTime, string tag = "", string key = "")
+        /// <returns>Message.</returns>
+        public Message SendMessage(string content, Func<Message, bool> bizFunc, string tag = "", string key = "")
         {
             var message = ComposeMessage(content, tag, key);
-            message.setStartDeliverTime(deliveryTime.ToTimestamp());
-            producer.sendOneway(message);
+
+            var result = producer.send(message, new ExtendedLocalTransactionExecuter(bizFunc));
+
+            message.setMsgID(result.getMessageId());
+            return message;
         }
 
         /// <summary>
         /// 发送定时消息
         /// </summary>
         /// <param name="content">内容</param>
-        /// <param name="deliveryTime">投送时间</param>
-        /// <param name="tag">标签</param>
+        /// <param name="bizFunc">业务方法</param>
+        /// <param name="deliveryTime">指定发送时间</param>
+        /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
-        /// <returns>System.String.</returns>
-        public Message SendTimingMessage(string content, DateTime deliveryTime, string tag = "", string key = "")
+        /// <returns>Message.</returns>
+        public Message SendTimingMessage(string content, Func<Message, bool> bizFunc, DateTime deliveryTime, string tag = "", string key = "")
         {
             var message = ComposeMessage(content, tag, key);
             message.setStartDeliverTime(deliveryTime.ToTimestamp());
-            var result = producer.send(message);
-            message.setMsgID(result.getMessageId());
-            return message;
-        }
 
-        /// <summary>
-        /// 发送普通消息
-        /// </summary>
-        /// <param name="content">内容</param>
-        /// <param name="tag">标签</param>
-        /// <param name="key">消息key, 要做到局唯一</param>
-        /// <returns>System.String.</returns>
-        public Message SendMessage(string content, string tag = "", string key = "")
-        {
-            var message = ComposeMessage(content, tag, key);
-            var result = producer.send(message);
+            var result = producer.send(message, new ExtendedLocalTransactionExecuter(bizFunc));
+
             message.setMsgID(result.getMessageId());
             return message;
         }
