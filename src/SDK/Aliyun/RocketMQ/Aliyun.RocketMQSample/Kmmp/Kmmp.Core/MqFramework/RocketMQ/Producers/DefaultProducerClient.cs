@@ -138,6 +138,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
         /// <returns>System.String.</returns>
+        /// <exception cref="NullReferenceException">producer为空</exception>
         public Message SendMessage(object body, string tag = "", string key = "")
         {
             if (producer == null)
@@ -147,6 +148,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             var message = ComposeMessage(body, tag, key);
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
+            //Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
             Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()}");
             return message;
         }

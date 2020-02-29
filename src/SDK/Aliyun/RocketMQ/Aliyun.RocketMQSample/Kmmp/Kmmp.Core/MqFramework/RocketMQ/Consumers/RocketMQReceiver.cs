@@ -49,11 +49,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         public override void Start()
         {
             ReceiverMessageListener listener = new ReceiverMessageListener();
-            listener.Received += receiver_Received;
+            listener.ReceivedEventHandler += receiver_Received;
             base.SetMessageListener(listener);
             if (!running)
             {
-
                 running = true;
             }
             base.Start();
@@ -69,10 +68,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         private void receiver_Received(object sender, MessageEventArgs e)
         {
             //防止两个消息同时从不同 channel 中获取，并执行
-            lock (this)
-            {
-                Received(this, e);
-            }
+            Received(this, e);
         }
         /// <summary>
         /// 执行与释放或重置非托管资源关联的应用程序定义的任务。
@@ -89,6 +85,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <seealso cref="ons.MessageListener" />
         private class ReceiverMessageListener : MessageListener
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ReceiverMessageListener"/> class.
+            /// </summary>
+            public ReceiverMessageListener()
+            {
+
+            }
             /// <summary>
             /// Consumes the specified message.
             /// </summary>
@@ -107,15 +110,38 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                         throw new ArgumentNullException("bodyType is null");
                     }
                     var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
-                    Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
+                    OnReceived(new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
+                }
+                else
+                {
+                    OnReceived(new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", message.getBody()));
                 }
                 Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{typeFullName}");
                 return ons.Action.CommitMessage;
+                //return ons.Action.ReconsumeLater;//失败&稍后重试
+            }
+            /// <summary>
+            /// Handles the <see cref="E:Received" /> event.
+            /// </summary>
+            /// <param name="args">The <see cref="MessageEventArgs"/> instance containing the event data.</param>
+            private void OnReceived(MessageEventArgs args)
+            {
+                // 定义一个局部变量，已防止最后一个订阅者刚好在检查null后取消订阅
+                EventHandler<MessageEventArgs> handler = ReceivedEventHandler;
+                // 如果没有 订阅者（观察者）， 委托对象将为null
+                if (handler != null)
+                {
+                    // 这是最重要的一句。
+                    // 此时执行的  handler已经是一个多播委托（如果有多个订阅者或观察者注册）。
+                    // 既然是多播委托，就可以依次调用各个 回调函数 （既然是回调函数，实际的执行就由订阅者类决定）。
+                    //这里面传入一个this, 就代表 事件源（或发布者 或 被观察者 都一个意思）
+                    handler(this, args);
+                }
             }
             /// <summary>
             /// 接收到消息事件
             /// </summary>
-            public event EventHandler<MessageEventArgs> Received = delegate { };
+            public event EventHandler<MessageEventArgs> ReceivedEventHandler;
         }
     }
 }

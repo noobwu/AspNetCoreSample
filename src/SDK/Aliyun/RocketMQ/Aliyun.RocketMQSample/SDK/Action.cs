@@ -24,11 +24,11 @@ namespace ons
     public enum Action
     {
         /// <summary>
-        /// The commit message
+        /// 成功
         /// </summary>
         CommitMessage,
         /// <summary>
-        /// The reconsume later
+        /// 失败&稍后重试
         /// </summary>
         ReconsumeLater
     }
