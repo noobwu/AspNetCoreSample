@@ -65,12 +65,13 @@ namespace Aliyun.RocketMQSample.Producer
         private static readonly int ProducerThreadCount = 2;
         static void KmmpMQTest()
         {
+
+            System.DateTime startTime = System.DateTime.Now;
             string queueName = "CateringVipType";
             Console.WriteLine($"发送消息:{DateTime.Now}");
-
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-
+            IMessagePublisher publisher = GetPublisher(queueName);
             var taskList = new List<Task>();
             for (int threadIndex = 1; threadIndex <= ProducerThreadCount; threadIndex++)
             {
@@ -79,7 +80,7 @@ namespace Aliyun.RocketMQSample.Producer
                 {
                     for (int messageIndex = 1; messageIndex <= MessageCountPerThread; messageIndex++)
                     {
-                        KmmpMQPublisherTest(queueName);
+                        KmmpMQPublisherTest(publisher);
                     }
                 }, TaskCreationOptions.LongRunning);
 
@@ -96,7 +97,8 @@ namespace Aliyun.RocketMQSample.Producer
         /// <summary>
         /// KMMPs the mq publisher test.
         /// </summary>
-        static void KmmpMQPublisherTest(string queueName)
+        /// <param name="publisher">The publisher.</param>
+        static void KmmpMQPublisherTest(IMessagePublisher publisher)
         {
 
             var strJson = @"[
@@ -159,20 +161,15 @@ namespace Aliyun.RocketMQSample.Producer
             int custId = 994323;
             string branchNo = "000";
             string productionType = "18";
-
-            //SysLogHelper.Debug("入列VIPType数据", JsonHelper.JsonConvertSerialize(list));
-            using (IMessagePublisher m_publisher = GetPublisher(queueName))
+            MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
             {
-                MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
-                {
-                    Name = messageId,
-                    custid = custId,
-                    branchNo = branchNo,
-                    ProductionType = productionType,
-                    data = data
-                };
-                m_publisher.Put(mqData);//永远不过期
-            }
+                Name = messageId,
+                custid = custId,
+                branchNo = branchNo,
+                ProductionType = productionType,
+                data = data
+            };
+            publisher.Put(mqData);//永远不过期
 
         }
 

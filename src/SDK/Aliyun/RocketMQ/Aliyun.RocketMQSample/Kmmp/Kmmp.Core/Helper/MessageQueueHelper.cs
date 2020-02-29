@@ -12,6 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -36,15 +37,15 @@ namespace Kmmp.Core.Helper
         /// <summary>
         /// The queue name host configuration dictionary
         /// </summary>
-        static Dictionary<string, string> queueNameHostConfigDict = new Dictionary<string, string>();
+        static ConcurrentDictionary<string, string> queueNameHostConfigDict = new ConcurrentDictionary<string, string>();
 
         #region "  常量定义  "
 
         /// <summary>
         /// 队列池
         /// </summary>
-        private static readonly Dictionary<string, IMessageQueue> _messageQueues =
-            new Dictionary<string, IMessageQueue>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, IMessageQueue> _messageQueues =
+            new ConcurrentDictionary<string, IMessageQueue>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// 消息队列池锁
@@ -74,8 +75,9 @@ namespace Kmmp.Core.Helper
                 foreach (var messageQueueKey in _messageQueues.Keys.ToList())
                 {
                     var queue = _messageQueues[messageQueueKey];
+                    _messageQueues.TryRemove(messageQueueKey, out queue);
                     queue.Dispose();
-                    _messageQueues.Remove(messageQueueKey);
+
                 }
             }
         }
@@ -91,8 +93,8 @@ namespace Kmmp.Core.Helper
             lock (s_messageQueuesLocker)
             {
                 var queue = _messageQueues[queueName];
+                _messageQueues.TryRemove(queueName, out queue);
                 queue.Dispose();
-                _messageQueues.Remove(queueName);
             }
         }
 
@@ -129,20 +131,17 @@ namespace Kmmp.Core.Helper
                 return new UnhappylessDisposeMessageQueue(messageQueue);
             }
 
-
             lock (s_messageQueuesLocker)
             {
                 if (_messageQueues.TryGetValue(mqConfigFileName, out messageQueue))
                 {
                     return new UnhappylessDisposeMessageQueue(messageQueue);
                 }
-
                 messageQueue = GetMessageQueue(mqConfigFileName);
                 _messageQueues[mqConfigFileName] = messageQueue;
                 return new UnhappylessDisposeMessageQueue(messageQueue);
             }
         }
-
         /// <summary>
         /// 初始化队列所对应的配置文件名称
         /// </summary>

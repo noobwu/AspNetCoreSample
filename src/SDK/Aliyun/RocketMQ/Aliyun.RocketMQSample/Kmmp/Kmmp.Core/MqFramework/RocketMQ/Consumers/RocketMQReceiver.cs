@@ -19,7 +19,6 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
     /// <seealso cref="Kmmp.Core.Imps.IMessageReceiver" />
     public class RocketMQReceiver : PushConsumerClient, IMessageReceiver, IBroadcastReceiver
     {
-        Type bodyType;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -33,7 +32,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         public RocketMQReceiver(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, string queueName, int consumerThreadCount = 5)
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId, queueName, consumerThreadCount)
         {
-            //this.bodyType = bodyType;
+
         }
 
         /// <summary>
