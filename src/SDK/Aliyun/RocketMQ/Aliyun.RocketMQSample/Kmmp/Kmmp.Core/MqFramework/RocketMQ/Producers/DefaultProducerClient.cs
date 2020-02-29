@@ -149,6 +149,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             var message = ComposeMessage(body, tag, key);
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
+            Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()}");
             return message;
         }
     }

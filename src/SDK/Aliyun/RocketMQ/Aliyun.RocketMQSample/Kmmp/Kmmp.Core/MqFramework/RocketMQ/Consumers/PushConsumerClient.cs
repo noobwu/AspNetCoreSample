@@ -59,13 +59,18 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// 启动
         /// </summary>
         /// <exception cref="Exception">没有找到消息监控器</exception>
+        /// <exception cref="NullReferenceException">consumer为空</exception>
         public override void Start()
         {
             if (this.listener == null)
             {
                 throw new Exception("没有找到消息监控器");
             }
-            consumer = ONSFactory.getInstance().createPushConsumer(this.FactoryProperty);
+            consumer = ONSFactory.getInstance()?.createPushConsumer(this.FactoryProperty);
+            if (consumer == null)
+            {
+                throw new NullReferenceException("consumer为空");
+            }
             consumer.subscribe(Topic, SubExpression, listener);
             consumer.start();
         }
@@ -75,7 +80,15 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// </summary>
         public override void Shutdown()
         {
-            consumer.shutdown();
+            try
+            {
+                consumer.shutdown();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
 
         /// <summary>

@@ -55,29 +55,27 @@ namespace Aliyun.RocketMQSample.Consumer
             Console.ReadKey();
         }
         /// <summary>
-        /// 线程总数iwg
+        /// 消费都数量
         /// </summary>
-        private static readonly int ConsumerThreadCount = 2;
+        private const int ConsumerCount = 2;
         static void KmmpMQTest()
         {
             string queueName = "CateringVipType";
             Console.WriteLine($"接收消息,{queueName}:{DateTime.Now}");
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var taskList = new List<Task>();
-            for (int threadIndex = 1; threadIndex <= ConsumerThreadCount; threadIndex++)
+            for (int index = 1; index <= ConsumerCount; index++)
             {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
-                {
-                    KmmpMQReceiverTest(queueName);
-                }, TaskCreationOptions.LongRunning);
-
-                taskList.Add(task);
+                // 接收消息
+                KmmpMQReceiverTest(queueName);
             }
-            Task.WaitAll(taskList.ToArray());
-            stopWatch.Stop();
-            Console.WriteLine($"接收消息,{queueName}：{ConsumerThreadCount}条， 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+
+            string tempQueueName = "CateringVipTypeTemp";
+            Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
+            for (int index = 1; index <= ConsumerCount; index++)
+            {
+                // 接收消息
+                KmmpMQReceiverTest(tempQueueName);
+            }
+
         }
 
         /// <summary>

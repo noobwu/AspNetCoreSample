@@ -64,8 +64,8 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             message.putSystemProperties("BodyTypeFullName", bodyTypeFullName);
 
             message.setKey(key);
-            Console.WriteLine($"BodyTypeFullName:{JsonHelper.JsonConvertSerialize(message.getSystemProperties("BodyTypeFullName"))}");
-
+            //Console.WriteLine($"BodyTypeFullName:{JsonHelper.JsonConvertSerialize(message.getSystemProperties("BodyTypeFullName"))}");
+            //Console.WriteLine($"BodyTypeFullName:{JsonHelper.JsonConvertSerialize(message.getSystemProperties("BodyTypeFullName"))}");
             return message;
         }
     }
