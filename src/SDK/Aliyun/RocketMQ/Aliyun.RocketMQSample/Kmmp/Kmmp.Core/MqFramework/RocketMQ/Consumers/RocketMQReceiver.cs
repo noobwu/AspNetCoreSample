@@ -81,7 +81,6 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         {
             this.Shutdown();
         }
-        private static int count = 0;
         /// <summary>
         /// Class ReceiverMessageListener.
         /// Implements the <see cref="ons.MessageListener" />
