@@ -108,9 +108,9 @@ namespace ons
         }
 
         /// <summary>
-        /// Sends the specified MSG.
+        /// 发送顺序消息
         /// </summary>
-        /// <param name="msg">The MSG.</param>
+        /// <param name="msg">消息队列中信息传递的载体.</param>
         /// <returns>SendResultONS.</returns>
         public virtual SendResultONS send(Message msg)
         {
@@ -120,9 +120,9 @@ namespace ons
         }
 
         /// <summary>
-        /// Sends the specified MSG.
+        /// 发送消息
         /// </summary>
-        /// <param name="msg">The MSG.</param>
+        /// <param name="msg">消息队列中信息传递的载体.</param>
         /// <param name="mq">The mq.</param>
         /// <returns>SendResultONS.</returns>
         public virtual SendResultONS send(Message msg, MessageQueueONS mq)
@@ -133,7 +133,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Sends the oneway.
+        /// 单向发送消息(发送方只负责发送消息，不等待服务端返回响应且没有回调函数触发，即只发送请求不等待应答。此方式发送消息的过程耗时非常短，一般在微秒级别。)
         /// </summary>
         /// <param name="msg">The MSG.</param>
         public virtual void sendOneway(Message msg)

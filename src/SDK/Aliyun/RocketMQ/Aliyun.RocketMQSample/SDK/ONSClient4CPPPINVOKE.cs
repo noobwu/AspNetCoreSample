@@ -1286,7 +1286,8 @@ namespace ons
         public static extern global::System.IntPtr Producer_send__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
         /// <summary>
-        /// Producers the send oneway.
+        /// 单向（Oneway）发送消息
+        /// 发送方只负责发送消息，不等待服务端返回响应且没有回调函数触发，即只发送请求不等待应答。此方式发送消息的过程耗时非常短，一般在微秒级别。
         /// </summary>
         /// <param name="jarg1">The jarg1.</param>
         /// <param name="jarg2">The jarg2.</param>
@@ -1368,21 +1369,21 @@ namespace ons
         public static extern void delete_OrderProducer(global::System.Runtime.InteropServices.HandleRef jarg1);
 
         /// <summary>
-        /// Orders the producer start.
+        /// 在发送顺序消息前，必须调用 start 方法来启动 Producer，只需调用一次即可
         /// </summary>
         /// <param name="jarg1">The jarg1.</param>
         [global::System.Runtime.InteropServices.DllImport("ONSClient4CPP", EntryPoint = "CSharp_ons_OrderProducer_start")]
         public static extern void OrderProducer_start(global::System.Runtime.InteropServices.HandleRef jarg1);
 
         /// <summary>
-        /// Orders the producer shutdown.
+        /// 在应用退出前，销毁 Producer 对象
         /// </summary>
         /// <param name="jarg1">The jarg1.</param>
         [global::System.Runtime.InteropServices.DllImport("ONSClient4CPP", EntryPoint = "CSharp_ons_OrderProducer_shutdown")]
         public static extern void OrderProducer_shutdown(global::System.Runtime.InteropServices.HandleRef jarg1);
 
         /// <summary>
-        /// Orders the producer send.
+        /// 发送顺序消息（顺序消息（FIFO 消息）是消息队列 RocketMQ 版提供的一种严格按照顺序来发布和消费的消息类型。）
         /// </summary>
         /// <param name="jarg1">The jarg1.</param>
         /// <param name="jarg2">The jarg2.</param>
