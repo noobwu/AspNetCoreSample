@@ -113,58 +113,58 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// The producer
         /// </summary>
-        private static Producer _producer;
+        private Producer _producer;
         /// <summary>
         /// The consumer
         /// </summary>
-        private static PushConsumer _consumer;
+        private PushConsumer _consumer;
         /// <summary>
         /// The orderconsumer
         /// </summary>
-        private static OrderConsumer _orderconsumer;
+        private OrderConsumer _orderconsumer;
         /// <summary>
         /// The orderproducer
         /// </summary>
-        private static OrderProducer _orderproducer;
+        private OrderProducer _orderproducer;
         /// <summary>
         /// The listen
         /// </summary>
-        private static MyMsgListener _listen;
+        private MyMsgListener _listen;
         /// <summary>
         /// The order listen
         /// </summary>
-        private static MyMsgOrderListener _order_listen;
+        private MyMsgOrderListener _order_listen;
         /// <summary>
         /// The s synchronize lock
         /// </summary>
-        private static object s_SyncLock = new Object();
+        private object s_SyncLock = new Object();
         /// <summary>
         /// 您在控制台创建的 Topic
         /// </summary>
-        private static string Ons_Topic = "TopicTest";
+        private string Ons_Topic = "TopicTest";
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeyId，用于身份认证
         /// </summary>
-        private static string Ons_AccessKey = "LTAI4FmKyLtChjPm6kvr8brC";
+        private string Ons_AccessKey = "LTAI4FmKyLtChjPm6kvr8brC";
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeySecret，用于身份认证
         /// </summary>
-        private static string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
+        private string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
         /// <summary>
         /// 您在控制台创建的 Group ID
         /// </summary>
-        private static string Ons_GroupId = "GID_Test";
+        private string Ons_GroupId = "GID_Test";
         /// <summary>
         /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
-        private static string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
+        private string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
 
         /// <summary>
         /// Sends the message.
         /// </summary>
         /// <param name="msgBody">The MSG body.</param>
         /// <param name="tag">The tag.</param>
-        public static void SendMessage(string msgBody, String tag = "RegisterLog")
+        public void SendMessage(string msgBody, String tag = "RegisterLog")
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString("N"));
@@ -185,7 +185,7 @@ namespace Aliyun.RocketMQSample
         /// <param name="msgBody">The MSG body.</param>
         /// <param name="tag">The tag.</param>
         /// <param name="shardingKey">顺序消息中用来计算不同分区的值(全局顺序消息，该字段可以设置为任意非空字符串。)</param>
-        public static void SendOrderMessage(string msgBody, String tag = "RegisterLog", String shardingKey = "test")
+        public void SendOrderMessage(string msgBody, String tag = "RegisterLog", String shardingKey = "test")
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString());
@@ -203,7 +203,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Starts the push consumer.
         /// </summary>
-        public static void StartPushConsumer()
+        public void StartPushConsumer()
         {
             _listen = new MyMsgListener();
             _consumer.subscribe(Ons_Topic, "*", _listen);
@@ -213,7 +213,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Starts the order consumer.
         /// </summary>
-        public static void StartOrderConsumer()
+        public void StartOrderConsumer()
         {
             _order_listen = new MyMsgOrderListener();
             _orderconsumer.subscribe(Ons_Topic, "*", _order_listen);
@@ -223,7 +223,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Shutdowns the push consumer.
         /// </summary>
-        public static void shutdownPushConsumer()
+        public void shutdownPushConsumer()
         {
             _consumer.shutdown();
         }
@@ -231,7 +231,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Shutdowns the order consumer.
         /// </summary>
-        public static void shutdownOrderConsumer()
+        public void shutdownOrderConsumer()
         {
             _orderconsumer.shutdown();
         }
@@ -239,7 +239,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 启动客户端实例
         /// </summary>
-        public static void StartProducer()
+        public void StartProducer()
         {
             _producer.start();
         }
@@ -247,7 +247,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 在您的线程即将退出时，关闭生产者实例
         /// </summary>
-        public static void ShutdownProducer()
+        public void ShutdownProducer()
         {
             _producer.shutdown();
         }
@@ -256,7 +256,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 启动顺序消息客户端实例
         /// </summary>
-        public static void StartOrderProducer()
+        public void StartOrderProducer()
         {
             _orderproducer.start();
         }
@@ -264,7 +264,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 在您的线程即将退出时，关闭顺序生产者实例
         /// </summary>
-        public static void ShutdownOrderProducer()
+        public void ShutdownOrderProducer()
         {
             _orderproducer.shutdown();
         }
@@ -273,7 +273,7 @@ namespace Aliyun.RocketMQSample
         /// 设置RocketMQ连接信息
         /// </summary>
         /// <returns>ONSFactoryProperty.</returns>
-        private static ONSFactoryProperty getFactoryProperty()
+        private ONSFactoryProperty getFactoryProperty()
         {
             ONSFactoryProperty factoryInfo = new ONSFactoryProperty();
             factoryInfo.setFactoryProperty(ONSFactoryProperty.AccessKey, Ons_AccessKey);
@@ -289,7 +289,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Creates the push consumer.
         /// </summary>
-        public static void CreatePushConsumer()
+        public void CreatePushConsumer()
         {
 
             _consumer = ONSFactory.getInstance().createPushConsumer(getFactoryProperty());
@@ -299,7 +299,7 @@ namespace Aliyun.RocketMQSample
         /// 创建生产者实例
         /// 说明：生产者实例是线程安全的，可用于发送不同 Topic 的消息。基本上，您每一个线程只需要一个生产者实例
         /// </summary>
-        public static void CreateProducer()
+        public void CreateProducer()
         {
 
             _producer = ONSFactory.getInstance().createProducer(getFactoryProperty());
@@ -309,7 +309,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 创建顺序消息消费都实例
         /// </summary>
-        public static void CreateOrderConsumer()
+        public void CreateOrderConsumer()
         {
 
             _orderconsumer = ONSFactory.getInstance().createOrderConsumer(getFactoryProperty());
@@ -319,9 +319,8 @@ namespace Aliyun.RocketMQSample
         /// 创建顺序消息生产者实例
         /// 说明：生产者实例是线程安全的，可用于发送不同 Topic 的消息。基本上，您每一个线程只需要一个生产者实例
         /// </summary>
-        public static void CreateOrderProducer()
+        public void CreateOrderProducer()
         {
-
             _orderproducer = ONSFactory.getInstance().createOrderProducer(getFactoryProperty());
         }
     }
