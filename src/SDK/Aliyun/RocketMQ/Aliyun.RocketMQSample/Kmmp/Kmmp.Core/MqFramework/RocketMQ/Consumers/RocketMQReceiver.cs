@@ -81,6 +81,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         {
             this.Shutdown();
         }
+        private static int count = 0;
         /// <summary>
         /// Class ReceiverMessageListener.
         /// Implements the <see cref="ons.MessageListener" />
@@ -108,7 +109,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                     var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
                     Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
                 }
-                //Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, MessageId为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getMsgID());
+                Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{typeFullName}");
                 return ons.Action.CommitMessage;
             }
             /// <summary>
