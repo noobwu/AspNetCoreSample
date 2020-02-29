@@ -19,7 +19,7 @@ namespace ons
 {
 
     /// <summary>
-    /// Class Message.
+    /// 消息队列中信息传递的载体。
     /// Implements the <see cref="System.IDisposable" />
     /// </summary>
     /// <seealso cref="System.IDisposable" />
@@ -217,7 +217,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets the topic.
+        /// 获取消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。
         /// </summary>
         /// <returns>System.String.</returns>
         public string getTopic()
@@ -227,7 +227,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Sets the topic.
+        /// 设置消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。
         /// </summary>
         /// <param name="topic">The topic.</param>
         public void setTopic(string topic)
@@ -236,7 +236,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets the tag.
+        /// 获取消息标签，二级消息类型，用来进一步区分某个 Topic 下的消息分类。详情请参见 Topic 与 Tag 最佳实践。
         /// </summary>
         /// <returns>System.String.</returns>
         public string getTag()
@@ -246,7 +246,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Sets the tag.
+        /// 设置消息标签，二级消息类型，用来进一步区分某个 Topic 下的消息分类。详情请参见 Topic 与 Tag 最佳实践。
         /// </summary>
         /// <param name="tags">The tags.</param>
         public void setTag(string tags)
@@ -255,7 +255,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets the key.
+        /// 获取消息的业务标识，由消息生产者（Producer）设置，唯一标识某个业务逻辑。
         /// </summary>
         /// <returns>System.String.</returns>
         public string getKey()
@@ -265,7 +265,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Sets the key.
+        /// 设置消息的业务标识，由消息生产者（Producer）设置，唯一标识某个业务逻辑。
         /// </summary>
         /// <param name="keys">The keys.</param>
         public void setKey(string keys)
@@ -274,7 +274,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets the MSG identifier.
+        /// 获取消息的全局唯一标识
         /// </summary>
         /// <returns>System.String.</returns>
         public string getMsgID()
@@ -284,7 +284,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Sets the MSG identifier.
+        /// 设置消息的全局唯一标识
         /// </summary>
         /// <param name="msgId">The MSG identifier.</param>
         public void setMsgID(string msgId)

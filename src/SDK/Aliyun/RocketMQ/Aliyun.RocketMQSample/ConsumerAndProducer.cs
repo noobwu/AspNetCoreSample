@@ -180,18 +180,18 @@ namespace Aliyun.RocketMQSample
         }
 
         /// <summary>
-        /// Sends the order message.
+        /// 发送顺序消息
         /// </summary>
         /// <param name="msgBody">The MSG body.</param>
         /// <param name="tag">The tag.</param>
-        /// <param name="key">The key.</param>
-        public static void SendOrderMessage(string msgBody, String tag = "RegisterLog", String key = "test")
+        /// <param name="shardingKey">顺序消息中用来计算不同分区的值(全局顺序消息，该字段可以设置为任意非空字符串。)</param>
+        public static void SendOrderMessage(string msgBody, String tag = "RegisterLog", String shardingKey = "test")
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString());
             try
             {
-                SendResultONS sendResult = _orderproducer.send(msg, key);
+                SendResultONS sendResult = _orderproducer.send(msg, shardingKey);
                 Console.WriteLine("send success {0}", sendResult.getMessageId());
             }
             catch (Exception ex)

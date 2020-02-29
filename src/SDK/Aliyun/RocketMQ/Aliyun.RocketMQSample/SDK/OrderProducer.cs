@@ -108,10 +108,10 @@ namespace ons
         }
 
         /// <summary>
-        /// Sends the specified MSG.
+        /// 发送顺序消息
         /// </summary>
-        /// <param name="msg">The MSG.</param>
-        /// <param name="shardingKey">The sharding key.</param>
+        /// <param name="msg">消息队列中信息传递的载体</param>
+        /// <param name="shardingKey">顺序消息中用来计算不同分区的值(全局顺序消息，该字段可以设置为任意非空字符串。)</param>
         /// <returns>SendResultONS.</returns>
         public virtual SendResultONS send(Message msg, string shardingKey)
         {

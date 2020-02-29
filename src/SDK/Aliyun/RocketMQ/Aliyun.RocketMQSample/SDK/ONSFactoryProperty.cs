@@ -388,7 +388,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the producer identifier.
+        /// 您在消息队列 RocketMQ 版控制台上创建的 Group ID，详情参见名词解释
         /// </summary>
         /// <value>The producer identifier.</value>
         public static string ProducerId
@@ -405,7 +405,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the consumer identifier.
+        /// 您在消息队列 RocketMQ 版控制台上创建的 Group ID，详情参见名词解释
         /// </summary>
         /// <value>The consumer identifier.</value>
         public static string ConsumerId
@@ -473,7 +473,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the access key.
+        /// 您在阿里云账号管理控制台中创建的 AccessKeyId，用于身份认证
         /// </summary>
         /// <value>The access key.</value>
         public static string AccessKey
@@ -490,7 +490,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the secret key.
+        /// 您在阿里云账号管理控制台中创建的 AccessKeySecret，用于身份认证
         /// </summary>
         /// <value>The secret key.</value>
         public static string SecretKey
@@ -507,7 +507,9 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the message model.
+        ///设置 Consumer 实例的消费模式，取值说明如下：
+        ///CLUSTERING（默认值）：表示集群消费
+        ///BROADCASTING：表示广播消费
         /// </summary>
         /// <value>The message model.</value>
         public static string MessageModel
@@ -558,7 +560,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the send MSG timeout millis.
+        /// 设置消息发送的超时时间，单位：毫秒，默认值：3000
         /// </summary>
         /// <value>The send MSG timeout millis.</value>
         public static string SendMsgTimeoutMillis
@@ -575,7 +577,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the namesrv addr.
+        /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
         /// <value>The namesrv addr.</value>
         public static string NAMESRV_ADDR
@@ -592,7 +594,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the consume thread nums.
+        /// 设置 Consumer 实例的消费线程数，默认值：20
         /// </summary>
         /// <value>The consume thread nums.</value>
         public static string ConsumeThreadNums
@@ -609,7 +611,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the ons channel.
+        /// 用户渠道，默认值为：ALIYUN，聚石塔用户为：CLOUD
         /// </summary>
         /// <value>The ons channel.</value>
         public static string OnsChannel
