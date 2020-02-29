@@ -37,6 +37,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// 生产者
         /// </summary>
         private Producer producer;
+        private bool running = false;
 
         /// <summary>
         /// 构造函数
@@ -54,9 +55,14 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 启动
         /// </summary>
+        /// <exception cref="NullReferenceException">producer为空</exception>
         public override void Start()
         {
-            producer = ONSFactory.getInstance().createProducer(this.FactoryProperty);
+            producer = ONSFactory.getInstance()?.createProducer(this.FactoryProperty);
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.start();
         }
 
@@ -65,6 +71,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// </summary>
         public override void Shutdown()
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.shutdown();
         }
 
@@ -76,6 +86,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="key">消息key, 要做到局唯一</param>
         public void SendOnewayMessage(object body, string tag = "", string key = "")
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(body, tag, key);
             producer.sendOneway(message);
         }
@@ -89,6 +103,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="key">消息Key</param>
         public void SendOnewayAndTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(body, tag, key);
             message.setStartDeliverTime(deliveryTime.ToTimestamp());
             producer.sendOneway(message);
@@ -104,6 +122,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <returns>System.String.</returns>
         public Message SendTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(body, tag, key);
             message.setStartDeliverTime(deliveryTime.ToTimestamp());
             var result = producer.send(message);
@@ -120,8 +142,11 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <returns>System.String.</returns>
         public Message SendMessage(object body, string tag = "", string key = "")
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(body, tag, key);
-
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
             return message;

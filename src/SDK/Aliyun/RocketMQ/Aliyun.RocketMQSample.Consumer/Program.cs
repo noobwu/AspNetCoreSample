@@ -1,4 +1,6 @@
 ﻿using Kmmp.Core.Helper;
+using Kmmp.DSync.Data;
+using Kmmp.MqReceiver.DSync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +73,9 @@ namespace Aliyun.RocketMQSample.Consumer
             receiver.Received += (sender, args) =>
             {
                 //Execute(q.Value<string>("Method"), args.Message);
-                Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
+                //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
+                var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                new SyncVipTypeMqReceiver().Execute(mqData);
             };
             receiver.Start();
         }

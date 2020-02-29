@@ -51,6 +51,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
         {
             this.queueName = queueName;
+            this.Start();
         }
         /// <summary>
         /// 执行与释放或重置非托管资源关联的应用程序定义的任务。
@@ -70,25 +71,32 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="delay">消息延迟投递时间(秒)</param>
         public void Put(object body, DateTime? timeOut = null, int? delay = null)
         {
-            string messageId = null;
-            IIdentityMessage identityMessage = body as IIdentityMessage;
-            if (identityMessage != null)
+            try
             {
-                messageId = identityMessage.MessageId;
+                string messageId = null;
+                IIdentityMessage identityMessage = body as IIdentityMessage;
+                if (identityMessage != null)
+                {
+                    messageId = identityMessage.MessageId;
+                }
+                else
+                {
+                    messageId = Guid.NewGuid().ToString("N");
+                }
+                if (delay.HasValue && delay > 0)
+                {
+                    var result = this.SendTimingMessage(body, DateTime.Now.AddSeconds(delay.Value), queueName, messageId);
+                }
+                else
+                {
+                    var result = this.SendMessage(body, queueName, messageId);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                messageId = Guid.NewGuid().ToString("N");
+                Console.WriteLine(ex);
             }
-            this.Start();
-            if (delay.HasValue && delay > 0)
-            {
-                var result = this.SendTimingMessage(body, DateTime.Now.AddSeconds(delay.Value), queueName, messageId);
-            }
-            else
-            {
-                var result = this.SendMessage(body, queueName, messageId);
-            }
+
         }
 
         /// <summary>

@@ -3,8 +3,10 @@ using Kmmp.Core.Imps;
 using Kmmp.DSync.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aliyun.RocketMQSample.Producer
@@ -21,27 +23,28 @@ namespace Aliyun.RocketMQSample.Producer
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
-            //OnscSharp.CreateProducer();
-            //OnscSharp.CreatePushConsumer();
-            //OnscSharp.StartPushConsumer();
-            //OnscSharp.StartProducer();
-            //System.DateTime beforDt = System.DateTime.Now;
-            //for (int i = 0; i < 10; ++i)
-            //{
-            //    //byte[] bytes = Encoding.UTF8.GetBytes("中文messages");//中文encode
-            //    //String body = Convert.ToBase64String(bytes);
-            //    OnscSharp.SendMessage("This is test message");
-            //    Thread.Sleep(1000 * 1);
-            //}
-            //System.DateTime endDt = System.DateTime.Now;
-            //System.TimeSpan ts = endDt.Subtract(beforDt);
-            //Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
-            //Thread.Sleep(1000 * 100);
-            //Console.ReadKey();
-            //OnscSharp.ShutdownProducer();
-            //OnscSharp.shutdownPushConsumer();
-            //Console.WriteLine("end");
-
+            /*
+            OnscSharp.CreateProducer();
+            OnscSharp.CreatePushConsumer();
+            OnscSharp.StartPushConsumer();
+            OnscSharp.StartProducer();
+            System.DateTime beforDt = System.DateTime.Now;
+            for (int i = 0; i < 10; ++i)
+            {
+                //byte[] bytes = Encoding.UTF8.GetBytes("中文messages");//中文encode
+                //String body = Convert.ToBase64String(bytes);
+                OnscSharp.SendMessage("This is test message");
+                Thread.Sleep(1000 * 1);
+            }
+            System.DateTime endDt = System.DateTime.Now;
+            System.TimeSpan ts = endDt.Subtract(beforDt);
+            Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
+            Thread.Sleep(1000 * 100);
+            Console.ReadKey();
+            OnscSharp.ShutdownProducer();
+            OnscSharp.shutdownPushConsumer();
+            Console.WriteLine("end");
+            */
             try
             {
                 KmmpMQTest();
@@ -53,20 +56,47 @@ namespace Aliyun.RocketMQSample.Producer
 
             Console.ReadKey();
         }
+        /// <summary>
+        /// 每线程发送消息数量
+        /// </summary>
+        private static readonly int MessageCountPerThread = 2;
+        /// <summary>
+        /// 线程总数iwg
+        /// </summary>
+        private static readonly int ProducerThreadCount = 2;
         static void KmmpMQTest()
         {
-            System.DateTime startTime = System.DateTime.Now;
             string queueName = "CateringVipType";
-            KmmpMQPublisherTest(queueName);
-            System.DateTime endTime = System.DateTime.Now;
-            System.TimeSpan ts = endTime.Subtract(startTime);
-            Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            IMessagePublisher m_publisher = GetPublisher(queueName);
+            var taskList = new List<Task>();
+            for (int threadIndex = 1; threadIndex <= ProducerThreadCount; threadIndex++)
+            {
+                // 生产消费
+                var task = Task.Factory.StartNew(() =>
+                {
+                    for (int messageIndex = 1; messageIndex <= MessageCountPerThread; messageIndex++)
+                    {
+                        KmmpMQPublisherTest(m_publisher);
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                taskList.Add(task);
+            }
+
+            Task.WaitAll(taskList.ToArray());
+            m_publisher.Dispose();
+            stopWatch.Stop();
+
+            Console.WriteLine("发送消息：{0}条， 使用时间{1}毫秒", MessageCountPerThread * ProducerThreadCount, stopWatch.ElapsedMilliseconds);
+            Console.ReadLine();
         }
 
         /// <summary>
         /// KMMPs the mq publisher test.
         /// </summary>
-        static void KmmpMQPublisherTest(string queueName)
+        static void KmmpMQPublisherTest(IMessagePublisher m_publisher)
         {
 
             var strJson = @"[
@@ -129,20 +159,15 @@ namespace Aliyun.RocketMQSample.Producer
             int custId = 994323;
             string branchNo = "000";
             string productionType = "18";
-
-            //SysLogHelper.Debug("入列VIPType数据", JsonHelper.JsonConvertSerialize(list));
-            using (IMessagePublisher m_publisher = GetPublisher(queueName))
+            MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
             {
-                MQ_VipData<Temp_VipType> mqData = new MQ_VipData<Temp_VipType>
-                {
-                    Name = messageId,
-                    custid = custId,
-                    branchNo = branchNo,
-                    ProductionType = productionType,
-                    data = data
-                };
-                m_publisher.Put(mqData);//永远不过期
-            }
+                Name = messageId,
+                custid = custId,
+                branchNo = branchNo,
+                ProductionType = productionType,
+                data = data
+            };
+            m_publisher.Put(mqData);//永远不过期
 
         }
 
