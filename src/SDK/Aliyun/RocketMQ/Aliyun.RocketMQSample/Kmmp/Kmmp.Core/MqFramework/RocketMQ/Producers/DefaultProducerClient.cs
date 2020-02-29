@@ -71,25 +71,25 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 使用oneway方式发送
         /// </summary>
-        /// <param name="content">发送内容</param>
+        /// <param name="body">The body.</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
-        public void SendOnewayMessage(string content, string tag = "", string key = "")
+        public void SendOnewayMessage(object body, string tag = "", string key = "")
         {
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
             producer.sendOneway(message);
         }
 
         /// <summary>
         /// 发送单向定时消息
         /// </summary>
-        /// <param name="content">内容</param>
+        /// <param name="body">The body.</param>
         /// <param name="deliveryTime">投送时间</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息Key</param>
-        public void SendOnewayAndTimingMessage(string content, DateTime deliveryTime, string tag = "", string key = "")
+        public void SendOnewayAndTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
         {
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
             message.setStartDeliverTime(deliveryTime.ToTimestamp());
             producer.sendOneway(message);
         }
@@ -97,14 +97,14 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 发送定时消息
         /// </summary>
-        /// <param name="content">内容</param>
+        /// <param name="body">The body.</param>
         /// <param name="deliveryTime">投送时间</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息Key</param>
         /// <returns>System.String.</returns>
-        public Message SendTimingMessage(string content, DateTime deliveryTime, string tag = "", string key = "")
+        public Message SendTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
         {
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
             message.setStartDeliverTime(deliveryTime.ToTimestamp());
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
@@ -114,13 +114,14 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 发送普通消息
         /// </summary>
-        /// <param name="content">内容</param>
+        /// <param name="body">The body.</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
         /// <returns>System.String.</returns>
-        public Message SendMessage(string content, string tag = "", string key = "")
+        public Message SendMessage(object body, string tag = "", string key = "")
         {
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
+
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
             return message;

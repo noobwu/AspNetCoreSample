@@ -11,6 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using Kmmp.Core.Helper;
 using ons;
 using System;
 using System.Collections.Generic;
@@ -47,19 +48,21 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 组合消息
         /// </summary>
-        /// <param name="content">内容</param>
+        /// <param name="body">内容</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息Key</param>
         /// <returns>Message.</returns>
-        protected Message ComposeMessage(string content, string tag = "", string key = "")
+        protected Message ComposeMessage(object body, string tag = "", string key = "")
         {
+            string strBody = JsonHelper.JsonConvertSerialize(body);
             var message = new Message(Topic, tag, string.Empty);
 
-            var bodyData = Encoding.UTF8.GetBytes(content);
-            message.setBody(bodyData, bodyData.Length);
+            var bodyBytes = Encoding.UTF8.GetBytes(strBody);
+            message.setBody(bodyBytes, bodyBytes.Length);
+
+            message.putSystemProperties("BodyTypeFullName", body.GetType().AssemblyQualifiedName);
 
             message.setKey(key);
-
             return message;
         }
     }

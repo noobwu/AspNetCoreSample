@@ -145,11 +145,11 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeyId，用于身份认证
         /// </summary>
-        private static string Ons_AccessKey = "LTAI4Fp1PGyST687RSEq7fkN";
+        private static string Ons_AccessKey = "LTAI4FmKyLtChjPm6kvr8brC";
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeySecret，用于身份认证
         /// </summary>
-        private static string Ons_SecretKey = "GMX1ofSPe1mocuzUO1N86b756aBpmy";
+        private static string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
         /// <summary>
         /// 您在控制台创建的 Group ID
         /// </summary>
@@ -157,7 +157,7 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
-        private static string Ons_NameSrv = "http://MQ_INST_1747983802895635_BcIcHhW0.mq-internet-access.mq-internet.aliyuncs.com:80";
+        private static string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
 
         /// <summary>
         /// Sends the message.

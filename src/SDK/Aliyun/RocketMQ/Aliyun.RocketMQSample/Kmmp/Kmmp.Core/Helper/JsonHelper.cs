@@ -83,5 +83,32 @@ namespace Kmmp.Core.Helper
                 return default(T);
             }
         }
+
+
+        /// <summary>
+        /// 作者:吴廷有
+        /// 时间:2015-10-10
+        /// 功能:JSON序列化JsonConvert方式
+        /// </summary>      
+        /// <param name="objValue">待序列化的对象</param>
+        /// <param name="settings"></param>
+        /// <param name="formatting"></param>
+        /// <returns>序列化的Json</returns>
+        public static string JsonConvertSerialize(object objValue, JsonSerializerSettings settings = null, Formatting formatting = 0)
+        {
+            if (null == objValue)
+            {
+                return null;
+            }
+            try
+            {
+                return JsonConvert.SerializeObject(objValue, formatting, settings == null ? m_defaultSettings : settings);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
     }
 }

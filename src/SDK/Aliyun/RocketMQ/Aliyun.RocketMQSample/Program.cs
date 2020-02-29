@@ -57,12 +57,16 @@ namespace Aliyun.RocketMQSample
             OnscSharp.ShutdownProducer();
             OnscSharp.shutdownPushConsumer();
             Console.WriteLine("end");
+
+            //KmmpMQPublisherTest();
+            //Console.ReadKey();
         }
         /// <summary>
         /// KMMPs the mq publisher test.
         /// </summary>
         static void KmmpMQPublisherTest()
         {
+            System.DateTime startTime = System.DateTime.Now;
             var strJson = @"[
   {
     ""CustId"": 994323,
@@ -135,9 +139,11 @@ namespace Aliyun.RocketMQSample
                     ProductionType = productionType,
                     data = data
                 };
-                m_publisher.Put(data);//永远不过期
+                m_publisher.Put(mqData);//永远不过期
             }
-
+            System.DateTime endTime = System.DateTime.Now;
+            System.TimeSpan ts = endTime.Subtract(startTime);
+            Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
         }
         /// <summary>
         /// 获取消息队列对象
@@ -156,6 +162,32 @@ namespace Aliyun.RocketMQSample
             }
             return _publisher;
         }
+        /// <summary>
+        /// KMMPs the mq publisher test.
+        /// </summary>
+        static void KmmpMQReceiverTest(string queueName)
+        {
+            var queue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
+            var receiver = queue.GetMessageReceiver(queueName, null);
+            receiver.Received += (sender, args) =>
+            {
+                //Execute(q.Value<string>("Method"), args.Message);
+            };
+            receiver.Start();
+        }
 
+        /// <summary>
+        /// Author：tiny.wu
+        /// Date：2016-09-28
+        /// Desc：执行
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="msg"></param>
+        private void Execute(string typeName, object msg)
+        {
+            Type type = Type.GetType(typeName);
+            var method = type.GetMethod("Execute");
+            method.Invoke(Activator.CreateInstance(type), new[] { msg });
+        }
     }
 }

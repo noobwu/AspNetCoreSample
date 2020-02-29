@@ -97,9 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerAndProducer.cs" />
-    <Compile Include="Kmmp.DSync.Data\MQ_VipData.cs" />
-    <Compile Include="Kmmp.DSync.Data\Temp_VipType.cs" />
-    <Compile Include="Kmmp.DSync.Data\VipType.cs" />
+    <Compile Include="Kmmp\Kmmp.DSync.Data\MQ_VipData.cs" />
+    <Compile Include="Kmmp\Kmmp.DSync.Data\Temp_VipType.cs" />
+    <Compile Include="Kmmp\Kmmp.DSync.Data\VipType.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ComponentLoader.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\DateTimeExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\DisposeExtension.cs" />
@@ -114,14 +114,18 @@
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\ConsumerClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\OrderConsumerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\PushConsumerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\RocketMQReceiver.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\DefaultProducerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ExtendedLocalTransactionChecker.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ExtendedLocalTransactionExecuter.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\OrderProducerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ProducerClientBase.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\RocketMQPublisher.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\TransactionProducerClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\RocketMQClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ObjectFactoryHelper.cs" />
+    <Compile Include="Kmmp\Kmmp.MqReceiver\BaseMqReceiver.cs" />
+    <Compile Include="Kmmp\Kmmp.MqReceiver\SyncVipTypeMqReceiver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDK\Action.cs" />

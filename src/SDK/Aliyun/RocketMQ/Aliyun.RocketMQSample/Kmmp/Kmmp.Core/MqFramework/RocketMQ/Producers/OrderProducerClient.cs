@@ -69,13 +69,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// 发送分区顺序消息
         /// </summary>
         /// <param name="shardingKey">分区Key</param>
-        /// <param name="content">内容</param>
+        /// <param name="body">内容</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
         /// <returns>Message.</returns>
-        public Message SendMessage(string shardingKey, string content, string tag = "", string key = "")
+        public Message SendMessage(string shardingKey, object body, string tag = "", string key = "")
         {
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
 
             var sendResult = producer.send(message, shardingKey);
             message.setMsgID(sendResult.getMessageId());
