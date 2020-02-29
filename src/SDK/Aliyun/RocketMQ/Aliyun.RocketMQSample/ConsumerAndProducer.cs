@@ -203,20 +203,22 @@ namespace Aliyun.RocketMQSample
         /// <summary>
         /// Starts the push consumer.
         /// </summary>
-        public void StartPushConsumer()
+        /// <param name="subExpression">The sub expression.</param>
+        public void StartPushConsumer(string subExpression = "*")
         {
             _listen = new MyMsgListener();
-            _consumer.subscribe(Ons_Topic, "*", _listen);
+            _consumer.subscribe(Ons_Topic, subExpression, _listen);
             _consumer.start();
         }
 
         /// <summary>
         /// Starts the order consumer.
         /// </summary>
-        public void StartOrderConsumer()
+        /// <param name="subExpression">The sub expression.</param>
+        public void StartOrderConsumer(string subExpression = "*")
         {
             _order_listen = new MyMsgOrderListener();
-            _orderconsumer.subscribe(Ons_Topic, "*", _order_listen);
+            _orderconsumer.subscribe(Ons_Topic, subExpression, _order_listen);
             _orderconsumer.start();
         }
 

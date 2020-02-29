@@ -31,77 +31,51 @@ namespace Aliyun.RocketMQSample.Consumer
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
+            try
+            {
+                //KmmpMQConsumerTest();
+                ConsumerTest();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            Console.ReadKey();
+        }
+        static void ConsumerTest()
+        {
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            OnscSharp instance = new OnscSharp();
-            instance.CreateProducer();
-            instance.CreatePushConsumer();
-            instance.StartPushConsumer();
-            instance.StartProducer();
+
 
             var taskList = new List<Task>();
             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
             {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
-                {
-                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                    {
-                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}");
-                    }
-                }, TaskCreationOptions.LongRunning);
-
-                taskList.Add(task);
+                OnscSharp instance = new OnscSharp();
+                instance.CreatePushConsumer();
+                instance.StartPushConsumer("TestMessage");
             }
-            OnscSharp tempInstance = new OnscSharp();
-            tempInstance.CreateProducer();
-            tempInstance.CreatePushConsumer();
-            tempInstance.StartPushConsumer();
-            tempInstance.StartProducer();
+
 
             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
             {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
-                {
-                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                    {
-                        tempInstance.SendMessage($"This is test temp message {tempThreadIndex}:{tempMessageIndex}");
-                    }
-                }, TaskCreationOptions.LongRunning);
-
-                taskList.Add(task);
+                OnscSharp tempInstance = new OnscSharp();
+                tempInstance.CreatePushConsumer();
+                tempInstance.StartPushConsumer("TempTestMessage");
             }
 
-            Task.WaitAll(taskList.ToArray());
-
-            instance.ShutdownProducer();
-            //instance.shutdownPushConsumer();
-
-            tempInstance.ShutdownProducer();
-            //tempInstance.shutdownPushConsumer();
 
             stopWatch.Stop();
 
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
-
-            //try
-            //{
-            //    KmmpMQTest();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex);
-            //}
-
-            Console.ReadKey();
         }
         /// <summary>
         /// 消费都数量
         /// </summary>
         private const int ConsumerCount = 2;
-        static void KmmpMQTest()
+        static void KmmpMQConsumerTest()
         {
             string queueName = "CateringVipType";
             Console.WriteLine($"接收消息,{queueName}:{DateTime.Now}");

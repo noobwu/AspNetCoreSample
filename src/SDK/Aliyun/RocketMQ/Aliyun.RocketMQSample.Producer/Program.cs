@@ -23,30 +23,11 @@ namespace Aliyun.RocketMQSample.Producer
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
-            //OnscSharp.CreateProducer();
-            //OnscSharp.CreatePushConsumer();
-            //OnscSharp.StartPushConsumer();
-            //OnscSharp.StartProducer();
-            //System.DateTime beforDt = System.DateTime.Now;
-            //for (int i = 0; i < 10; ++i)
-            //{
-            //    //byte[] bytes = Encoding.UTF8.GetBytes("中文messages");//中文encode
-            //    //String body = Convert.ToBase64String(bytes);
-            //    OnscSharp.SendMessage("This is test message");
-            //    Thread.Sleep(1000 * 1);
-            //}
-            //System.DateTime endDt = System.DateTime.Now;
-            //System.TimeSpan ts = endDt.Subtract(beforDt);
-            //Console.WriteLine("per message:{0}ms.", ts.TotalMilliseconds / 10000);
-            //Thread.Sleep(1000 * 100);
-            //Console.ReadKey();
-            //OnscSharp.ShutdownProducer();
-            //OnscSharp.shutdownPushConsumer();
-            //Console.WriteLine("end");
 
             try
             {
-                KmmpMQTest();
+                //KmmpMQProducerTest();
+                ProducerTest();
             }
             catch (Exception ex)
             {
@@ -63,7 +44,60 @@ namespace Aliyun.RocketMQSample.Producer
         /// 线程总数
         /// </summary>
         private static readonly int ProducerThreadCount = 2;
-        static void KmmpMQTest()
+        /// <summary>
+        /// Producers the test.
+        /// </summary>
+        static void ProducerTest()
+        {
+            Console.WriteLine($"instance,开始:{DateTime.Now}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            OnscSharp instance = new OnscSharp();
+            instance.CreateProducer();
+            instance.StartProducer();
+
+            var taskList = new List<Task>();
+            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            {
+                // 生产消费
+                var task = Task.Factory.StartNew(() =>
+                {
+                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                    {
+                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                taskList.Add(task);
+            }
+            OnscSharp tempInstance = new OnscSharp();
+            tempInstance.CreateProducer();
+            tempInstance.StartProducer();
+
+            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            {
+                // 生产消费
+                var task = Task.Factory.StartNew(() =>
+                {
+                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                    {
+                        tempInstance.SendMessage($"This is test temp message {tempThreadIndex}:{tempMessageIndex}", "TempTestMessage");
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                taskList.Add(task);
+            }
+
+            Task.WaitAll(taskList.ToArray());
+
+            instance.ShutdownProducer();
+            tempInstance.ShutdownProducer();
+
+            stopWatch.Stop();
+
+            Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+        }
+        static void KmmpMQProducerTest()
         {
 
             System.DateTime startTime = System.DateTime.Now;
