@@ -67,7 +67,7 @@ namespace Aliyun.RocketMQSample.Consumer
             //    // 接收消息
             //    KmmpMQReceiverTest(queueName);
             //}
-            KmmpMQReceiverTest(queueName);
+            //KmmpMQReceiverTest(queueName);
             string tempQueueName = "CateringVipTypeTemp";
             Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
             //for (int index = 1; index <= ConsumerCount; index++)
@@ -75,7 +75,7 @@ namespace Aliyun.RocketMQSample.Consumer
             //    接收消息
             //    KmmpMQReceiverTest(tempQueueName);
             //}
-            //KmmpMQReceiverTest(tempQueueName);
+            KmmpMQReceiverTest(tempQueueName);
             Console.ReadKey();
         }
 
@@ -85,20 +85,27 @@ namespace Aliyun.RocketMQSample.Consumer
         /// <param name="queueName">Name of the queue.</param>
         static void KmmpMQReceiverTest(string queueName)
         {
-            var receiver = GetReceiver(queueName);
-            receiver.Received += (sender, args) =>
+            try
             {
-                //Execute(q.Value<string>("Method"), args.Message);
-                //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
-                var mqData = args.Message as MQ_VipData<Temp_VipType>;
-                if (mqData == null)
+                var receiver = GetReceiver(queueName);
+                receiver.Received += (sender, args) =>
                 {
-                    mqData = JsonHelper.JsonConvertDeserialize<MQ_VipData<Temp_VipType>>(args.Message.ToString());
-                }
-                new SyncVipTypeMqReceiver().Execute(mqData);
-                Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData.MessageId}");
-            };
-            receiver.Start();
+                    //Execute(q.Value<string>("Method"), args.Message);
+                    //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
+                    var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                    if (mqData == null)
+                    {
+                        mqData = JsonHelper.JsonConvertDeserialize<MQ_VipData<Temp_VipType>>(args.Message.ToString());
+                    }
+                    new SyncVipTypeMqReceiver().Execute(mqData);
+                    Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData.MessageId}");
+                };
+                receiver.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         /// <summary>
