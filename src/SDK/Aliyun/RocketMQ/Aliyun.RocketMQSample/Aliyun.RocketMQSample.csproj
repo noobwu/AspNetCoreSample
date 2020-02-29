@@ -129,7 +129,6 @@
     <Compile Include="Kmmp\Kmmp.Core\ObjectFactoryHelper.cs" />
     <Compile Include="Kmmp\Kmmp.MqReceiver\BaseMqReceiver.cs" />
     <Compile Include="Kmmp\Kmmp.MqReceiver\SyncVipTypeMqReceiver.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDK\Action.cs" />
     <Compile Include="SDK\ConsumeContext.cs" />

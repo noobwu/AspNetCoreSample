@@ -75,7 +75,7 @@ namespace Aliyun.RocketMQSample.Consumer
                 // 接收消息
                 KmmpMQReceiverTest(tempQueueName);
             }
-
+            Console.ReadKey();
         }
 
         /// <summary>

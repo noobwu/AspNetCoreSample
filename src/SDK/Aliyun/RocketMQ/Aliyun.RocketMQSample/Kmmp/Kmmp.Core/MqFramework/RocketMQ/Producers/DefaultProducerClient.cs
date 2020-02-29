@@ -37,8 +37,6 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// 生产者
         /// </summary>
         private Producer producer;
-        private bool running = false;
-
         /// <summary>
         /// 构造函数
         /// </summary>
