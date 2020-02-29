@@ -113,6 +113,9 @@
     <Compile Include="Kmmp\Kmmp.Core\Models\JsonConfigInfo.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\ConsumerClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\OrderConsumerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\PushConsumerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\DefaultProducerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\ProducerClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\RocketMQClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ObjectFactoryHelper.cs" />
     <Compile Include="Program.cs" />
