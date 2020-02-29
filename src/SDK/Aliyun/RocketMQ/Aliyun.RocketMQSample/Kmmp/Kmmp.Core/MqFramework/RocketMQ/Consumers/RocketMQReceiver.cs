@@ -102,7 +102,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                     var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
                     Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
                 }
-                Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, 内容为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getBody());
+                Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, MessageId为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getMsgID());
                 return ons.Action.CommitMessage;
             }
             /// <summary>

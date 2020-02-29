@@ -60,7 +60,7 @@ namespace Aliyun.RocketMQSample.Producer
         /// </summary>
         private static readonly int MessageCountPerThread = 2;
         /// <summary>
-        /// 线程总数iwg
+        /// 线程总数
         /// </summary>
         private static readonly int ProducerThreadCount = 2;
         static void KmmpMQTest()
@@ -197,7 +197,7 @@ namespace Aliyun.RocketMQSample.Producer
         /// <param name="queueName">Name of the queue.</param>
         /// <returns>IMessagePublisher.</returns>
         /// <exception cref="Exception">0006</exception>
-        public static IMessagePublisher GetPublisher(string queueName)
+        private static IMessagePublisher GetPublisher(string queueName)
         {
             var messageQueue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
             IMessagePublisher _publisher = messageQueue.GetMessagePublisher(queueName);

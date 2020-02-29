@@ -34,11 +34,11 @@ namespace Kmmp.MqReceiver.DSync
         {
             try
             {
-
+                Console.WriteLine($"SyncVipTypeMqReceiver,MessageId:{mqData.MessageId}");
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
 
         }
