@@ -68,7 +68,7 @@ namespace Aliyun.RocketMQSample.Producer
 
             System.DateTime startTime = System.DateTime.Now;
             string queueName = "CateringVipType";
-            Console.WriteLine($"发送消息:{DateTime.Now}");
+            Console.WriteLine($"发送消息,{queueName}:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             IMessagePublisher publisher = GetPublisher(queueName);
@@ -86,11 +86,29 @@ namespace Aliyun.RocketMQSample.Producer
 
                 taskList.Add(task);
             }
+            string tempQueueName = "CateringVipTypeTemp";
+            Console.WriteLine($"发送消息,{tempQueueName}:{DateTime.Now}");
+            IMessagePublisher tempPublisher = GetPublisher(tempQueueName);
+            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            {
+                // 生产消费
+                var task = Task.Factory.StartNew(() =>
+                {
+                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                    {
+                        KmmpMQPublisherTest(tempPublisher);
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                taskList.Add(task);
+            }
 
             Task.WaitAll(taskList.ToArray());
+            publisher.Dispose();
+            tempPublisher.Dispose();
             stopWatch.Stop();
-
-            Console.WriteLine("发送消息：{0}条， 使用时间{1}毫秒", MessageCountPerThread * ProducerThreadCount, stopWatch.ElapsedMilliseconds);
+            Console.WriteLine($"发送消息,{queueName}：{MessageCountPerThread * ProducerThreadCount}条， 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+            Console.WriteLine($"发送消息,{tempQueueName}：{MessageCountPerThread * ProducerThreadCount}条， 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
             Console.ReadLine();
         }
 
