@@ -38,9 +38,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <summary>
         /// 接收消息事件
         /// </summary>
-        public event EventHandler<MessageEventArgs> Received = delegate { };
-
-        private bool running = false;
+        public event EventHandler<MessageEventArgs> ReceivedEventHandler;
         /// <summary>
         /// 作者：carl.wu
         /// 时间：2020-02-01
@@ -49,12 +47,8 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         public override void Start()
         {
             ReceiverMessageListener listener = new ReceiverMessageListener();
-            listener.ReceivedEventHandler += receiver_Received;
+            listener.ReceivedEventHandler += OnReceived;
             base.SetMessageListener(listener);
-            if (!running)
-            {
-                running = true;
-            }
             base.Start();
 
         }
@@ -64,11 +58,20 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// 功能：收到消息事件
         /// </summary>
         /// <param name="sender">发送者</param>
-        /// <param name="e">消息参数</param>
-        private void receiver_Received(object sender, MessageEventArgs e)
+        /// <param name="args">The <see cref="MessageEventArgs"/> instance containing the event data.</param>
+        private void OnReceived(object sender, MessageEventArgs args)
         {
-            //防止两个消息同时从不同 channel 中获取，并执行
-            Received(this, e);
+            // 定义一个局部变量，已防止最后一个订阅者刚好在检查null后取消订阅
+            EventHandler<MessageEventArgs> handler = ReceivedEventHandler;
+            // 如果没有 订阅者（观察者）， 委托对象将为null
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+            else
+            {
+                Console.WriteLine($"handler is null");
+            }
         }
         /// <summary>
         /// 执行与释放或重置非托管资源关联的应用程序定义的任务。
@@ -102,6 +105,8 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             public override ons.Action consume(Message message, ConsumeContext context)
             {
                 var typeFullName = message.getSystemProperties("BodyTypeFullName");
+                MessageEventArgs messageEventArgs = null;
+                string msgName = $"{message.getTopic()}:{message.getTag()}:{message.getKey()}";
                 if (!string.IsNullOrWhiteSpace(typeFullName))
                 {
                     var bodyType = Type.GetType(typeFullName);
@@ -110,14 +115,22 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                         throw new ArgumentNullException("bodyType is null");
                     }
                     var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
-                    OnReceived(new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
+                    messageEventArgs = new MessageEventArgs(msgName, msgBody);
                 }
                 else
                 {
-                    OnReceived(new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", message.getBody()));
+                    messageEventArgs = new MessageEventArgs(msgName, message.getBody());
                 }
                 Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{typeFullName}");
-                return ons.Action.CommitMessage;
+                try
+                {
+                    OnReceived(messageEventArgs);
+                    return ons.Action.CommitMessage;
+                }
+                catch (Exception)
+                {
+                    return ons.Action.ReconsumeLater;
+                }
                 //return ons.Action.ReconsumeLater;//失败&稍后重试
             }
             /// <summary>
@@ -131,12 +144,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                 // 如果没有 订阅者（观察者）， 委托对象将为null
                 if (handler != null)
                 {
-                    // 这是最重要的一句。
-                    // 此时执行的  handler已经是一个多播委托（如果有多个订阅者或观察者注册）。
-                    // 既然是多播委托，就可以依次调用各个 回调函数 （既然是回调函数，实际的执行就由订阅者类决定）。
-                    //这里面传入一个this, 就代表 事件源（或发布者 或 被观察者 都一个意思）
                     handler(this, args);
                 }
+                else
+                {
+                    Console.WriteLine($"handler is null");
+                }
+
             }
             /// <summary>
             /// 接收到消息事件

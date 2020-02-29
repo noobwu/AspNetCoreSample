@@ -97,7 +97,7 @@ namespace Kmmp.Core.Imps
         /// <summary>
         /// 消息接收事件
         /// </summary>
-        event EventHandler<MessageEventArgs> Received;
+        event EventHandler<MessageEventArgs> ReceivedEventHandler;
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ namespace Kmmp.Core.Imps
         /// <summary>
         /// 消息接收事件
         /// </summary>
-        event EventHandler<MessageEventArgs> Received;
+        event EventHandler<MessageEventArgs> ReceivedEventHandler;
     }
 
     /// <summary>

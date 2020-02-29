@@ -88,7 +88,7 @@ namespace Aliyun.RocketMQSample.Consumer
             try
             {
                 var receiver = GetReceiver(queueName);
-                receiver.Received += (sender, args) =>
+                receiver.ReceivedEventHandler += (sender, args) =>
                 {
                     //Execute(q.Value<string>("Method"), args.Message);
                     //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
