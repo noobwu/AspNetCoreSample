@@ -1,0 +1,9 @@
+﻿{
+    "_type": "Imps.MessageQueue.ActiveMessageQueue",
+    "IsAsync": true,
+    "Channels": {
+        "ActiveMQDev" : {
+            "Uri" : "failover:(tcp://weixin-test.kemai.com.cn:63616)"
+        }
+    }
+}
