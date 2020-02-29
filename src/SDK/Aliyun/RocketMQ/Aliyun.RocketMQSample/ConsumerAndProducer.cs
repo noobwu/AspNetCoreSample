@@ -99,7 +99,7 @@ namespace Aliyun.RocketMQSample
             // 根据业务唯一标识的 Key 做幂等处理
             string key = message.getKey();
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine(Encoding.UTF8.GetString(text));
+            Console.WriteLine("MyMsgOrderListener,consume:" + Encoding.UTF8.GetString(text));
             return ons.OrderAction.Success;
         }
     }

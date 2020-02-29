@@ -49,23 +49,28 @@ namespace Aliyun.RocketMQSample.Consumer
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
+            OnscSharp instance = new OnscSharp();
+            instance.CreatePushConsumer();
+            instance.StartPushConsumer("TestMessage");
 
-            var taskList = new List<Task>();
-            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-            {
-                OnscSharp instance = new OnscSharp();
-                instance.CreatePushConsumer();
-                instance.StartPushConsumer("TestMessage");
-            }
+            //for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            //{
+            //    OnscSharp instance = new OnscSharp();
+            //    instance.CreatePushConsumer();
+            //    instance.StartPushConsumer("TestMessage");
+            //}
 
 
-            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-            {
-                OnscSharp tempInstance = new OnscSharp();
-                tempInstance.CreatePushConsumer();
-                tempInstance.StartPushConsumer("TempTestMessage");
-            }
+            //for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            //{
+            //    OnscSharp tempInstance = new OnscSharp();
+            //    tempInstance.CreatePushConsumer();
+            //    tempInstance.StartPushConsumer("TempTestMessage");
+            //}
 
+            //OnscSharp tempInstance = new OnscSharp();
+            //tempInstance.CreatePushConsumer();
+            //tempInstance.StartPushConsumer("TempTestMessage");
 
             stopWatch.Stop();
 
