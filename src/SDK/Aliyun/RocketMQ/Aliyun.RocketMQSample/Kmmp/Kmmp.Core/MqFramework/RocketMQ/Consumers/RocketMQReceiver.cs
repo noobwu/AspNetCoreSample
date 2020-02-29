@@ -34,15 +34,14 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         {
         }
 
-
         /// <summary>
         /// 接收消息事件
         /// </summary>
         public event EventHandler<MessageEventArgs> Received = delegate { };
 
         /// <summary>
-        /// 作者：吴廷有
-        /// 时间：2015-10-23
+        /// 作者：carl.wu
+        /// 时间：2020-02-01
         /// 功能：启动监听
         /// </summary>
         public override void Start()
@@ -61,7 +60,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <param name="e">消息参数</param>
         private void receiver_Received(object sender, MessageEventArgs e)
         {
-            // 防止两个消息同时从不同 channel 中获取，并执行
+            //防止两个消息同时从不同 channel 中获取，并执行
             lock (this)
             {
                 Received(this, e);
@@ -75,15 +74,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             this.Shutdown();
         }
         private static int count = 0;
-        internal class ReceiverMessageListener : MessageListener
+        /// <summary>
+        /// Class ReceiverMessageListener.
+        /// Implements the <see cref="ons.MessageListener" />
+        /// </summary>
+        /// <seealso cref="ons.MessageListener" />
+        private class ReceiverMessageListener : MessageListener
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ReceiverMessageListener" /> class.
-            /// </summary>
-            public ReceiverMessageListener()
-            {
-
-            }
             /// <summary>
             /// Consumes the specified message.
             /// </summary>
