@@ -101,6 +101,7 @@
     <Compile Include="Kmmp.DSync.Data\Temp_VipType.cs" />
     <Compile Include="Kmmp.DSync.Data\VipType.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ComponentLoader.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\Extension\DateTimeExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\DisposeExtension.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\MessageQueueExtension.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Helper\JsonHelper.cs" />
@@ -108,7 +109,11 @@
     <Compile Include="Kmmp\Kmmp.Core\Imps\IComponent.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Imps\IMessageQueue.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Imps\MessageQueue\ActiveMessageQueue.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\Imps\MessageQueue\RocketMessageQueue.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Models\JsonConfigInfo.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\ConsumerClientBase.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\OrderConsumerClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\RocketMQClientBase.cs" />
     <Compile Include="Kmmp\Kmmp.Core\ObjectFactoryHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -171,9 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Config\activemq.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Config\messageQueue.food.mq.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

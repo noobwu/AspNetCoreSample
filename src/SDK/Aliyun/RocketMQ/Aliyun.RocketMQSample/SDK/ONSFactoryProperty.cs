@@ -422,7 +422,7 @@ namespace ons
         }
 
         /// <summary>
-        /// Gets or sets the publish topics.
+        /// 消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。
         /// </summary>
         /// <value>The publish topics.</value>
         public static string PublishTopics
