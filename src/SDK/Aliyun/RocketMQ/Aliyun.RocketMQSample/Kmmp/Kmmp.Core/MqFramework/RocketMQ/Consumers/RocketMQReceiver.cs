@@ -40,6 +40,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// </summary>
         public event EventHandler<MessageEventArgs> Received = delegate { };
 
+        private bool running = false;
         /// <summary>
         /// 作者：carl.wu
         /// 时间：2020-02-01
@@ -50,7 +51,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             ReceiverMessageListener listener = new ReceiverMessageListener();
             listener.Received += receiver_Received;
             base.SetMessageListener(listener);
+            if (!running)
+            {
+
+                running = true;
+            }
             base.Start();
+
         }
         /// <summary>
         /// 作者：carl.wu
@@ -102,7 +109,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                     var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
                     Received(this, new MessageEventArgs($"{message.getTopic()}:{message.getTag()}", msgBody));
                 }
-                Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, MessageId为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getMsgID());
+                //Console.WriteLine("消息序号: {0}, 当前线程ID = {1}, MessageId为： {2}", ++count, Thread.CurrentThread.ManagedThreadId, message.getMsgID());
                 return ons.Action.CommitMessage;
             }
             /// <summary>

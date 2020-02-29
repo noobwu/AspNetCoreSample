@@ -38,7 +38,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <summary>
         /// 消息监听器
         /// </summary>
-        private MessageListener listener;
+        protected MessageListener listener;
 
         /// <summary>
         /// 构造函数
@@ -71,8 +71,16 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             {
                 throw new NullReferenceException("consumer为空");
             }
-            consumer.subscribe(Topic, SubExpression, listener);
-            consumer.start();
+            try
+            {
+                consumer.subscribe(Topic, SubExpression, listener);
+                consumer.start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
 
         /// <summary>
