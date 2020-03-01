@@ -14,6 +14,7 @@
 using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.Core.MqFramework.RocketMQ.Consumers;
 using Kmmp.Core.MqFramework.RocketMQ.Producers;
+using ons;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aliyun.RocketMQSample.Consu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aliyun.RocketMQSample.OrderConsumer", "src\SDK\Aliyun\RocketMQ\Aliyun.RocketMQSample.OrderConsumer\Aliyun.RocketMQSample.OrderConsumer.csproj", "{8E103194-64B9-4918-9133-DF884512F9BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocketMQSDK", "src\SDK\Aliyun\RocketMQ\RocketMQSDK\RocketMQSDK.csproj", "{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -275,6 +277,18 @@ Global
 		{8E103194-64B9-4918-9133-DF884512F9BC}.Release|x64.Build.0 = Release|Any CPU
 		{8E103194-64B9-4918-9133-DF884512F9BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{8E103194-64B9-4918-9133-DF884512F9BC}.Release|x86.Build.0 = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|x64.ActiveCfg = Debug|x64
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|x64.Build.0 = Debug|x64
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Debug|x86.Build.0 = Debug|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|x64.ActiveCfg = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|x64.Build.0 = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|x86.ActiveCfg = Release|Any CPU
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -312,6 +326,7 @@ Global
 		{A827EB9E-4946-48B5-9904-0F8CAF289DF7} = {72A8D9AF-7DDC-48F1-8781-139A28F17549}
 		{58BBD8F1-2E6F-40FC-9A55-B92D2B8A7ABF} = {72A8D9AF-7DDC-48F1-8781-139A28F17549}
 		{8E103194-64B9-4918-9133-DF884512F9BC} = {72A8D9AF-7DDC-48F1-8781-139A28F17549}
+		{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40} = {72A8D9AF-7DDC-48F1-8781-139A28F17549}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D0A0329-7F31-453F-807D-FED2262A86C4}

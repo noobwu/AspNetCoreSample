@@ -18,6 +18,8 @@ using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.Core.MqFramework.RocketMQ.Consumers;
 using Kmmp.DSync.Data;
 using Kmmp.MqReceiver.DSync;
+using ons;
+using RocketMQSDK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

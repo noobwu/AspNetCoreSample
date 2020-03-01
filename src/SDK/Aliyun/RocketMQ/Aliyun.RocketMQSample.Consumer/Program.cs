@@ -18,6 +18,8 @@ using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.Core.MqFramework.RocketMQ.Consumers;
 using Kmmp.DSync.Data;
 using Kmmp.MqReceiver.DSync;
+using ons;
+using RocketMQSDK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,8 +48,8 @@ namespace Aliyun.RocketMQSample.Consumer
             try
             {
                 //KmmpMQConsumerTest();
-                //ConsumerTest();
-                KmmpRocketMQReceiverTest();
+                ConsumerTest();
+                //KmmpRocketMQReceiverTest();
             }
             catch (Exception ex)
             {
@@ -67,7 +69,7 @@ namespace Aliyun.RocketMQSample.Consumer
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            configs = configs.Where(a => !(new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
+            //configs = configs.Where(a => !(new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
             configs?.ForEach(config =>
             {
                 OnscSharp instance = new OnscSharp(config);

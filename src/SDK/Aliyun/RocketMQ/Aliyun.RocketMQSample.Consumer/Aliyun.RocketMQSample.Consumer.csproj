@@ -102,6 +102,10 @@
       <Project>{60b72cbe-79d3-4dc7-b86c-399942676dc3}</Project>
       <Name>Aliyun.RocketMQSample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RocketMQSDK\RocketMQSDK.csproj">
+      <Project>{27eff0b0-4642-446e-a6b6-99c6bbfebc40}</Project>
+      <Name>RocketMQSDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
