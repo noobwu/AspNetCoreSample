@@ -26,8 +26,8 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
-                //KmmpMQProducerTest();
-                ProducerTest();
+                KmmpMQProducerTest();
+                //ProducerTest();
             }
             catch (Exception ex)
             {

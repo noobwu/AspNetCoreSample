@@ -33,8 +33,8 @@ namespace Aliyun.RocketMQSample.Consumer
         {
             try
             {
-                //KmmpMQConsumerTest();
-                ConsumerTest();
+                KmmpMQConsumerTest();
+                //ConsumerTest();
             }
             catch (Exception ex)
             {
@@ -94,15 +94,15 @@ namespace Aliyun.RocketMQSample.Consumer
             //    // 接收消息
             //    KmmpMQReceiverTest(queueName);
             //}
-            //KmmpMQReceiverTest(queueName);
-            string tempQueueName = "CateringVipTypeTemp";
-            Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
+            KmmpMQReceiverTest(queueName);
+            //string tempQueueName = "CateringVipTypeTemp";
+            //Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
             //for (int index = 1; index <= ConsumerCount; index++)
             //{
             //    接收消息
             //    KmmpMQReceiverTest(tempQueueName);
             //}
-            KmmpMQReceiverTest(tempQueueName);
+            //KmmpMQReceiverTest(tempQueueName);
             Console.ReadKey();
         }
 
@@ -125,7 +125,7 @@ namespace Aliyun.RocketMQSample.Consumer
                         mqData = JsonHelper.JsonConvertDeserialize<MQ_VipData<Temp_VipType>>(args.Message.ToString());
                     }
                     new SyncVipTypeMqReceiver().Execute(mqData);
-                    Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData.MessageId}");
+                    Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData?.MessageId}");
                 };
                 receiver.Start();
             }

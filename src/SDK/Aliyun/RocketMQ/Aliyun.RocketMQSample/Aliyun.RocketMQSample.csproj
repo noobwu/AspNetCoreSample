@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerAndProducer.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\RocketMQConfig.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\MQ_VipData.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\Temp_VipType.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\VipType.cs" />
