@@ -28,5 +28,15 @@
     "GroupIdPrefix": "GID_",
     "MsgType": 3,
     "Remark": "全局顺序消息"
+  },
+  {
+    "AccessKeyId": "LTAI4FmKyLtChjPm6kvr8brC",
+    "AccessKeySecret": "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I",
+    "NameSrvAddr": "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80",
+    "Topic": "TimeDelayTopicTest",
+    "GroupId": "GID_TimeDelayTest",
+    "GroupIdPrefix": "GID_",
+    "MsgType": 5,
+    "Remark": "定时/延时消息"
   }
 ]
