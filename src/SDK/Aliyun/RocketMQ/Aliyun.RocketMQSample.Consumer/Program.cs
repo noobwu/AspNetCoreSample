@@ -75,7 +75,7 @@ namespace Aliyun.RocketMQSample.Consumer
                         case 2:
                         case 3:
                             {
-                                instance.CreatePushConsumer();
+                                instance.CreateOrderConsumer();
                                 instance.StartOrderConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
                             }
                             break;

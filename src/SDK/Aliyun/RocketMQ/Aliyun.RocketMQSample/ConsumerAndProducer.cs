@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using ons;
 using Kmmp.Core.MqFramework.RocketMQ;
+using Kmmp.Core.Helper;
 
 /// <summary>
 /// The test namespace.
@@ -60,7 +61,7 @@ namespace Aliyun.RocketMQSample
             //byte[] text = Convert.FromBase64String(value.getBody());//中文decode
             //string body = Encoding.UTF8.GetString(text);
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
+            Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
             return ons.Action.CommitMessage;
         }
     }
@@ -99,7 +100,7 @@ namespace Aliyun.RocketMQSample
             // 根据业务唯一标识的 Key 做幂等处理
             string key = message.getKey();
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
+            Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
             return ons.OrderAction.Success;
         }
     }
@@ -193,6 +194,8 @@ namespace Aliyun.RocketMQSample
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString("N"));
+            string base64BodyTypeFullName = "SayHello";
+            msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
             try
             {
                 SendResultONS sendResult = _producer.send(msg);
@@ -214,6 +217,8 @@ namespace Aliyun.RocketMQSample
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString());
+            string base64BodyTypeFullName = "SayHello";
+            msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
             try
             {
                 SendResultONS sendResult = _orderproducer.send(msg, shardingKey);
@@ -343,7 +348,7 @@ namespace Aliyun.RocketMQSample
         {
             ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
             onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
-            _orderconsumer = ONSFactory.getInstance().createOrderConsumer(getFactoryProperty());
+            _orderconsumer = ONSFactory.getInstance().createOrderConsumer(onsFactoryProperty);
         }
 
         /// <summary>
@@ -354,7 +359,7 @@ namespace Aliyun.RocketMQSample
         {
             ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
             onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
-            _orderproducer = ONSFactory.getInstance().createOrderProducer(getFactoryProperty());
+            _orderproducer = ONSFactory.getInstance().createOrderProducer(onsFactoryProperty);
         }
     }
 
