@@ -318,7 +318,7 @@ namespace RocketMQSDK
             factoryInfo.setFactoryProperty(ONSFactoryProperty.SecretKey, Ons_SecretKey);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.PublishTopics, Ons_Topic);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.NAMESRV_ADDR, Ons_NameSrv);
-            factoryInfo.setFactoryProperty(ONSFactoryProperty.LogPath, $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs");
+            factoryInfo.setFactoryProperty(ONSFactoryProperty.LogPath, $"{AppDomain.CurrentDomain.BaseDirectory}Logs");
             return factoryInfo;
         }
 
