@@ -100,6 +100,7 @@ namespace Aliyun.RocketMQSample.Producer
             }
             onscSharpList.ForEach(instance =>
             {
+                //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
                 switch (instance.Config.MsgType)
                 {
                     case 2:
@@ -113,6 +114,23 @@ namespace Aliyun.RocketMQSample.Producer
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
                                         instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                    case 5:
+                        {
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        instance.SendMessage($"This is time delay test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message", DateTime.Now.AddSeconds(10));
                                     }
                                 }, TaskCreationOptions.LongRunning);
 

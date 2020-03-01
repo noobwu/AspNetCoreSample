@@ -20,6 +20,7 @@ using System.Threading;
 using ons;
 using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.Core.Helper;
+using Kmmp.Core.Extension;
 
 /// <summary>
 /// The test namespace.
@@ -190,10 +191,15 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         /// <param name="msgBody">The MSG body.</param>
         /// <param name="tag">The tag.</param>
-        public void SendMessage(string msgBody, String tag = "RegisterLog")
+        /// <param name="deliveryTime">The delivery time.</param>
+        public void SendMessage(string msgBody, String tag = "RegisterLog", DateTime? deliveryTime = null)
         {
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString("N"));
+            if (deliveryTime.HasValue)
+            {
+                msg.setStartDeliverTime(deliveryTime.Value.ToTimestamp());
+            }
             string base64BodyTypeFullName = "SayHello";
             msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
             try
@@ -206,7 +212,6 @@ namespace Aliyun.RocketMQSample
                 Console.WriteLine("send failure{0}", ex.ToString());
             }
         }
-
         /// <summary>
         /// 发送顺序消息
         /// </summary>
