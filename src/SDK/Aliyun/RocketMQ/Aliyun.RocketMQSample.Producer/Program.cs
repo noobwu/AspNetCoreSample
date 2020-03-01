@@ -39,6 +39,14 @@ namespace Aliyun.RocketMQSample.Producer
     class Program
     {
         /// <summary>
+        /// 每线程发送消息数量
+        /// </summary>
+        private static readonly int MessageCountPerThread = 1;
+        /// <summary>
+        /// 线程总数
+        /// </summary>
+        private static readonly int ProducerThreadCount = 1;
+        /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
         /// <param name="args">The arguments.</param>
@@ -48,7 +56,6 @@ namespace Aliyun.RocketMQSample.Producer
             try
             {
                 //KmmpMQProducerTest();
-                ProducerTest();
                 //KmmpRocketMQPublisherTest();
             }
             catch (Exception ex)
@@ -58,118 +65,7 @@ namespace Aliyun.RocketMQSample.Producer
 
             Console.ReadKey();
         }
-        /// <summary>
-        /// 每线程发送消息数量
-        /// </summary>
-        private static readonly int MessageCountPerThread = 1;
-        /// <summary>
-        /// 线程总数
-        /// </summary>
-        private static readonly int ProducerThreadCount = 1;
-        /// <summary>
-        /// Producers the test.
-        /// </summary>
-        static void ProducerTest()
-        {
-            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
-            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
-            Console.WriteLine($"ProducerTest,开始:{DateTime.Now}");
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            List<OnscSharp> onscSharpList = new List<OnscSharp>();
-            var taskList = new List<Task>();
-            if (configs != null && configs.Count > 0)
-            {
-                configs.ForEach(config =>
-                {
-                    OnscSharp instance = new OnscSharp(config);
-                    switch (config.MsgType)
-                    {
-                        case 2:
-                        case 3:
-                            {
-                                instance.CreateOrderProducer();
-                                instance.StartOrderProducer();
-                            }
-                            break;
-                        default:
-                            {
-                                instance.CreateProducer();
-                                instance.StartProducer();
-                            }
-                            break;
-                    }
-                    onscSharpList.Add(instance);
-                });
-            }
-            onscSharpList.ForEach(instance =>
-            {
-                //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
-                switch (instance.Config.MsgType)
-                {
-                    case 2:
-                    case 3:
-                        {
-                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-                            {
-                                // 生产消费
-                                var task = Task.Factory.StartNew(() =>
-                                {
-                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                                    {
-                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
-                                    }
-                                }, TaskCreationOptions.LongRunning);
 
-                                taskList.Add(task);
-                            }
-                        }
-                        break;
-                    case 5:
-                        {
-                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-                            {
-                                // 生产消费
-                                var task = Task.Factory.StartNew(() =>
-                                {
-                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                                    {
-                                        instance.SendMessage($"This is time delay test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message", DateTime.Now.AddSeconds(10));
-                                    }
-                                }, TaskCreationOptions.LongRunning);
-
-                                taskList.Add(task);
-                            }
-                        }
-                        break;
-                    default:
-                        {
-                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-                            {
-                                // 生产消费
-                                var task = Task.Factory.StartNew(() =>
-                                {
-                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                                    {
-                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
-                                    }
-                                }, TaskCreationOptions.LongRunning);
-                                taskList.Add(task);
-                            }
-                        }
-                        break;
-                }
-            });
-            Task.WaitAll(taskList.ToArray());
-            onscSharpList.ForEach(a =>
-            {
-                a.ShutdownProducer();
-                a.ShutdownOrderProducer();
-            });
-            stopWatch.Stop();
-
-            Console.WriteLine($"ProducerTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
-        }
 
         /// <summary>
         /// KMMPs the rocket mq publisher test.

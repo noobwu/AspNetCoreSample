@@ -48,7 +48,6 @@ namespace Aliyun.RocketMQSample.OrderConsumer
             try
             {
                 //KmmpMQConsumerTest();
-                //ConsumerTest();
                 KmmpRocketMQReceiverTest();
             }
             catch (Exception ex)
@@ -58,43 +57,6 @@ namespace Aliyun.RocketMQSample.OrderConsumer
 
             Console.ReadKey();
         }
-        /// <summary>
-        /// Consumers the test.
-        /// </summary>
-        static void ConsumerTest()
-        {
-            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
-            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
-
-            Console.WriteLine($"instance,开始:{DateTime.Now}");
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            configs = configs.Where(a => (new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
-            configs?.ForEach(config =>
-            {
-                OnscSharp instance = new OnscSharp(config);
-                switch (config.MsgType)
-                {
-                    case 2:
-                    case 3:
-                        {
-                            instance.CreateOrderConsumer();
-                            instance.StartOrderConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
-                        }
-                        break;
-                    default:
-                        {
-                            instance.CreatePushConsumer();
-                            instance.StartPushConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
-                        }
-                        break;
-                }
-
-            });
-            stopWatch.Stop();
-            Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
-        }
-
         /// <summary>
         /// KMMPs the mq consumer test.
         /// </summary>
