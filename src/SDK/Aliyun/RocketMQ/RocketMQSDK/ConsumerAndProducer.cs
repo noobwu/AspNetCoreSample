@@ -323,7 +323,7 @@ namespace RocketMQSDK
         }
 
         /// <summary>
-        /// Creates the push consumer.
+        /// 创建普通消息消费者实例(同一个GroupId,同一个进程,不允许有多个消费者实例)
         /// </summary>
         public void CreatePushConsumer()
         {
@@ -346,7 +346,7 @@ namespace RocketMQSDK
 
 
         /// <summary>
-        /// 创建顺序消息消费都实例
+        /// 创建顺序消息消费者实例(同一个GroupId,同一个进程,不允许有多个消费者实例)
         /// </summary>
         public void CreateOrderConsumer()
         {
