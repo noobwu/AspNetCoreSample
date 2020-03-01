@@ -82,6 +82,7 @@ namespace Aliyun.RocketMQSample.Producer
                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                     {
                         tempInstance.SendMessage($"This is test temp message {tempThreadIndex}:{tempMessageIndex}", "TempTestMessage");
+
                     }
                 }, TaskCreationOptions.LongRunning);
 

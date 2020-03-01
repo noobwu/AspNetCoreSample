@@ -53,6 +53,7 @@ namespace Aliyun.RocketMQSample.Consumer
             instance.CreatePushConsumer();
             instance.StartPushConsumer("TestMessage");
 
+            //instance.shutdownPushConsumer();
             //for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
             //{
             //    OnscSharp instance = new OnscSharp();
@@ -72,7 +73,11 @@ namespace Aliyun.RocketMQSample.Consumer
             //tempInstance.CreatePushConsumer();
             //tempInstance.StartPushConsumer("TempTestMessage");
 
+
+            //tempInstance.shutdownPushConsumer();
+
             stopWatch.Stop();
+
 
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
