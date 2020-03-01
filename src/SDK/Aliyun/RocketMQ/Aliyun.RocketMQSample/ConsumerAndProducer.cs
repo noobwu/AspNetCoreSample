@@ -167,6 +167,11 @@ namespace Aliyun.RocketMQSample
         private string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
 
         /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>The configuration.</value>
+        public RocketMQConfig Config { get; private set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="OnscSharp"/> class.
         /// </summary>
         /// <param name="config">The configuration.</param>
@@ -177,6 +182,7 @@ namespace Aliyun.RocketMQSample
             this.Ons_NameSrv = config.NameSrvAddr;
             this.Ons_Topic = config.Topic;
             this.Ons_GroupId = config.GroupId;
+            this.Config = config;
         }
         /// <summary>
         /// Sends the message.

@@ -86,45 +86,58 @@ namespace Aliyun.RocketMQSample.Producer
                             {
                                 instance.CreateOrderProducer();
                                 instance.StartOrderProducer();
-                                for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-                                {
-                                    // 生产消费
-                                    var task = Task.Factory.StartNew(() =>
-                                    {
-                                        for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                                        {
-                                            instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
-                                        }
-                                    }, TaskCreationOptions.LongRunning);
-
-                                    taskList.Add(task);
-                                }
                             }
                             break;
                         default:
                             {
                                 instance.CreateProducer();
                                 instance.StartProducer();
-                                for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-                                {
-                                    // 生产消费
-                                    var task = Task.Factory.StartNew(() =>
-                                    {
-                                        for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                                        {
-                                            instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
-                                        }
-                                    }, TaskCreationOptions.LongRunning);
-
-                                    taskList.Add(task);
-                                }
                             }
                             break;
                     }
                     onscSharpList.Add(instance);
                 });
-
             }
+            onscSharpList.ForEach(instance =>
+            {
+                switch (instance.Config.MsgType)
+                {
+                    case 2:
+                    case 3:
+                        {
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                    default:
+                        {
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                }
+            });
             Task.WaitAll(taskList.ToArray());
             onscSharpList.ForEach(a =>
             {
