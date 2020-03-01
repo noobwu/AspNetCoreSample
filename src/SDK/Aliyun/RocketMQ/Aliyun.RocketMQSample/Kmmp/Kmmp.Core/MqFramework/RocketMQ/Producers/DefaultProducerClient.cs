@@ -26,6 +26,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 {
     /// <summary>
     /// 普通消息生产者
+    /// 参考文档https://help.aliyun.com/document_detail/29547.html
     /// Implements the <see cref="ProducerClientBase" />
     /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     /// </summary>
@@ -78,74 +79,47 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 
         /// <summary>
         /// 使用oneway方式发送
+        /// 发送方只负责发送消息，不等待服务端返回响应且没有回调函数触发，即只发送请求不等待应答。此方式发送消息的过程耗时非常短，一般在微秒级别。
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
-        public void SendOnewayMessage(object body, string tag = "", string key = "")
+        /// <param name="deliveryTime">The delivery time.</param>
+        /// <exception cref="System.NullReferenceException">producer为空</exception>
+        public void SendOnewayMessage(object body, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             if (producer == null)
             {
                 throw new NullReferenceException("producer为空");
             }
             var message = ComposeMessage(body, tag, key);
+            if (deliveryTime.HasValue)
+            {
+                message.setStartDeliverTime(deliveryTime.Value.ToTimestamp());
+            }
             producer.sendOneway(message);
         }
-
-        /// <summary>
-        /// 发送单向定时消息
-        /// </summary>
-        /// <param name="body">The body.</param>
-        /// <param name="deliveryTime">投送时间</param>
-        /// <param name="tag">标签</param>
-        /// <param name="key">消息Key</param>
-        public void SendOnewayAndTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
-        {
-            if (producer == null)
-            {
-                throw new NullReferenceException("producer为空");
-            }
-            var message = ComposeMessage(body, tag, key);
-            message.setStartDeliverTime(deliveryTime.ToTimestamp());
-            producer.sendOneway(message);
-        }
-
-        /// <summary>
-        /// 发送定时消息
-        /// </summary>
-        /// <param name="body">The body.</param>
-        /// <param name="deliveryTime">投送时间</param>
-        /// <param name="tag">标签</param>
-        /// <param name="key">消息Key</param>
-        /// <returns>System.String.</returns>
-        public Message SendTimingMessage(object body, DateTime deliveryTime, string tag = "", string key = "")
-        {
-            if (producer == null)
-            {
-                throw new NullReferenceException("producer为空");
-            }
-            var message = ComposeMessage(body, tag, key);
-            message.setStartDeliverTime(deliveryTime.ToTimestamp());
-            var result = producer.send(message);
-            message.setMsgID(result.getMessageId());
-            return message;
-        }
-
         /// <summary>
         /// 发送普通消息
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
+        /// <param name="deliveryTime">定时/延时时间</param>
         /// <returns>System.String.</returns>
+        /// <exception cref="System.NullReferenceException">producer为空</exception>
         /// <exception cref="NullReferenceException">producer为空</exception>
-        public Message SendMessage(object body, string tag = "", string key = "")
+        public Message SendMessage(object body, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             if (producer == null)
             {
                 throw new NullReferenceException("producer为空");
             }
             var message = ComposeMessage(body, tag, key);
+            if (deliveryTime.HasValue)
+            {
+                message.setStartDeliverTime(deliveryTime.Value.ToTimestamp());
+            }
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
             //Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");

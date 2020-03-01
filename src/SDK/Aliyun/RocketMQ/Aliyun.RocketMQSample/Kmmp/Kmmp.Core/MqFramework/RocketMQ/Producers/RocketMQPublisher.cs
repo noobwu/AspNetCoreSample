@@ -79,14 +79,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
                 {
                     messageId = Guid.NewGuid().ToString("N");
                 }
+                DateTime? deliveryTime = null;
                 if (delay.HasValue && delay > 0)
                 {
-                    var result = this.SendTimingMessage(body, DateTime.Now.AddSeconds(delay.Value), queueName, messageId);
+                    deliveryTime = DateTime.Now.AddSeconds(delay.Value);
                 }
-                else
-                {
-                    var result = this.SendMessage(body, queueName, messageId);
-                }
+                var result = this.SendMessage(body, queueName, messageId, deliveryTime);
             }
             catch (Exception ex)
             {
