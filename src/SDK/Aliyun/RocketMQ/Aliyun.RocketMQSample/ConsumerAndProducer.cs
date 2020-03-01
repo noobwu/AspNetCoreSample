@@ -151,6 +151,8 @@ namespace Aliyun.RocketMQSample
         private string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
         /// <summary>
         /// 您在控制台创建的 Group ID
+        /// 1. Group ID 既可用于生产者，标识同一类 Producer 实例（Producer ID），又可用于消费者，标识同一类 Consumer 实例（Consumer ID）；
+        /// 2. 同一个 Group ID 不可以共用于 TCP 协议和 HTTP 协议，需要分别申请。
         /// </summary>
         private string Ons_GroupId = "GID_Test";
         /// <summary>

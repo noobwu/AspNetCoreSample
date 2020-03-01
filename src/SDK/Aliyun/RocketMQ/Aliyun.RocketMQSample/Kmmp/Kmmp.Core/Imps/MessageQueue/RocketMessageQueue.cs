@@ -62,6 +62,8 @@ namespace Kmmp.Core.Imps.MessageQueue
         public string Topic { get; set; }
         /// <summary>
         /// 一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。
+        /// 1. Group ID 既可用于生产者，标识同一类 Producer 实例（Producer ID），又可用于消费者，标识同一类 Consumer 实例（Consumer ID）；
+        /// 2. 同一个 Group ID 不可以共用于 TCP 协议和 HTTP 协议，需要分别申请。
         /// </summary>
         /// <value>The group identifier.</value>
         public string GroupId { get; set; }
@@ -89,7 +91,6 @@ namespace Kmmp.Core.Imps.MessageQueue
         /// <summary>
         /// 执行与释放或重置非托管资源关联的应用程序定义的任务。
         /// </summary>
-
         public void Dispose()
         {
 
