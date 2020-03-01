@@ -13,6 +13,8 @@
 // ***********************************************************************
 using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
+using Kmmp.Core.Models;
+using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.DSync.Data;
 using Kmmp.MqReceiver.DSync;
 using System;
@@ -42,8 +44,8 @@ namespace Aliyun.RocketMQSample.Consumer
         {
             try
             {
-                KmmpMQConsumerTest();
-                //ConsumerTest();
+                //KmmpMQConsumerTest();
+                ConsumerTest();
             }
             catch (Exception ex)
             {
@@ -57,48 +59,37 @@ namespace Aliyun.RocketMQSample.Consumer
         /// </summary>
         static void ConsumerTest()
         {
-            /// <summary>
-            /// 每线程发送消息数量
-            /// </summary>
-            int MessageCountPerThread = 2;
-            /// <summary>
-            /// 线程总数
-            /// </summary>
-            int ProducerThreadCount = 2;
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
+
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
+            if (configs != null && configs.Count > 0)
+            {
+                configs.ForEach(config =>
+                {
+                    OnscSharp instance = new OnscSharp(config);
+                    switch (config.MsgType)
+                    {
+                        case 2:
+                        case 3:
+                            {
+                                instance.CreatePushConsumer();
+                                instance.StartOrderConsumer("TestMessage");
+                            }
+                            break;
+                        default:
+                            {
+                                instance.CreatePushConsumer();
+                                instance.StartPushConsumer("TestMessage");
+                            }
+                            break;
+                    }
 
-            OnscSharp instance = new OnscSharp();
-            instance.CreatePushConsumer();
-            instance.StartPushConsumer("TestMessage");
-
-            //instance.shutdownPushConsumer();
-            //for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-            //{
-            //    OnscSharp instance = new OnscSharp();
-            //    instance.CreatePushConsumer();
-            //    instance.StartPushConsumer("TestMessage");
-            //}
-
-
-            //for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-            //{
-            //    OnscSharp tempInstance = new OnscSharp();
-            //    tempInstance.CreatePushConsumer();
-            //    tempInstance.StartPushConsumer("TempTestMessage");
-            //}
-
-            OnscSharp tempInstance = new OnscSharp();
-            tempInstance.CreatePushConsumer();
-            tempInstance.StartPushConsumer("TempTestMessage");
-
-
-            //tempInstance.shutdownPushConsumer();
-
+                });
+            }
             stopWatch.Stop();
-
-
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
 
@@ -119,7 +110,6 @@ namespace Aliyun.RocketMQSample.Consumer
             Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
 
             KmmpMQReceiverTest(tempQueueName);
-            Console.ReadKey();
         }
 
         /// <summary>

@@ -211,6 +211,12 @@
     <None Include="Config\messageQueue.pos.mq.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Config\RocketMQConfigs - 复制.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\RocketMQConfigs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Config\mqConnection.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

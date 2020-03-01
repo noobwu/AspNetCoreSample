@@ -53,6 +53,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ
         /// <value>The topic.</value>
         public string Topic { get; set; }
         /// <summary>
+        /// 同一组GroupId一个进程只能有一个消费者
         /// 一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。
         /// 1. Group ID 既可用于生产者，标识同一类 Producer 实例（Producer ID），又可用于消费者，标识同一类 Consumer 实例（Consumer ID）；
         /// 2. 同一个 Group ID 不可以共用于 TCP 协议和 HTTP 协议，需要分别申请。
@@ -73,5 +74,15 @@ namespace Kmmp.Core.MqFramework.RocketMQ
         /// </summary>
         /// <value><c>true</c> if this instance is asynchronous; otherwise, <c>false</c>.</value>
         public bool IsAsync { get; set; }
+        /// <summary>
+        /// 消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
+        /// </summary>
+        /// <value>The MsgType.</value>
+        public byte MsgType { get; set; }
+        /// <summary>
+        /// 描述
+        /// </summary>
+        /// <value>The description.</value>
+        public string Remark { get; set; }
     }
 }

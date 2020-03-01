@@ -100,24 +100,33 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             /// <exception cref="ArgumentNullException"></exception>
             public override ons.Action consume(Message message, ConsumeContext context)
             {
-                var typeFullName = message.getSystemProperties("BodyTypeFullName");
+                var base64BodyTypeFullName = message.getSystemProperties("BodyTypeFullName");
                 MessageEventArgs messageEventArgs = null;
                 string msgName = $"{message.getTopic()}:{message.getTag()}:{message.getKey()}";
-                if (!string.IsNullOrWhiteSpace(typeFullName))
+                if (!string.IsNullOrWhiteSpace(base64BodyTypeFullName))
                 {
-                    var bodyType = Type.GetType(typeFullName);
-                    if (bodyType == null)
+                    try
                     {
-                        throw new ArgumentNullException("bodyType is null");
+                        var bodyTypeFullName = Encoding.UTF8.GetString(Convert.FromBase64String(base64BodyTypeFullName));
+                        var bodyType = Type.GetType(bodyTypeFullName);
+                        if (bodyType == null)
+                        {
+                            throw new ArgumentNullException("bodyType is null");
+                        }
+                        var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
+                        messageEventArgs = new MessageEventArgs(msgName, msgBody);
                     }
-                    var msgBody = JsonConvert.DeserializeObject(message.getBody(), bodyType);
-                    messageEventArgs = new MessageEventArgs(msgName, msgBody);
+                    catch (Exception ex)
+                    {
+                        messageEventArgs = new MessageEventArgs(msgName, message.getBody());
+                        Console.WriteLine(ex);
+                    }
                 }
                 else
                 {
                     messageEventArgs = new MessageEventArgs(msgName, message.getBody());
                 }
-                Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{typeFullName}");
+                Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
                 try
                 {
                     OnReceived(messageEventArgs);

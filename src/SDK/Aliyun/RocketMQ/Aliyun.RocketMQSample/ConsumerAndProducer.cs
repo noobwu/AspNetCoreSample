@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using ons;
+using Kmmp.Core.MqFramework.RocketMQ;
 
 /// <summary>
 /// The test namespace.
@@ -150,16 +151,33 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         private string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
         /// <summary>
-        /// 您在控制台创建的 Group ID
+        /// 同一组GroupId一个进程只能有一个消费者
+        /// 一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。
         /// 1. Group ID 既可用于生产者，标识同一类 Producer 实例（Producer ID），又可用于消费者，标识同一类 Consumer 实例（Consumer ID）；
         /// 2. 同一个 Group ID 不可以共用于 TCP 协议和 HTTP 协议，需要分别申请。
+        /// 3. 以 “GID_” 或者 “GID-” 开头，只能包含字母、数字、短横线（-）和下划线（_）；
+        /// 4. 长度限制在 7-64 字符之间；
+        /// 5. Group ID 一旦创建，则无法修改。
         /// </summary>
+        /// <value>The group identifier.</value>
         private string Ons_GroupId = "GID_Test";
         /// <summary>
         /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
         private string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OnscSharp"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        public OnscSharp(RocketMQConfig config)
+        {
+            this.Ons_AccessKey = config.AccessKeyId;
+            this.Ons_SecretKey = config.AccessKeySecret;
+            this.Ons_NameSrv = config.NameSrvAddr;
+            this.Ons_Topic = config.Topic;
+            this.Ons_GroupId = config.GroupId;
+        }
         /// <summary>
         /// Sends the message.
         /// </summary>
@@ -254,7 +272,7 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void ShutdownProducer()
         {
-            _producer.shutdown();
+            _producer?.shutdown();
         }
 
 
@@ -271,7 +289,7 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void ShutdownOrderProducer()
         {
-            _orderproducer.shutdown();
+            _orderproducer?.shutdown();
         }
 
         /// <summary>
@@ -283,8 +301,6 @@ namespace Aliyun.RocketMQSample
             ONSFactoryProperty factoryInfo = new ONSFactoryProperty();
             factoryInfo.setFactoryProperty(ONSFactoryProperty.AccessKey, Ons_AccessKey);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.SecretKey, Ons_SecretKey);
-            //factoryInfo.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
-            //factoryInfo.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.PublishTopics, Ons_Topic);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.NAMESRV_ADDR, Ons_NameSrv);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.LogPath, $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs");
@@ -297,7 +313,6 @@ namespace Aliyun.RocketMQSample
         public void CreatePushConsumer()
         {
             ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
-            //onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Guid.NewGuid().ToString("N"));
             onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
             _consumer = ONSFactory.getInstance().createPushConsumer(onsFactoryProperty);
         }
@@ -309,7 +324,6 @@ namespace Aliyun.RocketMQSample
         public void CreateProducer()
         {
             ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
-            //onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Guid.NewGuid().ToString("N"));
             onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
             _producer = ONSFactory.getInstance().createProducer(onsFactoryProperty);
 
@@ -321,7 +335,8 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void CreateOrderConsumer()
         {
-
+            ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
+            onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
             _orderconsumer = ONSFactory.getInstance().createOrderConsumer(getFactoryProperty());
         }
 
@@ -331,6 +346,8 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void CreateOrderProducer()
         {
+            ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
+            onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
             _orderproducer = ONSFactory.getInstance().createOrderProducer(getFactoryProperty());
         }
     }

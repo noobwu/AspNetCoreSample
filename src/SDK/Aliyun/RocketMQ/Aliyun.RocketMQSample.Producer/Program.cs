@@ -13,6 +13,8 @@
 // ***********************************************************************
 using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
+using Kmmp.Core.Models;
+using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.DSync.Data;
 using System;
 using System.Collections.Generic;
@@ -42,8 +44,8 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
-                KmmpMQProducerTest();
-                //ProducerTest();
+                //KmmpMQProducerTest();
+                ProducerTest();
             }
             catch (Exception ex)
             {
@@ -65,51 +67,70 @@ namespace Aliyun.RocketMQSample.Producer
         /// </summary>
         static void ProducerTest()
         {
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            OnscSharp instance = new OnscSharp();
-            instance.CreateProducer();
-            instance.StartProducer();
-
+            List<OnscSharp> onscSharpList = new List<OnscSharp>();
             var taskList = new List<Task>();
-            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            if (configs != null && configs.Count > 0)
             {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
+                configs.ForEach(config =>
                 {
-                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                    OnscSharp instance = new OnscSharp(config);
+                    switch (config.MsgType)
                     {
-                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                        case 2:
+                        case 3:
+                            {
+                                instance.CreateOrderProducer();
+                                instance.StartOrderProducer();
+                                for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                                {
+                                    // 生产消费
+                                    var task = Task.Factory.StartNew(() =>
+                                    {
+                                        for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                        {
+                                            instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                        }
+                                    }, TaskCreationOptions.LongRunning);
+
+                                    taskList.Add(task);
+                                }
+                            }
+                            break;
+                        default:
+                            {
+                                instance.CreateProducer();
+                                instance.StartProducer();
+                                for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                                {
+                                    // 生产消费
+                                    var task = Task.Factory.StartNew(() =>
+                                    {
+                                        for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                        {
+                                            instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                        }
+                                    }, TaskCreationOptions.LongRunning);
+
+                                    taskList.Add(task);
+                                }
+                            }
+                            break;
                     }
-                }, TaskCreationOptions.LongRunning);
+                    onscSharpList.Add(instance);
+                });
 
-                taskList.Add(task);
             }
-            OnscSharp tempInstance = new OnscSharp();
-            tempInstance.CreateProducer();
-            tempInstance.StartProducer();
-
-            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
-            {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
-                {
-                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
-                    {
-                        tempInstance.SendMessage($"This is test temp message {tempThreadIndex}:{tempMessageIndex}", "TempTestMessage");
-
-                    }
-                }, TaskCreationOptions.LongRunning);
-
-                taskList.Add(task);
-            }
-
             Task.WaitAll(taskList.ToArray());
-
-            instance.ShutdownProducer();
-            tempInstance.ShutdownProducer();
-
+            onscSharpList.ForEach(a =>
+            {
+                a.ShutdownProducer();
+                a.ShutdownOrderProducer();
+            });
             stopWatch.Stop();
 
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
