@@ -59,8 +59,7 @@ namespace Aliyun.RocketMQSample
             //byte[] text = Convert.FromBase64String(value.getBody());//中文decode
             //string body = Encoding.UTF8.GetString(text);
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine(Encoding.UTF8.GetString(text));
-            Console.WriteLine("Receive message:{0}", key);
+            Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
             return ons.Action.CommitMessage;
         }
     }
@@ -99,7 +98,7 @@ namespace Aliyun.RocketMQSample
             // 根据业务唯一标识的 Key 做幂等处理
             string key = message.getKey();
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine("MyMsgOrderListener,consume:" + Encoding.UTF8.GetString(text));
+            Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
             return ons.OrderAction.Success;
         }
     }
@@ -171,7 +170,7 @@ namespace Aliyun.RocketMQSample
             try
             {
                 SendResultONS sendResult = _producer.send(msg);
-                Console.WriteLine("send success {0}", sendResult.getMessageId());
+                Console.WriteLine($"SendMessage success MessageId:{sendResult.getMessageId()},Key:{msg.getKey()},tag:{msg.getTag()}");
             }
             catch (Exception ex)
             {
@@ -192,7 +191,8 @@ namespace Aliyun.RocketMQSample
             try
             {
                 SendResultONS sendResult = _orderproducer.send(msg, shardingKey);
-                Console.WriteLine("send success {0}", sendResult.getMessageId());
+                //Console.WriteLine("send success {0}", sendResult.getMessageId());
+                Console.WriteLine($"SendOrderMessage success MessageId:{sendResult.getMessageId()},Key:{msg.getKey()},tag:{msg.getTag()}");
             }
             catch (Exception ex)
             {
@@ -208,6 +208,7 @@ namespace Aliyun.RocketMQSample
         {
             _listen = new MyMsgListener();
             _consumer.subscribe(Ons_Topic, subExpression, _listen);
+            Console.WriteLine($"StartPushConsumer,{_consumer.GetHashCode()}");
             _consumer.start();
         }
 
@@ -280,8 +281,8 @@ namespace Aliyun.RocketMQSample
             ONSFactoryProperty factoryInfo = new ONSFactoryProperty();
             factoryInfo.setFactoryProperty(ONSFactoryProperty.AccessKey, Ons_AccessKey);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.SecretKey, Ons_SecretKey);
-            factoryInfo.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
-            factoryInfo.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
+            //factoryInfo.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
+            //factoryInfo.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.PublishTopics, Ons_Topic);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.NAMESRV_ADDR, Ons_NameSrv);
             factoryInfo.setFactoryProperty(ONSFactoryProperty.LogPath, $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs");
@@ -293,8 +294,10 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void CreatePushConsumer()
         {
-
-            _consumer = ONSFactory.getInstance().createPushConsumer(getFactoryProperty());
+            ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
+            //onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Guid.NewGuid().ToString("N"));
+            onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ConsumerId, Ons_GroupId);
+            _consumer = ONSFactory.getInstance().createPushConsumer(onsFactoryProperty);
         }
 
         /// <summary>
@@ -303,8 +306,11 @@ namespace Aliyun.RocketMQSample
         /// </summary>
         public void CreateProducer()
         {
+            ONSFactoryProperty onsFactoryProperty = getFactoryProperty();
+            //onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Guid.NewGuid().ToString("N"));
+            onsFactoryProperty.setFactoryProperty(ONSFactoryProperty.ProducerId, Ons_GroupId);
+            _producer = ONSFactory.getInstance().createProducer(onsFactoryProperty);
 
-            _producer = ONSFactory.getInstance().createProducer(getFactoryProperty());
         }
 
 
