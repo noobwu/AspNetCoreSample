@@ -112,7 +112,7 @@ namespace Aliyun.RocketMQSample.Producer
                                 {
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
-                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
                                     }
                                 }, TaskCreationOptions.LongRunning);
 
@@ -129,7 +129,7 @@ namespace Aliyun.RocketMQSample.Producer
                                 {
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
-                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", "TestMessage");
+                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
                                     }
                                 }, TaskCreationOptions.LongRunning);
                                 taskList.Add(task);

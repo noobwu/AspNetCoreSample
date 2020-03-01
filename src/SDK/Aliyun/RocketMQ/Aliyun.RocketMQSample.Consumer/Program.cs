@@ -76,13 +76,13 @@ namespace Aliyun.RocketMQSample.Consumer
                         case 3:
                             {
                                 instance.CreatePushConsumer();
-                                instance.StartOrderConsumer("TestMessage");
+                                instance.StartOrderConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
                             }
                             break;
                         default:
                             {
                                 instance.CreatePushConsumer();
-                                instance.StartPushConsumer("TestMessage");
+                                instance.StartPushConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
                             }
                             break;
                     }
