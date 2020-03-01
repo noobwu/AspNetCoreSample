@@ -56,9 +56,18 @@ namespace Kmmp.Core.MqFramework.RocketMQ
         /// 一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。
         /// 1. Group ID 既可用于生产者，标识同一类 Producer 实例（Producer ID），又可用于消费者，标识同一类 Consumer 实例（Consumer ID）；
         /// 2. 同一个 Group ID 不可以共用于 TCP 协议和 HTTP 协议，需要分别申请。
+        /// 3. 以 “GID_” 或者 “GID-” 开头，只能包含字母、数字、短横线（-）和下划线（_）；
+        /// 4. 长度限制在 7-64 字符之间；
+        /// 5. Group ID 一旦创建，则无法修改。
         /// </summary>
         /// <value>The group identifier.</value>
         public string GroupId { get; set; }
+
+        /// <summary>
+        /// 以 “GID_” 或者 “GID-” 开头
+        /// </summary>
+        /// <value>The group identifier prefix.</value>
+        public string GroupIdPrefix { get; set; } = "GID_";
         /// <summary>
         /// 是否启用异步
         /// </summary>

@@ -24,17 +24,17 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// </summary>
         /// <param name="config">RocketMQ配置信息</param>
         /// <param name="queueName">队列名称</param>
-        /// <param name="consumerThreadCount">Consumer 实例的消费线程数，默认值：5</param>
         /// <param name="receiverId">接受对象Id</param>
+        /// <param name="consumerThreadCount">Consumer 实例的消费线程数，默认值：5</param>
         public RocketMQReceiver(RocketMQConfig config, string queueName, string receiverId = null, int consumerThreadCount = 5)
-            : base(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupId, queueName, consumerThreadCount)
+            : base(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupIdPrefix + queueName, queueName, consumerThreadCount)
         {
 
         }
         /// <summary>
         /// 接收消息事件
         /// </summary>
-        public event EventHandler<MessageEventArgs> ReceivedEventHandler;
+        public event EventHandler<MessageEventArgs> Received;
         /// <summary>
         /// 作者：carl.wu
         /// 时间：2020-02-01
@@ -58,7 +58,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         private void OnReceived(object sender, MessageEventArgs args)
         {
             // 定义一个局部变量，已防止最后一个订阅者刚好在检查null后取消订阅
-            EventHandler<MessageEventArgs> handler = ReceivedEventHandler;
+            EventHandler<MessageEventArgs> handler = Received;
             // 如果没有 订阅者（观察者）， 委托对象将为null
             if (handler != null)
             {

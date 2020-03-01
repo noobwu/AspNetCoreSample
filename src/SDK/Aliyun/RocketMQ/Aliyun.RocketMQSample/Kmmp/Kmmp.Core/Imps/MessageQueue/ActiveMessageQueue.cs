@@ -953,7 +953,7 @@ namespace Kmmp.Core.Imps.MessageQueue
         /// <summary>
         /// 接收消息事件
         /// </summary>
-        public event EventHandler<MessageEventArgs> ReceivedEventHandler = delegate { };
+        public event EventHandler<MessageEventArgs> Received = delegate { };
 
         /// <summary>
         /// 作者：吴廷有
@@ -986,7 +986,7 @@ namespace Kmmp.Core.Imps.MessageQueue
             // 防止两个消息同时从不同 channel 中获取，并执行
             lock (this)
             {
-                ReceivedEventHandler(this, e);
+                Received(this, e);
             }
         }
 

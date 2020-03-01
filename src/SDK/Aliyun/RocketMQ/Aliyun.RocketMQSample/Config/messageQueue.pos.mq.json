@@ -5,6 +5,6 @@
     "AccessKeySecret": "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I",
     "NameSrvAddr": "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80",
     "Topic": "TopicTest",
-    "GroupId": "GID_Test"
+    "GroupIdPrefix": "GID_"
   }
 }

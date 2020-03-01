@@ -140,7 +140,7 @@ namespace Aliyun.RocketMQSample.Producer
 
                 taskList.Add(task);
             }
-            string tempQueueName = "CateringVipTypeTemp";
+            string tempQueueName = "TempCateringVipType";
             Console.WriteLine($"发送消息,{tempQueueName}:{DateTime.Now}");
             IMessagePublisher tempPublisher = GetPublisher(tempQueueName);
             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)

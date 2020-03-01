@@ -113,20 +113,12 @@ namespace Aliyun.RocketMQSample.Consumer
             const int ConsumerCount = 2;
             string queueName = "CateringVipType";
             Console.WriteLine($"接收消息,{queueName}:{DateTime.Now}");
-            //for (int index = 1; index <= ConsumerCount; index++)
-            //{
-            //    // 接收消息
-            //    KmmpMQReceiverTest(queueName);
-            //}
+
             KmmpMQReceiverTest(queueName);
-            string tempQueueName = "CateringVipTypeTemp";
+            string tempQueueName = "TempCateringVipType";
             Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
-            //for (int index = 1; index <= ConsumerCount; index++)
-            //{
-            //    接收消息
-            //    KmmpMQReceiverTest(tempQueueName);
-            //}
-            //KmmpMQReceiverTest(tempQueueName);
+
+            KmmpMQReceiverTest(tempQueueName);
             Console.ReadKey();
         }
 
@@ -139,7 +131,7 @@ namespace Aliyun.RocketMQSample.Consumer
             try
             {
                 var receiver = GetReceiver(queueName);
-                receiver.ReceivedEventHandler += (sender, args) =>
+                receiver.Received += (sender, args) =>
                 {
                     //Execute(q.Value<string>("Method"), args.Message);
                     //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
