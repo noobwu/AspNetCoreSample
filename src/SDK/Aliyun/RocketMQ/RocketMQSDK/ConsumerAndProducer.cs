@@ -199,8 +199,8 @@ namespace RocketMQSDK
             {
                 msg.setStartDeliverTime(ToTimestamp(deliveryTime.Value));
             }
-            //string base64BodyTypeFullName = "SayHello";
-            //msg.putUserProperties("BodyTypeFullName", base64BodyTypeFullName);
+            //msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);// 接收信息的时候无法获取到
+            //msg.putUserProperties("BodyTypeFullName", base64BodyTypeFullName);// 接收信息的时候可以获取到
             try
             {
                 SendResultONS sendResult = _producer.send(msg);
@@ -222,7 +222,8 @@ namespace RocketMQSDK
             Message msg = new Message(Ons_Topic, tag, msgBody);
             msg.setKey(Guid.NewGuid().ToString());
             string base64BodyTypeFullName = "SayHello";
-            msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
+            //msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);// 接收信息的时候无法获取到
+            msg.putUserProperties("BodyTypeFullName", base64BodyTypeFullName);// 接收信息的时候可以获取到
             try
             {
                 SendResultONS sendResult = _orderproducer.send(msg, shardingKey);
