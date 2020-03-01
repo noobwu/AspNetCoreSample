@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// The Consumer namespace.
 /// </summary>
-namespace Aliyun.RocketMQSample.Consumer
+namespace Aliyun.RocketMQSample.OrderConsumer
 {
     /// <summary>
     /// Class Program.
@@ -65,7 +65,7 @@ namespace Aliyun.RocketMQSample.Consumer
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            configs = configs.Where(a => !(new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
+            configs = configs.Where(a => (new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
             configs?.ForEach(config =>
             {
                 OnscSharp instance = new OnscSharp(config);
@@ -87,7 +87,6 @@ namespace Aliyun.RocketMQSample.Consumer
                 }
 
             });
-
             stopWatch.Stop();
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
@@ -159,6 +158,7 @@ namespace Aliyun.RocketMQSample.Consumer
         /// </summary>
         /// <param name="queueName">Name of the queue.</param>
         /// <returns>IMessageReceiver.</returns>
+        /// <exception cref="System.Exception">0006</exception>
         /// <exception cref="Exception">0006</exception>
         private static IMessageReceiver GetReceiver(string queueName)
         {
