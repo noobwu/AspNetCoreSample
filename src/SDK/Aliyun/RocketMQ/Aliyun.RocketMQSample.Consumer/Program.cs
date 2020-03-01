@@ -95,8 +95,8 @@ namespace Aliyun.RocketMQSample.Consumer
             //    KmmpMQReceiverTest(queueName);
             //}
             KmmpMQReceiverTest(queueName);
-            //string tempQueueName = "CateringVipTypeTemp";
-            //Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
+            string tempQueueName = "CateringVipTypeTemp";
+            Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
             //for (int index = 1; index <= ConsumerCount; index++)
             //{
             //    接收消息
