@@ -1,9 +1,0 @@
-﻿{
-    "_type": "Imps.MessageQueue.ActiveMessageQueue",
-    "IsAsync": true,
-    "Channels": {
-        "ActiveMQDev" : {
-            "Uri" : "failover:(tcp://weixin-test.kemai.com.cn:8088)?timeout=10000&nested.connectionTimeout=3000"
-        }
-    }
-}

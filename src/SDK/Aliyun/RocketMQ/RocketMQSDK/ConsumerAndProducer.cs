@@ -142,15 +142,15 @@ namespace RocketMQSDK
         /// <summary>
         /// 您在控制台创建的 Topic
         /// </summary>
-        private string Ons_Topic = "TopicTest";
+        private string Ons_Topic = "";
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeyId，用于身份认证
         /// </summary>
-        private string Ons_AccessKey = "LTAI4FmKyLtChjPm6kvr8brC";
+        private string Ons_AccessKey = "";
         /// <summary>
         /// 您在阿里云账号管理控制台中创建的 AccessKeySecret，用于身份认证
         /// </summary>
-        private string Ons_SecretKey = "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I";
+        private string Ons_SecretKey = "";
         /// <summary>
         /// 同一组GroupId一个进程只能有一个消费者
         /// 一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。
@@ -161,11 +161,11 @@ namespace RocketMQSDK
         /// 5. Group ID 一旦创建，则无法修改。
         /// </summary>
         /// <value>The group identifier.</value>
-        private string Ons_GroupId = "GID_Test";
+        private string Ons_GroupId = "";
         /// <summary>
         /// 设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取
         /// </summary>
-        private string Ons_NameSrv = "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80";
+        private string Ons_NameSrv = "";
 
         /// <summary>
         /// Gets the configuration.
