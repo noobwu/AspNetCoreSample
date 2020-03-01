@@ -67,16 +67,16 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 
         /// <summary>
         /// 发送分区顺序消息
+        /// https://help.aliyun.com/document_detail/49323.html
         /// </summary>
-        /// <param name="shardingKey">分区Key</param>
         /// <param name="body">内容</param>
+        /// <param name="shardingKey">分区Key(分区顺序消息中区分不同分区的关键字段，Sharding Key 与普通消息的 key 是完全不同的概念。全局顺序消息，该字段可以设置为任意非空字符串。)</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
         /// <returns>Message.</returns>
-        public Message SendMessage(string shardingKey, object body, string tag = "", string key = "", DateTime? deliveryTime = null)
+        public Message SendMessage(object body, string shardingKey = "shardingKey", string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             var message = ComposeMessage(body, tag, key);
-
             var sendResult = producer.send(message, shardingKey);
             message.setMsgID(sendResult.getMessageId());
             return message;

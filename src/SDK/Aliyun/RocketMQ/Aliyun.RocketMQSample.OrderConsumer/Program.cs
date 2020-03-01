@@ -54,7 +54,6 @@ namespace Aliyun.RocketMQSample.OrderConsumer
             {
                 Console.WriteLine(ex);
             }
-
             Console.ReadKey();
         }
         /// <summary>

@@ -48,7 +48,7 @@ namespace Aliyun.RocketMQSample.Consumer
             try
             {
                 //KmmpMQConsumerTest();
-                //KmmpRocketMQReceiverTest();
+                KmmpRocketMQReceiverTest();
             }
             catch (Exception ex)
             {

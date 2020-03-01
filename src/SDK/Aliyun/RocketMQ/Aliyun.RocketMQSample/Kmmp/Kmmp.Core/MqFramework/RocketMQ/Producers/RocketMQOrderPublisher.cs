@@ -86,7 +86,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
                 {
                     deliveryTime = DateTime.Now.AddSeconds(delay.Value);
                 }
-                var result = this.SendMessage(string.Empty, body, queueName, messageId, deliveryTime);
+                var result = this.SendMessage(body, messageId, queueName, messageId, deliveryTime);
             }
             catch (Exception ex)
             {
