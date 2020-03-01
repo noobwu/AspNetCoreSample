@@ -59,7 +59,8 @@ namespace RocketMQSDK
             //byte[] text = Convert.FromBase64String(value.getBody());//中文decode
             //string body = Encoding.UTF8.GetString(text);
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
+            //Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getUserProperties("BodyTypeFullName")}");
+            Console.WriteLine($"Receive message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
             return ons.Action.CommitMessage;
         }
     }
@@ -98,7 +99,8 @@ namespace RocketMQSDK
             // 根据业务唯一标识的 Key 做幂等处理
             string key = message.getKey();
             Byte[] text = Encoding.Default.GetBytes(message.getBody());
-            Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
+            //Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)},BodyTypeFullName:{message.getUserProperties("BodyTypeFullName")}");
+            Console.WriteLine($"Receive order message,key:{key},tag:{message.getTag()},body:{Encoding.UTF8.GetString(text)}");
             return ons.OrderAction.Success;
         }
     }
@@ -197,8 +199,8 @@ namespace RocketMQSDK
             {
                 msg.setStartDeliverTime(ToTimestamp(deliveryTime.Value));
             }
-            string base64BodyTypeFullName = "SayHello";
-            msg.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
+            //string base64BodyTypeFullName = "SayHello";
+            //msg.putUserProperties("BodyTypeFullName", base64BodyTypeFullName);
             try
             {
                 SendResultONS sendResult = _producer.send(msg);
