@@ -99,7 +99,7 @@
       <Name>Aliyun.RocketMQSample</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocketMQSDK\RocketMQSDK.csproj">
-      <Project>{27EFF0B0-4642-446E-A6B6-99C6BBFEBC40}</Project>
+      <Project>{27eff0b0-4642-446e-a6b6-99c6bbfebc40}</Project>
       <Name>RocketMQSDK</Name>
     </ProjectReference>
   </ItemGroup>
