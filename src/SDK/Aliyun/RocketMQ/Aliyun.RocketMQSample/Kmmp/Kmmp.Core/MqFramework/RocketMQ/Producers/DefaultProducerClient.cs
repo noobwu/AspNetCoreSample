@@ -84,7 +84,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="body">The body.</param>
         /// <param name="tag">标签</param>
         /// <param name="key">消息key, 要做到局唯一</param>
-        /// <param name="deliveryTime">The delivery time.</param>
+        /// <param name="deliveryTime">定时/延时时间</param>
         /// <exception cref="System.NullReferenceException">producer为空</exception>
         public void SendOnewayMessage(object body, string tag = "", string key = "", DateTime? deliveryTime = null)
         {

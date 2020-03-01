@@ -73,7 +73,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
         /// <returns>Message.</returns>
-        public Message SendMessage(string shardingKey, object body, string tag = "", string key = "")
+        public Message SendMessage(string shardingKey, object body, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             var message = ComposeMessage(body, tag, key);
 

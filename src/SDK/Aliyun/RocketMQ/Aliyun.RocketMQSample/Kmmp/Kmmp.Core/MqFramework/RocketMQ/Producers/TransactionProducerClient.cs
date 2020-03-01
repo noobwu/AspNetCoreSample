@@ -25,8 +25,8 @@ using System.Threading.Tasks;
 namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 {
     /// <summary>
-    /// 事务消息生产者
-    /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
+    /// {D255958A-8513-4226-94B9-080D98F904A1}事务消息生产者
+    /// {D255958A-8513-4226-94B9-080D98F904A1}Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     /// </summary>
     /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     public class TransactionProducerClient : ProducerClientBase
@@ -53,8 +53,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 启动
         /// </summary>
+        /// <exception cref="System.NullReferenceException">producer为空</exception>
         public override void Start()
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.start();
         }
 
@@ -63,6 +68,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// </summary>
         public override void Shutdown()
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.shutdown();
         }
 
@@ -73,31 +82,20 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="bizFunc">业务方法</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
+        /// <param name="deliveryTime">定时/延时时间</param>
         /// <returns>Message.</returns>
-        public Message SendMessage(string content, Func<Message, bool> bizFunc, string tag = "", string key = "")
+        /// <exception cref="System.NullReferenceException">producer为空</exception>
+        public Message SendMessage(string content, Func<Message, bool> bizFunc, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(content, tag, key);
-
-            var result = producer.send(message, new ExtendedLocalTransactionExecuter(bizFunc));
-
-            message.setMsgID(result.getMessageId());
-            return message;
-        }
-
-        /// <summary>
-        /// 发送定时消息
-        /// </summary>
-        /// <param name="content">内容</param>
-        /// <param name="bizFunc">业务方法</param>
-        /// <param name="deliveryTime">指定发送时间</param>
-        /// <param name="tag">消息标签</param>
-        /// <param name="key">消息Key</param>
-        /// <returns>Message.</returns>
-        public Message SendTimingMessage(string content, Func<Message, bool> bizFunc, DateTime deliveryTime, string tag = "", string key = "")
-        {
-            var message = ComposeMessage(content, tag, key);
-            message.setStartDeliverTime(deliveryTime.ToTimestamp());
-
+            if (deliveryTime.HasValue)
+            {
+                message.setStartDeliverTime(deliveryTime.Value.ToTimestamp());
+            }
             var result = producer.send(message, new ExtendedLocalTransactionExecuter(bizFunc));
 
             message.setMsgID(result.getMessageId());

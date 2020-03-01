@@ -15,6 +15,7 @@ using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
 using Kmmp.Core.Models;
 using Kmmp.Core.MqFramework.RocketMQ;
+using Kmmp.Core.MqFramework.RocketMQ.Producers;
 using Kmmp.DSync.Data;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,8 @@ namespace Aliyun.RocketMQSample.Producer
             try
             {
                 //KmmpMQProducerTest();
-                ProducerTest();
+                //ProducerTest();
+                KmmpRocketMQPublisherTest();
             }
             catch (Exception ex)
             {
@@ -69,7 +71,7 @@ namespace Aliyun.RocketMQSample.Producer
         {
             string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
             List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
-            Console.WriteLine($"instance,开始:{DateTime.Now}");
+            Console.WriteLine($"ProducerTest,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             List<OnscSharp> onscSharpList = new List<OnscSharp>();
@@ -164,7 +166,94 @@ namespace Aliyun.RocketMQSample.Producer
             });
             stopWatch.Stop();
 
-            Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+            Console.WriteLine($"ProducerTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+        }
+
+        /// <summary>
+        /// KMMPs the rocket mq publisher test.
+        /// </summary>
+        static void KmmpRocketMQPublisherTest()
+        {
+            string queueName = "CateringVipType";
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
+            Console.WriteLine($"KmmpRocketMQPublisherTest,开始:{DateTime.Now}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            List<IMessagePublisher> publisherList = new List<IMessagePublisher>();
+            var taskList = new List<Task>();
+            configs?.ForEach(config =>
+            {
+                IMessagePublisher instance = null;
+                //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
+                switch (config.MsgType)
+                {
+                    case 2:
+                    case 3:
+                        {
+                            instance = new RocketMQOrderPublisher(config, queueName);
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        //instance.Put($"This is order test message {tempThreadIndex}:{tempMessageIndex}");
+                                        instance.Put(GetMQVipData());
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                    case 5:
+                        {
+                            instance = new RocketMQPublisher(config, queueName);
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        //instance.Put($"This is order test message {tempThreadIndex}:{tempMessageIndex}");
+                                        instance.Put(GetMQVipData(), delay: 10);
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                    default:
+                        {
+                            instance = new RocketMQPublisher(config, queueName);
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        instance.Put(GetMQVipData(), delay: 10);
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
+                }
+            });
+            Task.WaitAll(taskList.ToArray());
+            publisherList?.ForEach(a =>
+            {
+                a.Dispose();
+            });
+            stopWatch.Stop();
+
+            Console.WriteLine($"KmmpRocketMQPublisherTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
         /// <summary>
         /// KMMPs the mq producer test.
@@ -223,6 +312,29 @@ namespace Aliyun.RocketMQSample.Producer
         /// </summary>
         /// <param name="publisher">The publisher.</param>
         static void KmmpMQPublisherTest(IMessagePublisher publisher)
+        {
+            publisher.Put(GetMQVipData());
+
+        }
+
+        /// <summary>
+        /// 获取消息队列对象
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <returns>IMessagePublisher.</returns>
+        /// <exception cref="Exception">0006</exception>
+        private static IMessagePublisher GetPublisher(string queueName)
+        {
+            var messageQueue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
+            IMessagePublisher _publisher = messageQueue.GetMessagePublisher(queueName);
+            if (_publisher == null)
+            {
+                throw new Exception("0006");
+            }
+            return _publisher;
+        }
+
+        private static MQ_VipData<Temp_VipType> GetMQVipData()
         {
 
             var strJson = @"[
@@ -293,25 +405,7 @@ namespace Aliyun.RocketMQSample.Producer
                 ProductionType = productionType,
                 data = data
             };
-            publisher.Put(mqData);//永远不过期
-
-        }
-
-        /// <summary>
-        /// 获取消息队列对象
-        /// </summary>
-        /// <param name="queueName">Name of the queue.</param>
-        /// <returns>IMessagePublisher.</returns>
-        /// <exception cref="Exception">0006</exception>
-        private static IMessagePublisher GetPublisher(string queueName)
-        {
-            var messageQueue = MessageQueueHelper.GetMessageQueueFromPool(queueName);
-            IMessagePublisher _publisher = messageQueue.GetMessagePublisher(queueName);
-            if (_publisher == null)
-            {
-                throw new Exception("0006");
-            }
-            return _publisher;
+            return mqData;
         }
     }
 }

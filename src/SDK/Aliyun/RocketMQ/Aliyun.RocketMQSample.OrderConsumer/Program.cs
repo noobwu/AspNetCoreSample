@@ -15,6 +15,7 @@ using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
 using Kmmp.Core.Models;
 using Kmmp.Core.MqFramework.RocketMQ;
+using Kmmp.Core.MqFramework.RocketMQ.Consumers;
 using Kmmp.DSync.Data;
 using Kmmp.MqReceiver.DSync;
 using System;
@@ -45,7 +46,8 @@ namespace Aliyun.RocketMQSample.OrderConsumer
             try
             {
                 //KmmpMQConsumerTest();
-                ConsumerTest();
+                //ConsumerTest();
+                KmmpRocketMQReceiverTest();
             }
             catch (Exception ex)
             {
@@ -169,6 +171,74 @@ namespace Aliyun.RocketMQSample.OrderConsumer
                 throw new Exception("0006");
             }
             return receiver;
+        }
+        /// <summary>
+        /// Consumers the test.
+        /// </summary>
+        static void KmmpRocketMQReceiverTest()
+        {
+            Console.WriteLine($"KmmpRocketMQReceiverTest,开始:{DateTime.Now}");
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
+            string queueName = "CateringVipType";
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            configs = configs.Where(a => (new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
+            configs?.ForEach(config =>
+            {
+                IMessageReceiver instance = null;
+                switch (config.MsgType)
+                {
+                    case 2:
+                    case 3:
+                        {
+                            instance = new RocketMQOrderReceiver(config, queueName);
+                        }
+                        break;
+                    default:
+                        {
+                            instance = new RocketMQReceiver(config, queueName);
+
+                        }
+                        break;
+                }
+                if (instance != null)
+                {
+                    StartKmmpMQReceiver(instance);
+                }
+
+            });
+
+            stopWatch.Stop();
+            Console.WriteLine($"KmmpRocketMQReceiverTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+        }
+        /// <summary>
+        /// KMMPs the mq publisher test.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        static void StartKmmpMQReceiver(IMessageReceiver receiver)
+        {
+            try
+            {
+                receiver.Received += (sender, args) =>
+                {
+                    //Execute(q.Value<string>("Method"), args.Message);
+                    //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
+                    var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                    if (mqData == null)
+                    {
+                        mqData = JsonHelper.JsonConvertDeserialize<MQ_VipData<Temp_VipType>>(args.Message.ToString());
+                    }
+                    new SyncVipTypeMqReceiver().Execute(mqData);
+                    Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData?.MessageId}");
+                };
+                receiver.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
     }
