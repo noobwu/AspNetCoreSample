@@ -1,4 +1,17 @@
-﻿using Kmmp.Core.Helper;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample.Consumer
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-03-01
+// ***********************************************************************
+// <copyright file="Program.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
 using Kmmp.DSync.Data;
 using Kmmp.MqReceiver.DSync;
@@ -10,6 +23,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The Consumer namespace.
+/// </summary>
 namespace Aliyun.RocketMQSample.Consumer
 {
     /// <summary>
@@ -36,6 +52,9 @@ namespace Aliyun.RocketMQSample.Consumer
 
             Console.ReadKey();
         }
+        /// <summary>
+        /// Consumers the test.
+        /// </summary>
         static void ConsumerTest()
         {
             /// <summary>
@@ -70,9 +89,9 @@ namespace Aliyun.RocketMQSample.Consumer
             //    tempInstance.StartPushConsumer("TempTestMessage");
             //}
 
-            //OnscSharp tempInstance = new OnscSharp();
-            //tempInstance.CreatePushConsumer();
-            //tempInstance.StartPushConsumer("TempTestMessage");
+            OnscSharp tempInstance = new OnscSharp();
+            tempInstance.CreatePushConsumer();
+            tempInstance.StartPushConsumer("TempTestMessage");
 
 
             //tempInstance.shutdownPushConsumer();
@@ -83,6 +102,9 @@ namespace Aliyun.RocketMQSample.Consumer
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
 
+        /// <summary>
+        /// KMMPs the mq consumer test.
+        /// </summary>
         static void KmmpMQConsumerTest()
         {
             /// <summary>
@@ -142,8 +164,8 @@ namespace Aliyun.RocketMQSample.Consumer
         /// Date：2016-09-28
         /// Desc：执行
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <param name="msg"></param>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="msg">The MSG.</param>
         private void Execute(string typeName, object msg)
         {
             Type type = Type.GetType(typeName);

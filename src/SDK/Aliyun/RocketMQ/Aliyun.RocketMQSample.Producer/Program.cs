@@ -1,4 +1,17 @@
-﻿using Kmmp.Core.Helper;
+﻿// ***********************************************************************
+// Assembly         : Aliyun.RocketMQSample.Producer
+// Author           : Administrator
+// Created          : 2020-02-29
+//
+// Last Modified By : Administrator
+// Last Modified On : 2020-03-01
+// ***********************************************************************
+// <copyright file="Program.cs" company="NoobCore.com">
+//     Copyright ©  2020
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using Kmmp.Core.Helper;
 using Kmmp.Core.Imps;
 using Kmmp.DSync.Data;
 using System;
@@ -9,6 +22,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The Producer namespace.
+/// </summary>
 namespace Aliyun.RocketMQSample.Producer
 {
 
@@ -98,6 +114,9 @@ namespace Aliyun.RocketMQSample.Producer
 
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
+        /// <summary>
+        /// KMMPs the mq producer test.
+        /// </summary>
         static void KmmpMQProducerTest()
         {
 
