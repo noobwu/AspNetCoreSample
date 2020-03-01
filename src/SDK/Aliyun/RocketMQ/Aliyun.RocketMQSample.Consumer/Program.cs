@@ -17,14 +17,7 @@ namespace Aliyun.RocketMQSample.Consumer
     /// </summary>
     class Program
     {
-        /// <summary>
-        /// 每线程发送消息数量
-        /// </summary>
-        private static readonly int MessageCountPerThread = 2;
-        /// <summary>
-        /// 线程总数
-        /// </summary>
-        private static readonly int ProducerThreadCount = 2;
+
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
@@ -45,6 +38,14 @@ namespace Aliyun.RocketMQSample.Consumer
         }
         static void ConsumerTest()
         {
+            /// <summary>
+            /// 每线程发送消息数量
+            /// </summary>
+            int MessageCountPerThread = 2;
+            /// <summary>
+            /// 线程总数
+            /// </summary>
+            int ProducerThreadCount = 2;
             Console.WriteLine($"instance,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -81,12 +82,13 @@ namespace Aliyun.RocketMQSample.Consumer
 
             Console.WriteLine($"instance,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
-        /// <summary>
-        /// 消费都数量
-        /// </summary>
-        private const int ConsumerCount = 2;
+
         static void KmmpMQConsumerTest()
         {
+            /// <summary>
+            /// 消费都数量
+            /// </summary>
+            const int ConsumerCount = 2;
             string queueName = "CateringVipType";
             Console.WriteLine($"接收消息,{queueName}:{DateTime.Now}");
             //for (int index = 1; index <= ConsumerCount; index++)
