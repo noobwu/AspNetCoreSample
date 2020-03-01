@@ -59,11 +59,11 @@ namespace Aliyun.RocketMQSample.Producer
         /// <summary>
         /// 每线程发送消息数量
         /// </summary>
-        private static readonly int MessageCountPerThread = 2;
+        private static readonly int MessageCountPerThread = 1;
         /// <summary>
         /// 线程总数
         /// </summary>
-        private static readonly int ProducerThreadCount = 2;
+        private static readonly int ProducerThreadCount = 1;
         /// <summary>
         /// Producers the test.
         /// </summary>
