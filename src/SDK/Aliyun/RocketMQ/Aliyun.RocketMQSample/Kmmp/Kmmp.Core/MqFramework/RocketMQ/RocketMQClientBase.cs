@@ -75,7 +75,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ
         /// <summary>
         /// The log path
         /// </summary>
-        private string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Logs";
+        private string logPath = AppDomain.CurrentDomain.BaseDirectory + @"Logs";
 
         /// <summary>
         /// 日志保存路径
