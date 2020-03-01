@@ -42,7 +42,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// </summary>
         public override void Start()
         {
-            ReceiverMessageListener listener = new ReceiverMessageListener();
+            OrderReceiverMessageListener listener = new OrderReceiverMessageListener();
             listener.ReceivedEventHandler += OnReceived;
             base.SetMessageListener(listener);
             base.Start();
@@ -82,12 +82,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// Implements the <see cref="ons.MessageListener" />
         /// </summary>
         /// <seealso cref="ons.MessageListener" />
-        private class ReceiverMessageListener : MessageOrderListener
+        private class OrderReceiverMessageListener : MessageOrderListener
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ReceiverMessageListener"/> class.
             /// </summary>
-            public ReceiverMessageListener()
+            public OrderReceiverMessageListener()
             {
 
             }
@@ -100,7 +100,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
             /// <exception cref="ArgumentNullException"></exception>
             public override OrderAction consume(Message message, ConsumeOrderContext context)
             {
-                var base64BodyTypeFullName = message.getSystemProperties("BodyTypeFullName");
+                var base64BodyTypeFullName = message.getUserProperties("BodyTypeFullName");
                 MessageEventArgs messageEventArgs = null;
                 string msgName = $"{message.getTopic()}:{message.getTag()}:{message.getKey()}";
                 if (!string.IsNullOrWhiteSpace(base64BodyTypeFullName))
@@ -124,9 +124,11 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                 }
                 else
                 {
+                    Console.WriteLine($"base64BodyTypeFullName is null,body:{message.getBody()}");
                     messageEventArgs = new MessageEventArgs(msgName, message.getBody());
                 }
-                Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
+                //Console.WriteLine($"顺序消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
+                Console.WriteLine($"顺序消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()}");
                 try
                 {
                     OnReceived(messageEventArgs);

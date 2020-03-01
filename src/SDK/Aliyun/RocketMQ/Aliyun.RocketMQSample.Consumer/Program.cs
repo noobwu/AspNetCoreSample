@@ -213,10 +213,6 @@ namespace Aliyun.RocketMQSample.Consumer
                     //Execute(q.Value<string>("Method"), args.Message);
                     //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
                     var mqData = args.Message as MQ_VipData<Temp_VipType>;
-                    if (mqData == null)
-                    {
-                        mqData = JsonHelper.JsonConvertDeserialize<MQ_VipData<Temp_VipType>>(args.Message.ToString());
-                    }
                     new SyncVipTypeMqReceiver().Execute(mqData);
                     Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData?.MessageId}");
                 };

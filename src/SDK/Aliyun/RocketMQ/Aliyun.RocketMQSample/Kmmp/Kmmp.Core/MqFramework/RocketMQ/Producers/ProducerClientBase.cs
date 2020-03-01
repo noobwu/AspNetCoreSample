@@ -60,14 +60,14 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             var bodyBytes = Encoding.UTF8.GetBytes(strBody);
             message.setBody(bodyBytes, bodyBytes.Length);
 
-            //string base64BodyTypeFullName = Convert.ToBase64String(Encoding.UTF8.GetBytes(body.GetType().AssemblyQualifiedName));
-
-            string base64BodyTypeFullName = "SayHello";
-            message.putSystemProperties("BodyTypeFullName", base64BodyTypeFullName);
+            string base64BodyTypeFullName = Convert.ToBase64String(Encoding.UTF8.GetBytes(body.GetType().AssemblyQualifiedName));
+            //base64BodyTypeFullName = Convert.ToBase64String(Encoding.UTF8.GetBytes("SayHello"));
+            message.putUserProperties("BodyTypeFullName", base64BodyTypeFullName);
 
             message.setKey(key);
-            Console.WriteLine($"BodyTypeFullName:{base64BodyTypeFullName},getSystemProperties:{message.getSystemProperties("BodyTypeFullName")}");
-            //Console.WriteLine($"BodyTypeFullName:{JsonHelper.JsonConvertSerialize(message.getSystemProperties("BodyTypeFullName"))}");
+
+            //Console.WriteLine($"BodyTypeFullName:{base64BodyTypeFullName},BodyTypeFullName:{message.getUserProperties("BodyTypeFullName")}");
+
             return message;
         }
     }
