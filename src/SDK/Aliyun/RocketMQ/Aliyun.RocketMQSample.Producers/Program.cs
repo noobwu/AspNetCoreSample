@@ -55,9 +55,10 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
+                Console.Title = "KmmpRocketMQTransProducerTest";
                 //KmmpMQProducerTest();
-                KmmpRocketMQPublisherTest();
-                Console.Title = "KmmpRocketMQPublisherTest";
+                //KmmpRocketMQPublisherTest();
+                KmmpRocketMQTransProducerTest();
             }
             catch (Exception ex)
             {
@@ -67,7 +68,57 @@ namespace Aliyun.RocketMQSample.Producer
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// KMMPs the rocket mq publisher test.
+        /// </summary>
+        static void KmmpRocketMQTransProducerTest()
+        {
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
+            Console.WriteLine($"KmmpRocketMQTransProducerTest,开始:{DateTime.Now}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            List<TransactionProducerClient> producerList = new List<TransactionProducerClient>();
+            var taskList = new List<Task>();
+            configs = configs.Where(a => a.MsgType == 4).ToList();
+            configs?.ForEach(config =>
+            {
+                string queueName = $"{config.GroupId.Replace(config.GroupIdPrefix, string.Empty)}";
+                Func<Message, TransactionStatus> transCheckFunc = (msg) =>
+                {
+                    return TransactionStatus.CommitTransaction;
+                };
+                Func<Message, TransactionStatus> transExecFunc = (msg) =>
+                 {
+                     return TransactionStatus.CommitTransaction;
+                 };
+                //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
+                TransactionProducerClient instance = new TransactionProducerClient(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupId, transCheckFunc);
+                instance.Start();
+                for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                {
+                    // 生产消费
+                    var task = Task.Factory.StartNew(() =>
+                    {
+                        for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                        {
+                            //instance.Put($"This is order test message {tempThreadIndex}:{tempMessageIndex}");
+                            instance.SendMessage(GetMQVipData(), transExecFunc, queueName);
+                        }
+                    }, TaskCreationOptions.LongRunning);
 
+                    taskList.Add(task);
+                }
+            });
+            Task.WaitAll(taskList.ToArray());
+            producerList?.ForEach(a =>
+            {
+                a.Shutdown();
+            });
+            stopWatch.Stop();
+
+            Console.WriteLine($"KmmpRocketMQTransProducerTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+        }
         /// <summary>
         /// KMMPs the rocket mq publisher test.
         /// </summary>

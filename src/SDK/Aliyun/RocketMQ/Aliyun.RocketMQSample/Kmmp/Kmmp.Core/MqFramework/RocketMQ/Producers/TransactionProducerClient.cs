@@ -81,20 +81,20 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 发送普通消息
         /// </summary>
-        /// <param name="content">内容</param>
+        /// <param name="body">内容</param>
         /// <param name="transExecFunc">业务方法</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
         /// <param name="deliveryTime">定时/延时时间</param>
         /// <returns>Message.</returns>
         /// <exception cref="System.NullReferenceException">producer为空</exception>
-        public Message SendMessage(string content, Func<Message, TransactionStatus> transExecFunc, string tag = "", string key = "", DateTime? deliveryTime = null)
+        public Message SendMessage(object body, Func<Message, TransactionStatus> transExecFunc, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             if (producer == null)
             {
                 throw new NullReferenceException("producer为空");
             }
-            var message = ComposeMessage(content, tag, key);
+            var message = ComposeMessage(body, tag, key);
             if (deliveryTime.HasValue)
             {
                 message.setStartDeliverTime(deliveryTime.Value.ToTimestamp());

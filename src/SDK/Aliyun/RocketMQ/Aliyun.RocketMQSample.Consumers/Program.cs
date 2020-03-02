@@ -47,9 +47,10 @@ namespace Aliyun.RocketMQSample.Consumers
         {
             try
             {
-                Console.Title = "KmmpRocketMQReceiverTest";
+                Console.Title = "KmmpRocketMQTransReceiverTest";
                 //KmmpMQConsumerTest();
-                KmmpRocketMQReceiverTest();
+                //KmmpRocketMQReceiverTest();
+                KmmpRocketMQTransReceiverTest();
 
             }
             catch (Exception ex)
@@ -59,7 +60,27 @@ namespace Aliyun.RocketMQSample.Consumers
 
             Console.ReadKey();
         }
+        /// <summary>
+        /// Consumers the test.
+        /// </summary>
+        static void KmmpRocketMQTransReceiverTest()
+        {
+            Console.WriteLine($"KmmpRocketMQTransReceiverTest,开始:{DateTime.Now}");
+            string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
+            List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            configs = configs?.Where(a => (new byte[] { 4 }).Contains(a.MsgType)).ToList();
+            configs?.ForEach(config =>
+            {
+                string queueName = $"{config.GroupId.Replace(config.GroupIdPrefix, string.Empty)}";
+                IMessageReceiver instance = new RocketMQReceiver(config, queueName);
 
+            });
+
+            stopWatch.Stop();
+            Console.WriteLine($"KmmpRocketMQTransReceiverTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+        }
         /// <summary>
         /// Consumers the test.
         /// </summary>
