@@ -24,12 +24,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
     /// Implements the <see cref="ons.LocalTransactionExecuter" />
     /// </summary>
     /// <seealso cref="ons.LocalTransactionExecuter" />
-    public class ExtendedLocalTransactionExecuter : LocalTransactionExecuter
+    public class LocalTransactionExecuterImpl : LocalTransactionExecuter
     {
         /// <summary>
         /// 业务逻辑方法
         /// </summary>
-        private readonly Func<Message, bool> bizFunc;
+        private readonly Func<Message, TransactionStatus> transExecFunc;
 
         /// <summary>
         /// 异常处理方法
@@ -37,13 +37,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         private readonly Action<Message, Exception> exceptionAction;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtendedLocalTransactionExecuter" /> class.
+        /// Initializes a new instance of the <see cref="LocalTransactionExecuterImpl" /> class.
         /// </summary>
-        /// <param name="bizFunc">The biz function.</param>
+        /// <param name="transExecFunc">The biz function.</param>
         /// <param name="exceptionAction">The exception action.</param>
-        public ExtendedLocalTransactionExecuter(Func<Message, bool> bizFunc, Action<Message, Exception> exceptionAction = null)
+        public LocalTransactionExecuterImpl(Func<Message, TransactionStatus> transExecFunc, Action<Message, Exception> exceptionAction = null)
         {
-            this.bizFunc = bizFunc;
+            this.transExecFunc = transExecFunc;
             this.exceptionAction = exceptionAction;
         }
 
@@ -58,17 +58,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             // 消息ID和crc32id主要是用来防止消息重复
             // 如果业务本身是幂等的, 可以忽略, 否则需要利用msgId或crc32Id来做幂等
             // 如果要求消息绝对不重复, 推荐做法是对消息体body使用crc32或md5来防止重复消息.
-            bool success = bizFunc.Invoke(msg);
-            if (success)
-            {
-                // 本地事务成功、提交消息
-                return TransactionStatus.CommitTransaction;
-            }
-            else
-            {
-                // 本地事务失败、回滚消息
-                return TransactionStatus.RollbackTransaction;
-            }
+            return transExecFunc.Invoke(msg);
         }
     }
 }

@@ -47,8 +47,9 @@ namespace Aliyun.RocketMQSample.OrderConsumer
         {
             try
             {
+                Console.Title = "KmmpRocketMQOrderReceiverTest";
                 //KmmpMQConsumerTest();
-                KmmpRocketMQReceiverTest();
+                KmmpRocketMQOrderReceiverTest();
             }
             catch (Exception ex)
             {
@@ -138,18 +139,17 @@ namespace Aliyun.RocketMQSample.OrderConsumer
         /// <summary>
         /// Consumers the test.
         /// </summary>
-        static void KmmpRocketMQReceiverTest()
+        static void KmmpRocketMQOrderReceiverTest()
         {
             Console.WriteLine($"KmmpRocketMQReceiverTest,开始:{DateTime.Now}");
             string strRocketMQConfigs = JsonConfigInfo.ReadAllFromFile("RocketMQConfigs.json");
             List<RocketMQConfig> configs = JsonHelper.JsonConvertDeserialize<List<RocketMQConfig>>(strRocketMQConfigs);
-            string queueName = "CateringVipType";
-
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             configs = configs.Where(a => (new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
             configs?.ForEach(config =>
             {
+                string queueName = $"{config.GroupId.Replace(config.GroupIdPrefix, string.Empty)}";
                 IMessageReceiver instance = null;
                 switch (config.MsgType)
                 {

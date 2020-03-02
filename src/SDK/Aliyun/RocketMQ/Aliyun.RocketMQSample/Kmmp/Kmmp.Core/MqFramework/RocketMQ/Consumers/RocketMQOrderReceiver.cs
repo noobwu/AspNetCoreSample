@@ -128,7 +128,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                     messageEventArgs = new MessageEventArgs(msgName, message.getBody());
                 }
                 //Console.WriteLine($"顺序消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
-                Console.WriteLine($"顺序消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()}");
+                Console.WriteLine($"于{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}接收到顺序消息,序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Topic:{message.getTopic()},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()}");
                 try
                 {
                     OnReceived(messageEventArgs);

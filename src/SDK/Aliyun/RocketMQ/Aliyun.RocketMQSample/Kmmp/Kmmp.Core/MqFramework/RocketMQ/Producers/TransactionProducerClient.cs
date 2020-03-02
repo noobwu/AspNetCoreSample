@@ -34,7 +34,8 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 消息生产者
         /// </summary>
-        private readonly TransactionProducer producer;
+        private TransactionProducer producer;
+        private Func<Message, TransactionStatus> transCheckFunc;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -43,11 +44,11 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="nameSrvAddr">设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取</param>
         /// <param name="topic">您在控制台创建的消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。</param>
         /// <param name="groupId">一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。</param>
-        /// <param name="checkFunc">The check function.</param>
-        public TransactionProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, Func<Message, TransactionStatus> checkFunc)
+        /// <param name="transCheckFunc">The check function.</param>
+        public TransactionProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, Func<Message, TransactionStatus> transCheckFunc)
             : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
         {
-            producer = ONSFactory.getInstance().createTransactionProducer(this.FactoryProperty, new ExtendedLocalTransactionChecker(checkFunc));
+            this.transCheckFunc = transCheckFunc;
         }
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <exception cref="System.NullReferenceException">producer为空</exception>
         public override void Start()
         {
+            producer = ONSFactory.getInstance()?.createTransactionProducer(this.FactoryProperty, new LocalTransactionCheckerImpl(transCheckFunc));
             if (producer == null)
             {
                 throw new NullReferenceException("producer为空");
@@ -66,6 +68,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 关闭
         /// </summary>
+        /// <exception cref="NullReferenceException">producer为空</exception>
         public override void Shutdown()
         {
             if (producer == null)
@@ -79,13 +82,13 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// 发送普通消息
         /// </summary>
         /// <param name="content">内容</param>
-        /// <param name="bizFunc">业务方法</param>
+        /// <param name="transExecFunc">业务方法</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
         /// <param name="deliveryTime">定时/延时时间</param>
         /// <returns>Message.</returns>
         /// <exception cref="System.NullReferenceException">producer为空</exception>
-        public Message SendMessage(string content, Func<Message, bool> bizFunc, string tag = "", string key = "", DateTime? deliveryTime = null)
+        public Message SendMessage(string content, Func<Message, TransactionStatus> transExecFunc, string tag = "", string key = "", DateTime? deliveryTime = null)
         {
             if (producer == null)
             {
@@ -96,9 +99,9 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             {
                 message.setStartDeliverTime(deliveryTime.Value.ToTimestamp());
             }
-            var result = producer.send(message, new ExtendedLocalTransactionExecuter(bizFunc));
-
+            var result = producer.send(message, new LocalTransactionExecuterImpl(transExecFunc));
             message.setMsgID(result.getMessageId());
+            Console.WriteLine($"SendTransactionMessage at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},Topic:{Topic},GroupId:{GroupId},tag:{tag},key:{key},MsgID:{message.getMsgID()}");
             return message;
         }
     }

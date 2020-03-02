@@ -123,7 +123,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
             var result = producer.send(message);
             message.setMsgID(result.getMessageId());
             //Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()},BodyTypeFullName:{message.getSystemProperties("BodyTypeFullName")}");
-            Console.WriteLine($"SendMessage,tag:{tag},key:{key},MsgID:{message.getMsgID()}");
+            Console.WriteLine($"SendMessage at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")},Topic:{Topic},GroupId:{GroupId},tag:{tag},key:{key},MsgID:{message.getMsgID()}");
             return message;
         }
     }

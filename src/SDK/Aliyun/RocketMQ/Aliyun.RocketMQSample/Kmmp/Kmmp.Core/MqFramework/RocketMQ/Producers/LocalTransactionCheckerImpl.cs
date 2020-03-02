@@ -24,7 +24,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
     /// Implements the <see cref="ons.LocalTransactionChecker" />
     /// </summary>
     /// <seealso cref="ons.LocalTransactionChecker" />
-    public class ExtendedLocalTransactionChecker : LocalTransactionChecker
+    public class LocalTransactionCheckerImpl : LocalTransactionChecker
     {
         /// <summary>
         /// 事务检查方法
@@ -32,12 +32,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         private readonly Func<Message, TransactionStatus> checkFunc;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtendedLocalTransactionChecker" /> class.
+        /// Initializes a new instance of the <see cref="LocalTransactionCheckerImpl" /> class.
         /// </summary>
-        /// <param name="checkFunc">The check function.</param>
-        public ExtendedLocalTransactionChecker(Func<Message, TransactionStatus> checkFunc)
+        /// <param name="transCheckFunc">The check function.</param>
+        public LocalTransactionCheckerImpl(Func<Message, TransactionStatus> transCheckFunc)
         {
-            this.checkFunc = checkFunc;
+            this.checkFunc = transCheckFunc;
         }
 
         /// <summary>

@@ -51,17 +51,27 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <summary>
         /// 启动
         /// </summary>
+        /// <exception cref="NullReferenceException">producer为空</exception>
         public override void Start()
         {
-            producer = ONSFactory.getInstance().createOrderProducer(this.FactoryProperty);
+            producer = ONSFactory.getInstance()?.createOrderProducer(this.FactoryProperty);
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.start();
         }
 
         /// <summary>
         /// 关闭
         /// </summary>
+        /// <exception cref="NullReferenceException">producer为空</exception>
         public override void Shutdown()
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             producer.shutdown();
         }
 
@@ -73,12 +83,18 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="shardingKey">分区Key(分区顺序消息中区分不同分区的关键字段，Sharding Key 与普通消息的 key 是完全不同的概念。全局顺序消息，该字段可以设置为任意非空字符串。)</param>
         /// <param name="tag">消息标签</param>
         /// <param name="key">消息Key</param>
+        /// <param name="deliveryTime">The delivery time.</param>
         /// <returns>Message.</returns>
         public Message SendMessage(object body, string shardingKey = "shardingKey", string tag = "", string key = "", DateTime? deliveryTime = null)
         {
+            if (producer == null)
+            {
+                throw new NullReferenceException("producer为空");
+            }
             var message = ComposeMessage(body, tag, key);
             var sendResult = producer.send(message, shardingKey);
             message.setMsgID(sendResult.getMessageId());
+            Console.WriteLine($"SendOrderMessage at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},Topic:{Topic},GroupId:{GroupId},tag:{tag},key:{key},MsgID:{message.getMsgID()}");
             return message;
         }
     }
