@@ -18,7 +18,7 @@ using Kmmp.Core.MqFramework.RocketMQ;
 using Kmmp.Core.MqFramework.RocketMQ.Producers;
 using Kmmp.DSync.Data;
 using ons;
-using RocketMQSDK;
+using Aliyun.RocketMQSDK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
