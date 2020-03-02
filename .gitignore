@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /src/SDK/Aliyun/RocketMQ/Aliyun.RocketMQSample/Config
-/src/SDK/Aliyun/RocketMQ/RocketMQSDK/Config
+/src/SDK/Aliyun/RocketMQ/Aliyun.RocketMQSDK/Config
