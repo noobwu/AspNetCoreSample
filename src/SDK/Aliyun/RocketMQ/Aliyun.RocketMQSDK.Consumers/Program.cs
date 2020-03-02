@@ -60,23 +60,26 @@ namespace Aliyun.RocketMQSDK.Consumers
             Console.WriteLine($"ConsumerTest,开始:{DateTime.Now}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            //configs = configs.Where(a => !(new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
+            configs = configs?.Where(a => !(new byte[] { 2, 3 }).Contains(a.MsgType)).ToList();
             configs?.ForEach(config =>
             {
                 OnscSharp instance = new OnscSharp(config);
+                string queueName = string.Empty;
                 switch (config.MsgType)
                 {
                     case 2:
                     case 3:
                         {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage";
                             instance.CreateOrderConsumer();
-                            instance.StartOrderConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
+                            instance.StartOrderConsumer(queueName);
                         }
                         break;
                     default:
                         {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message";
                             instance.CreatePushConsumer();
-                            instance.StartPushConsumer($"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
+                            instance.StartPushConsumer(queueName);
                         }
                         break;
                 }

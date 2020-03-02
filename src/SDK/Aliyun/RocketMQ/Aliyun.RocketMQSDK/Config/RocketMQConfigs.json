@@ -14,7 +14,7 @@
     "AccessKeySecret": "ovzU5xGpoEG8Qclv9HzCeRwixlrZ4I",
     "NameSrvAddr": "http://MQ_INST_1282082963315717_BcOsSRpY.mq-internet-access.mq-internet.aliyuncs.com:80",
     "Topic": "GeneralTopicTest",
-    "GroupId": "GID_Test",
+    "GroupId": "GID_GeneralTest",
     "GroupIdPrefix": "GID_",
     "MsgType": 1,
     "Remark": "普通消息"

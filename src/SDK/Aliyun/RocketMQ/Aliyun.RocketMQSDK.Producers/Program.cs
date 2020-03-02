@@ -77,12 +77,14 @@ namespace Aliyun.RocketMQSDK.Producers
             }
             onscSharpList.ForEach(instance =>
             {
+                string queueName = string.Empty;
                 //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
                 switch (instance.Config.MsgType)
                 {
                     case 2:
                     case 3:
                         {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage";
                             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
                             {
                                 // 生产消费
@@ -90,7 +92,7 @@ namespace Aliyun.RocketMQSDK.Producers
                                 {
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
-                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage");
+                                        instance.SendOrderMessage($"This is order test message {tempThreadIndex}:{tempMessageIndex}", queueName);
                                     }
                                 }, TaskCreationOptions.LongRunning);
 
@@ -98,8 +100,9 @@ namespace Aliyun.RocketMQSDK.Producers
                             }
                         }
                         break;
-                    case 5:
+                    case 5: //延迟队列
                         {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message";
                             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
                             {
                                 // 生产消费
@@ -107,7 +110,7 @@ namespace Aliyun.RocketMQSDK.Producers
                                 {
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
-                                        instance.SendMessage($"This is time delay test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message", DateTime.Now.AddSeconds(10));
+                                        instance.SendMessage($"This is time delay test message {tempThreadIndex}:{tempMessageIndex}", queueName, DateTime.Now.AddSeconds(10));
                                     }
                                 }, TaskCreationOptions.LongRunning);
 
@@ -117,6 +120,7 @@ namespace Aliyun.RocketMQSDK.Producers
                         break;
                     default:
                         {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message";
                             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
                             {
                                 // 生产消费
@@ -124,7 +128,7 @@ namespace Aliyun.RocketMQSDK.Producers
                                 {
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
-                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message");
+                                        instance.SendMessage($"This is test message {tempThreadIndex}:{tempMessageIndex}", queueName);
                                     }
                                 }, TaskCreationOptions.LongRunning);
                                 taskList.Add(task);
