@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
 {
     /// <summary>
-    /// Class ConsumerBase.
+    /// 不同消息类型的Topic的多个学费者，不能在同一个进程内
     /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.RocketMQClientBase" />
     /// </summary>
     /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.RocketMQClientBase" />

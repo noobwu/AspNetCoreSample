@@ -12,6 +12,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
 {
     /// <summary>
     /// Class RocketMQReceiver.
+    /// 不同消息类型的Topic的多个学费者，不能在同一个进程内
     /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Consumers.PushConsumerClient" />
     /// Implements the <see cref="Kmmp.Core.Imps.IMessageReceiver" />
     /// </summary>
