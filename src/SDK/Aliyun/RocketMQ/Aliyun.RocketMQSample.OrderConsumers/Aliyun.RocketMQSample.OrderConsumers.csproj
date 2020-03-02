@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8E103194-64B9-4918-9133-DF884512F9BC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Aliyun.RocketMQSample.OrderConsumer</RootNamespace>
-    <AssemblyName>Aliyun.RocketMQSample.OrderConsumer</AssemblyName>
+    <RootNamespace>Aliyun.RocketMQSample.OrderConsumers</RootNamespace>
+    <AssemblyName>Aliyun.RocketMQSample.OrderConsumers</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
