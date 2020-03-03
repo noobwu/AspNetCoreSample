@@ -84,5 +84,10 @@ namespace ons
         /// </summary>
         /// <value>The description.</value>
         public string Remark { get; set; }
+        /// <summary>
+        /// 日志文件所在目录
+        /// </summary>
+        /// <value>The log path.</value>
+        public string LogPath { get; set; }
     }
 }

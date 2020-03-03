@@ -46,7 +46,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="config">RocketMQ配置信息</param>
         /// <param name="queueName">Name of the queue.</param>
         public RocketMQOrderPublisher(RocketMQConfig config, string queueName) : base(
-            config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupIdPrefix + queueName)
+            config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupIdPrefix + queueName, config.LogPath)
         {
             this.queueName = queueName;
             this.Start();//多线程的问题

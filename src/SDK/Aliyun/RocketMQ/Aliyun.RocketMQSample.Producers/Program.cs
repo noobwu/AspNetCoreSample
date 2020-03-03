@@ -93,7 +93,7 @@ namespace Aliyun.RocketMQSample.Producer
                      return TransactionStatus.CommitTransaction;
                  };
                 //消息类型(1:普通消息,2:分区顺序消息,3:全局顺序消息,4:事务消息,5:定时/延时消息)
-                TransactionProducerClient instance = new TransactionProducerClient(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupId, transCheckFunc);
+                TransactionProducerClient instance = new TransactionProducerClient(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupId, config.LogPath, transCheckFunc);
                 instance.Start();
                 for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
                 {

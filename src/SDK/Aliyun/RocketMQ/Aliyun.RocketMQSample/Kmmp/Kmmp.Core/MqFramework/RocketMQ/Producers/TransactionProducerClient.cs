@@ -25,8 +25,8 @@ using System.Threading.Tasks;
 namespace Kmmp.Core.MqFramework.RocketMQ.Producers
 {
     /// <summary>
-    /// {D255958A-8513-4226-94B9-080D98F904A1}事务消息生产者
-    /// {D255958A-8513-4226-94B9-080D98F904A1}Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
+    /// 事务消息生产者
+    /// Implements the <see cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     /// </summary>
     /// <seealso cref="Kmmp.Core.MqFramework.RocketMQ.Producers.ProducerClientBase" />
     public class TransactionProducerClient : ProducerClientBase
@@ -44,9 +44,10 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Producers
         /// <param name="nameSrvAddr">设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取</param>
         /// <param name="topic">您在控制台创建的消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。</param>
         /// <param name="groupId">一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。</param>
+        /// <param name="logPath">The log path.</param>
         /// <param name="transCheckFunc">The check function.</param>
-        public TransactionProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, Func<Message, TransactionStatus> transCheckFunc)
-            : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
+        public TransactionProducerClient(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, string logPath, Func<Message, TransactionStatus> transCheckFunc)
+            : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId, logPath)
         {
             this.transCheckFunc = transCheckFunc;
         }

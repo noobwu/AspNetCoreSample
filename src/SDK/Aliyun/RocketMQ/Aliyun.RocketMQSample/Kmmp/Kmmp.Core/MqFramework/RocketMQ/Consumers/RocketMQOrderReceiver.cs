@@ -28,7 +28,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <param name="receiverId">接受对象Id</param>
         /// <param name="consumerThreadCount">Consumer 实例的消费线程数，默认值：5</param>
         public RocketMQOrderReceiver(RocketMQConfig config, string queueName, string receiverId = null, int consumerThreadCount = 5)
-            : base(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupIdPrefix + queueName, queueName, consumerThreadCount)
+            : base(config.AccessKeyId, config.AccessKeySecret, config.NameSrvAddr, config.Topic, config.GroupIdPrefix + queueName, config.LogPath, queueName, consumerThreadCount)
         {
 
         }

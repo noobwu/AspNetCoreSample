@@ -49,11 +49,12 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <param name="nameSrvAddr">设置 TCP 协议接入点，从消息队列 RocketMQ 版控制台的实例详情页面获取</param>
         /// <param name="topic">您在控制台创建的消息主题，一级消息类型，通过 Topic 对消息进行分类。详情请参见 Topic 与 Tag 最佳实践。</param>
         /// <param name="groupId">一类Producer或Consumer标识，这类 Producer 或 Consumer 通常生产或消费同一类消息，且消息发布或订阅的逻辑一致。</param>
+        /// <param name="logPath">日志文件所在目录</param>
         /// <param name="subExpression">子表达式, Tag的过滤，全部使用*, 多个TagA||TagB</param>
         /// <param name="consumerThreadCount">Consumer 实例的消费线程数，默认值：5</param>
-        protected ConsumerClientBase(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId,
+        protected ConsumerClientBase(string accessKeyId, string accessKeySecret, string nameSrvAddr, string topic, string groupId, string logPath = null,
                                     string subExpression = "*", int consumerThreadCount = 5)
-            : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId)
+            : base(accessKeyId, accessKeySecret, nameSrvAddr, topic, groupId, logPath)
         {
             this.SubExpression = subExpression;
             this.ConsumerThreadCount = consumerThreadCount;
