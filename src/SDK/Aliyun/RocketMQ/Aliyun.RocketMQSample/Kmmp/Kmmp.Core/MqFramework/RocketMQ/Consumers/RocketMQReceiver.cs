@@ -77,7 +77,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         {
             this.Shutdown();
         }
-        private static int count = 0;
+
         /// <summary>
         /// Class ReceiverMessageListener.
         /// Implements the <see cref="ons.MessageListener" />
@@ -85,6 +85,7 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
         /// <seealso cref="ons.MessageListener" />
         private class ReceiverMessageListener : MessageListener
         {
+            int count = 0;
             /// <summary>
             /// Initializes a new instance of the <see cref="ReceiverMessageListener"/> class.
             /// </summary>
@@ -128,8 +129,9 @@ namespace Kmmp.Core.MqFramework.RocketMQ.Consumers
                     Console.WriteLine($"base64BodyTypeFullName is null,body:{message.getBody()}");
                     messageEventArgs = new MessageEventArgs(msgName, message.getBody());
                 }
-                //Console.WriteLine($"消息序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
-                Console.WriteLine($"于{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}接收到消息,序号:{count++}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Topic:{message.getTopic()},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()}");
+                count++;
+                //Console.WriteLine($"于{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}接收到消息,count:{count}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Topic:{message.getTopic()},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()},typeFullName:{base64BodyTypeFullName}");
+                Console.WriteLine($"于{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}接收到消息,count:{count}, 当前线程ID:{ Thread.CurrentThread.ManagedThreadId},Topic:{message.getTopic()},Tag:{message.getTag()},key:{message.getKey()},MsgID:{message.getMsgID()}");
                 try
                 {
                     OnReceived(messageEventArgs);

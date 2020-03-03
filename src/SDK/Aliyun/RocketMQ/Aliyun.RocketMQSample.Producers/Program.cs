@@ -41,11 +41,11 @@ namespace Aliyun.RocketMQSample.Producer
         /// <summary>
         /// 每线程发送消息数量
         /// </summary>
-        private static readonly int MessageCountPerThread = 1;
+        private static readonly int MessageCountPerThread = 2;
         /// <summary>
         /// 线程总数
         /// </summary>
-        private static readonly int ProducerThreadCount = 1;
+        private static readonly int ProducerThreadCount = 100;
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
@@ -117,7 +117,7 @@ namespace Aliyun.RocketMQSample.Producer
             });
             stopWatch.Stop();
 
-            Console.WriteLine($"KmmpRocketMQTransProducerTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+            Console.WriteLine($"KmmpRocketMQTransProducerTest,Count:{ ProducerThreadCount * MessageCountPerThread},结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
         /// <summary>
         /// KMMPs the rocket mq publisher test.
