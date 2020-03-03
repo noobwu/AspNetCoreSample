@@ -40,6 +40,7 @@ namespace Aliyun.RocketMQSDK.Consumers
         {
             try
             {
+                Console.Title = "ConsumerTest";
                 ConsumerTest();
             }
             catch (Exception ex)
@@ -73,6 +74,13 @@ namespace Aliyun.RocketMQSDK.Consumers
                             queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}OrderMessage";
                             instance.CreateOrderConsumer();
                             instance.StartOrderConsumer(queueName);
+                        }
+                        break;
+                    case 4:
+                        {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}TransMessage";
+                            instance.CreateTransConsumer();
+                            instance.StartTransConsumer(queueName);
                         }
                         break;
                     default:

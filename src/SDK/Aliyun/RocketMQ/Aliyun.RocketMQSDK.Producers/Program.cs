@@ -22,6 +22,7 @@ namespace Aliyun.RocketMQSDK.Producers
 
             try
             {
+                Console.Title = "ProducerTest";
                 ProducerTest();
             }
             catch (Exception ex)
@@ -63,6 +64,44 @@ namespace Aliyun.RocketMQSDK.Producers
                             {
                                 instance.CreateOrderProducer();
                                 instance.StartOrderProducer();
+                            }
+                            break;
+                        case 4:
+                            {
+                                Func<Message, TransactionStatus> transCheckFunc = (msg) =>
+                                {
+                                    //消息 ID（有可能消息体一样，但消息 ID 不一样，当前消息属于半事务消息，所以消息 ID 在控制台无法查询）
+                                    string msgId = msg.getMsgID();
+                                    //消息体内容进行 crc32，也可以使用其它的方法如 MD5
+                                    int crc32Id = 0;// HashUtil.crc32Code(msg.getBody());;
+                                                    //消息 ID、消息本 crc32Id 主要是用来防止消息重复
+                                                    //如果业务本身是幂等的，可以忽略，否则需要利用 msgId 或 crc32Id 来做幂等
+                                                    //如果要求消息绝对不重复，推荐做法是对消息体使用 crc32 或 MD5 来防止重复消息
+                                                    //业务自己的参数对象，这里只是一个示例，需要您根据实际情况来处理
+                                    Object businessServiceArgs = new Object();
+                                    TransactionStatus transactionStatus = TransactionStatus.Unknow;
+                                    try
+                                    {
+                                        bool isCommit = true;// businessService.checkbusinessService(businessServiceArgs);//处理相关的业务逻辑
+                                        if (isCommit)
+                                        {
+                                            //本地事务已成功则提交消息
+                                            transactionStatus = TransactionStatus.CommitTransaction;
+                                        }
+                                        else
+                                        {
+                                            //本地事务已失败则回滚消息
+                                            transactionStatus = TransactionStatus.RollbackTransaction;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex);
+                                    }
+                                    return transactionStatus;
+                                };
+                                instance.CreateTransProducer(new LocalTransactionCheckerImpl(transCheckFunc));
+                                instance.StartTransProducer();
                             }
                             break;
                         default:
@@ -118,6 +157,56 @@ namespace Aliyun.RocketMQSDK.Producers
                             }
                         }
                         break;
+                    case 4:
+                        {
+                            queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}TransMessage";
+                            Func<Message, TransactionStatus> transExecFunc = (msg) =>
+                            {
+                                //消息 ID（有可能消息体一样，但消息 ID 不一样，当前消息属于半事务消息，所以消息 ID 在控制台无法查询）
+                                string msgId = msg.getMsgID();
+                                //消息体内容进行 crc32，也可以使用其它的方法如 MD5
+                                int crc32Id = 0;// HashUtil.crc32Code(msg.getBody());;
+                                                //消息 ID、消息本 crc32Id 主要是用来防止消息重复
+                                                //如果业务本身是幂等的，可以忽略，否则需要利用 msgId 或 crc32Id 来做幂等
+                                                //如果要求消息绝对不重复，推荐做法是对消息体使用 crc32 或 MD5 来防止重复消息
+                                                //业务自己的参数对象，这里只是一个示例，需要您根据实际情况来处理
+                                Object businessServiceArgs = new Object();
+                                TransactionStatus transactionStatus = TransactionStatus.Unknow;
+                                try
+                                {
+                                    bool isCommit = true;// businessService.checkbusinessService(businessServiceArgs);//处理相关的业务逻辑
+                                    if (isCommit)
+                                    {
+                                        //本地事务已成功则提交消息
+                                        transactionStatus = TransactionStatus.CommitTransaction;
+                                    }
+                                    else
+                                    {
+                                        //本地事务已失败则回滚消息
+                                        transactionStatus = TransactionStatus.RollbackTransaction;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex);
+                                }
+                                return transactionStatus;
+                            };
+                            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+                            {
+                                // 生产消费
+                                var task = Task.Factory.StartNew(() =>
+                                {
+                                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                                    {
+                                        instance.SendTransMessage($"This is trans test message {tempThreadIndex}:{tempMessageIndex}", new LocalTransactionExecuterImpl(transExecFunc), queueName);
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+
+                                taskList.Add(task);
+                            }
+                        }
+                        break;
                     default:
                         {
                             queueName = $"{instance.Config.GroupId.Replace(instance.Config.GroupIdPrefix, string.Empty)}Message";
@@ -142,11 +231,13 @@ namespace Aliyun.RocketMQSDK.Producers
             {
                 a.ShutdownProducer();
                 a.ShutdownOrderProducer();
+                a.ShutdownTransProducer();
             });
             stopWatch.Stop();
 
             Console.WriteLine($"ProducerTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
+
         /// <summary>
         /// 读json配制文件的内容
         /// </summary>
