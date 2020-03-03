@@ -55,9 +55,9 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
-                Console.Title = "KmmpMQProducerTest";
-                KmmpMQProducerTest();
-                //KmmpRocketMQPublisherTest();
+                Console.Title = "KmmpRocketMQPublisherTest";
+                //KmmpMQProducerTest();
+                KmmpRocketMQPublisherTest();
                 //KmmpRocketMQTransProducerTest();
             }
             catch (Exception ex)
@@ -150,7 +150,7 @@ namespace Aliyun.RocketMQSample.Producer
                                     for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
                                     {
                                         //instance.Put($"This is order test message {tempThreadIndex}:{tempMessageIndex}");
-                                        instance.Put(GetMQVipData());
+                                        instance.Put(GetMQVipData(), null, 10);
                                     }
                                 }, TaskCreationOptions.LongRunning);
 
@@ -170,6 +170,7 @@ namespace Aliyun.RocketMQSample.Producer
                                     {
                                         //instance.Put($"This is order test message {tempThreadIndex}:{tempMessageIndex}");
                                         instance.Put(GetMQVipData(), delay: 10);
+                                        //instance.Put(GetMQVipData());
                                     }
                                 }, TaskCreationOptions.LongRunning);
 
@@ -242,7 +243,7 @@ namespace Aliyun.RocketMQSample.Producer
         /// <param name="publisher">The publisher.</param>
         static void KmmpMQPublisherTest(IMessagePublisher publisher)
         {
-            publisher.Put(GetMQVipData());
+            publisher.Put(GetMQVipData(), null, 10);
 
         }
 

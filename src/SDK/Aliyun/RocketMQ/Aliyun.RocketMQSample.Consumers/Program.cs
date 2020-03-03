@@ -47,9 +47,9 @@ namespace Aliyun.RocketMQSample.Consumers
         {
             try
             {
-                Console.Title = "KmmpMQReceiverTest";
-                KmmpMQReceiverTest();
-                //KmmpRocketMQReceiverTest();
+                Console.Title = "KmmpRocketMQReceiverTest";
+                //KmmpMQReceiverTest();
+                KmmpRocketMQReceiverTest();
                 //KmmpRocketMQTransReceiverTest();
 
             }
