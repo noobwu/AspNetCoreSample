@@ -47,10 +47,10 @@ namespace Aliyun.RocketMQSample.Consumers
         {
             try
             {
-                Console.Title = "KmmpRocketMQTransReceiverTest";
-                //KmmpMQConsumerTest();
+                Console.Title = "KmmpMQReceiverTest";
+                KmmpMQReceiverTest();
                 //KmmpRocketMQReceiverTest();
-                KmmpRocketMQTransReceiverTest();
+                //KmmpRocketMQTransReceiverTest();
 
             }
             catch (Exception ex)
@@ -127,19 +127,13 @@ namespace Aliyun.RocketMQSample.Consumers
         /// <summary>
         /// KMMPs the mq consumer test.
         /// </summary>
-        static void KmmpMQConsumerTest()
+        static void KmmpMQReceiverTest()
         {
             /// <summary>
             /// 消费都数量
             /// </summary>
-            const int ConsumerCount = 2;
-            string queueName = "CateringVipType";
-            Console.WriteLine($"接收消息,{queueName}:{DateTime.Now}");
-
-            KmmpMQReceiverTest(queueName);
             string tempQueueName = "TempCateringVipType";
             Console.WriteLine($"接收消息,{tempQueueName}:{DateTime.Now}");
-
             KmmpMQReceiverTest(tempQueueName);
         }
 
@@ -167,7 +161,7 @@ namespace Aliyun.RocketMQSample.Consumers
         /// </summary>
         /// <param name="typeName">Name of the type.</param>
         /// <param name="msg">The MSG.</param>
-        private void Execute(string typeName, object msg)
+        private static void Execute(string typeName, object msg)
         {
             Type type = Type.GetType(typeName);
             var method = type.GetMethod("Execute");
@@ -200,11 +194,10 @@ namespace Aliyun.RocketMQSample.Consumers
             {
                 receiver.Received += (sender, args) =>
                 {
-                    //Execute(q.Value<string>("Method"), args.Message);
-                    //Console.WriteLine($"args:{JsonHelper.JsonConvertSerialize(args)}");
-                    var mqData = args.Message as MQ_VipData<Temp_VipType>;
-                    new SyncVipTypeMqReceiver().Execute(mqData);
-                    Console.WriteLine($"ChannelName:{args.ChannelName},MessageId:{mqData?.MessageId}");
+                    //var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                    //new SyncVipTypeMqReceiver().Execute(mqData);
+                    Execute("Kmmp.MqReceiver.DSync.SyncVipTypeMqReceiver,Aliyun.RocketMQSample", args.Message);
+                    Console.WriteLine($"StartKmmpMQReceiver,ChannelName:{args.ChannelName}");
                 };
                 receiver.Start();
             }
@@ -213,5 +206,6 @@ namespace Aliyun.RocketMQSample.Consumers
                 Console.WriteLine(ex);
             }
         }
+
     }
 }

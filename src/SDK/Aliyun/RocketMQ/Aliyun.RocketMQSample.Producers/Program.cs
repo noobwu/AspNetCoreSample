@@ -55,10 +55,10 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
-                Console.Title = "KmmpRocketMQTransProducerTest";
-                //KmmpMQProducerTest();
+                Console.Title = "KmmpMQProducerTest";
+                KmmpMQProducerTest();
                 //KmmpRocketMQPublisherTest();
-                KmmpRocketMQTransProducerTest();
+                //KmmpRocketMQTransProducerTest();
             }
             catch (Exception ex)
             {
@@ -210,27 +210,9 @@ namespace Aliyun.RocketMQSample.Producer
         /// </summary>
         static void KmmpMQProducerTest()
         {
-
-            System.DateTime startTime = System.DateTime.Now;
-            string queueName = "CateringVipType";
-            Console.WriteLine($"发送消息,{queueName}:{DateTime.Now}");
+            var taskList = new List<Task>();
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            IMessagePublisher publisher = GetPublisher(queueName);
-            var taskList = new List<Task>();
-            for (int threadIndex = 1; threadIndex <= ProducerThreadCount; threadIndex++)
-            {
-                // 生产消费
-                var task = Task.Factory.StartNew(() =>
-                {
-                    for (int messageIndex = 1; messageIndex <= MessageCountPerThread; messageIndex++)
-                    {
-                        KmmpMQPublisherTest(publisher);
-                    }
-                }, TaskCreationOptions.LongRunning);
-
-                taskList.Add(task);
-            }
             string tempQueueName = "TempCateringVipType";
             Console.WriteLine($"发送消息,{tempQueueName}:{DateTime.Now}");
             IMessagePublisher tempPublisher = GetPublisher(tempQueueName);
@@ -247,12 +229,9 @@ namespace Aliyun.RocketMQSample.Producer
 
                 taskList.Add(task);
             }
-
             Task.WaitAll(taskList.ToArray());
-            publisher.Dispose();
             tempPublisher.Dispose();
             stopWatch.Stop();
-            Console.WriteLine($"发送消息,{queueName}：{MessageCountPerThread * ProducerThreadCount}条， 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
             Console.WriteLine($"发送消息,{tempQueueName}：{MessageCountPerThread * ProducerThreadCount}条， 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
             Console.ReadLine();
         }

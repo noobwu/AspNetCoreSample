@@ -34,7 +34,7 @@ namespace Kmmp.MqReceiver.DSync
         {
             try
             {
-                //Console.WriteLine($"SyncVipTypeMqReceiver,MessageId:{mqData.MessageId}");
+                Console.WriteLine($"SyncVipTypeMqReceiver,MessageId:{mqData.MessageId}");
             }
             catch (Exception ex)
             {
