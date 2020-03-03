@@ -75,7 +75,10 @@ namespace Aliyun.RocketMQSample.Consumers
             {
                 string queueName = $"{config.GroupId.Replace(config.GroupIdPrefix, string.Empty)}";
                 IMessageReceiver instance = new RocketMQReceiver(config, queueName);
-
+                if (instance != null)
+                {
+                    StartKmmpMQReceiver(instance);
+                }
             });
 
             stopWatch.Stop();
