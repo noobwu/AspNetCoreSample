@@ -196,6 +196,7 @@ namespace Aliyun.RocketMQSample.Producer
                         }
                         break;
                 }
+                publisherList.Add(instance);
             });
             Task.WaitAll(taskList.ToArray());
             publisherList?.ForEach(a =>
