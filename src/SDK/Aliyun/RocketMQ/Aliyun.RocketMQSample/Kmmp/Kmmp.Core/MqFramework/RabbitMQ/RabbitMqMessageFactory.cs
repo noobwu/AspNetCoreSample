@@ -26,7 +26,7 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
     /// <summary>
     /// Class RabbitMqMessageFactory.
     /// </summary>
-    public class RabbitMqMessageFactory
+    public class RabbitMqMessageFactory : IDisposable
     {
         /// <summary>
         /// Gets the connection factory.
@@ -99,6 +99,21 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
                     ConnectionFactory.Port = parts[1].ToInt();
                 }
             }
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMqMessageFactory"/> class.
+        /// </summary>
+        /// <param name="connectionFactory">The connection factory.</param>
+        public RabbitMqMessageFactory(ConnectionFactory connectionFactory)
+        {
+            ConnectionFactory = connectionFactory;
+        }
+
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        public virtual void Dispose()
+        {
         }
     }
 }
