@@ -49,7 +49,8 @@ namespace Aliyun.RocketMQSample.UnitTests.Messaging
         /// </summary>
         private readonly ConnectionFactory mqFactory = new ConnectionFactory
         {
-            HostName = Environment.GetEnvironmentVariable("CI_RABBITMQ") ?? "localhost"
+            //HostName = Environment.GetEnvironmentVariable("CI_RABBITMQ") ?? "localhost"
+            HostName = "localhost"
         };
         /// <summary>
         /// The exchange
@@ -157,7 +158,7 @@ namespace Aliyun.RocketMQSample.UnitTests.Messaging
             {
                 5.Times(i =>
                 {
-                    byte[] payload = new HelloRabbit { Name = "World! #{0}".Fmt(i) }.ToJson().ToUtf8Bytes();
+                    byte[] payload = new HelloRabbit { Name = $"World! #{i}" }.ToJson().ToUtf8Bytes();
                     var props = channel.CreateBasicProperties();
                     props.Persistent = true;
 
