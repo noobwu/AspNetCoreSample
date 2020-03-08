@@ -106,13 +106,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Kmmp\Kmmp.Core\ContentFormat.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\StringExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\QueueNames.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqMessageFactory.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqProducer.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqQueueClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\RocketMQOrderReceiver.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\RocketMQOrderPublisher.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\Utils\HttpUtils.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\MQ_VipData.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\Temp_VipType.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\VipType.cs" />

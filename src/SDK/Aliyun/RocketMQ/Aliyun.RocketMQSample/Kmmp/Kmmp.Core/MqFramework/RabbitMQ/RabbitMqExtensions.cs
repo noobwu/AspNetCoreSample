@@ -18,7 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client.Exceptions;
-
+using Kmmp.Core.Extension;
+using Kmmp.Core.Utils;
+using Kmmp.Kmmp.Core;
 /// <summary>
 /// The RabbitMQ namespace.
 /// </summary>
@@ -271,6 +273,33 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
             var lowerCaseQueue = queueName.ToLower();
             return lowerCaseQueue.StartsWith("amq.")
                 || lowerCaseQueue.StartsWith(QueueNames.TempMqPrefix);
+        }
+
+        /// <summary>
+        /// Converts to message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="msgResult">The MSG result.</param>
+        /// <returns>IMessage&lt;T&gt;.</returns>
+        /// <exception cref="NotSupportedException">Unknown Content-Type: " + props.ContentType</exception>
+        public static T ToMessageBody<T>(this BasicGetResult msgResult)
+        {
+            if (msgResult == null)
+                return default(T);
+
+            var props = msgResult.BasicProperties;
+            T body;
+
+            if (string.IsNullOrEmpty(props.ContentType) || props.ContentType.MatchesContentType(MimeTypes.Json))
+            {
+                var json = msgResult.Body.FromUtf8Bytes();
+                body = json.FromJson<T>();
+            }
+            else
+            {
+                throw new NotSupportedException("Unknown Content-Type: " + props.ContentType);
+            }
+            return body;
         }
     }
 }

@@ -104,6 +104,16 @@ namespace Kmmp.Core.Extension
                 : new[] { strVal.Substring(0, pos), strVal.Substring(pos + 1) };
         }
         /// <summary>
+        /// Froms the json.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json">The json.</param>
+        /// <returns>T.</returns>
+        public static T FromJson<T>(this string json)
+        {
+            return JsonHelper.JsonConvertDeserialize<T>(json);
+        }
+        /// <summary>
         /// Converts to json.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -135,6 +145,11 @@ namespace Kmmp.Core.Extension
             return Encoding.UTF8.GetBytes(value);
         }
 
+        /// <summary>
+        /// Withouts the bom.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>System.String.</returns>
         public static string WithoutBom(this string value)
         {
             return value.Length > 0 && value[0] == 65279
