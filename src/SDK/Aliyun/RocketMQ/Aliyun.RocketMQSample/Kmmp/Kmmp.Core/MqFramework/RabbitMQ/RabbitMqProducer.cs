@@ -101,7 +101,54 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
         /// The queues
         /// </summary>
         static HashSet<string> Queues = new HashSet<string>();
+        /// <summary>
+        /// Publishes the message.
+        /// </summary>
+        /// <param name="exchange">The exchange.</param>
+        /// <param name="routingKey">The routing key.</param>
+        /// <param name="basicProperties">The basic properties.</param>
+        /// <param name="body">The body.</param>
+        public virtual void PublishMessage(string exchange, string routingKey, IBasicProperties basicProperties, byte[] body)
+        {
+            try
+            {
+                // In case of server named queues (client declared queue with channel.declare()), assume queue already exists
+                //(redeclaration would result in error anyway since queue was marked as exclusive) and publish to default exchange
+                if (routingKey.IsServerNamedQueue())
+                {
+                    Channel.BasicPublish("", routingKey, basicProperties, body);
+                }
+                else
+                {
+                    if (!Queues.Contains(routingKey))
+                    {
+                        Channel.RegisterQueueByName(routingKey);
+                        Queues = new HashSet<string>(Queues) { routingKey };
+                    }
 
+                    Channel.BasicPublish(exchange, routingKey, basicProperties, body);
+                }
+
+            }
+            catch (OperationInterruptedException ex)
+            {
+                if (ex.Is404())
+                {
+                    // In case of server named queues (client declared queue with channel.declare()), assume queue already exists (redeclaration would result in error anyway since queue was marked as exclusive) and publish to default exchange
+                    if (routingKey.IsServerNamedQueue())
+                    {
+                        Channel.BasicPublish("", routingKey, basicProperties, body);
+                    }
+                    else
+                    {
+                        Channel.RegisterExchangeByName(exchange);
+
+                        Channel.BasicPublish(exchange, routingKey, basicProperties, body);
+                    }
+                }
+                throw;
+            }
+        }
         /// <summary>
         /// Gets the message.
         /// </summary>
