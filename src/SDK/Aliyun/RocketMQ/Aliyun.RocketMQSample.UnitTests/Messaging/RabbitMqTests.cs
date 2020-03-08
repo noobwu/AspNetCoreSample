@@ -170,6 +170,47 @@ namespace Aliyun.RocketMQSample.UnitTests.Messaging
                 });
             }
         }
+        /// <summary>
+        /// Defines the test method Can_consume_messages_from_RabbitMQ_with_BasicGet.
+        /// </summary>
+        [Test]
+        public void Can_consume_messages_from_RabbitMQ_with_BasicGet()
+        {
+            using (IConnection connection = mqFactory.CreateConnection())
+            using (IModel channel = connection.CreateModel())
+            {
+                PublishHelloRabbit(channel);
+
+                while (true)
+                {
+                    var basicGetMsg = channel.BasicGet(QueueNames<HelloRabbit>.In, autoAck: false);
+
+                    if (basicGetMsg == null)
+                    {
+                        Console.WriteLine("End of the road...");
+                        return;
+                    }
+
+                    var msg = basicGetMsg.Body.FromUtf8Bytes().FromJson<HelloRabbit>();
+
+                    Thread.Sleep(1000);
+
+                    channel.BasicAck(basicGetMsg.DeliveryTag, multiple: false);
+                }
+            }
+        }
+        /// <summary>
+        /// Publishes the hello rabbit.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="text">The text.</param>
+        private static void PublishHelloRabbit(IModel channel, string text = "World!")
+        {
+            byte[] payload = new HelloRabbit { Name = text }.ToJson().ToUtf8Bytes();
+            var props = channel.CreateBasicProperties();
+            props.Persistent = true;
+            channel.BasicPublish(Exchange, QueueNames<HelloRabbit>.In, props, payload);
+        }
 
     }
 }

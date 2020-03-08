@@ -248,5 +248,19 @@ namespace Kmmp.Core.Extension
                 : strVal.Substring(0, pos);
         }
 
+
+        /// <summary>
+        /// Print string.Format to Console.WriteLine
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="args">The arguments.</param>
+        public static void Print(this string text, params object[] args)
+        {
+            if (args.Length > 0)
+                Console.WriteLine(text, args);
+            else
+                Console.WriteLine(text);
+        }
+
     }
 }
