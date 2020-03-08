@@ -11,6 +11,8 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using Kmmp.Core.Extension;
+using Kmmp.Core.Helper;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
 using System;
@@ -96,6 +98,32 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
         public RabbitMqProducer(RabbitMqMessageFactory msgFactory)
         {
             this.msgFactory = msgFactory;
+        }
+        /// <summary>
+        /// Publishes the specified queue name.
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="exchange">The exchange.</param>
+        public virtual void Publish(string queueName, object body, string exchange)
+        {
+            var props = Channel.CreateBasicProperties();
+            props.Persistent = true;
+            props.MessageId = Guid.NewGuid().ToString("N");
+            props.Timestamp = new AmqpTimestamp(DateTime.Now.ToTimestamp());
+            props.Priority = 0;
+            props.ContentType = "application/json";
+            if (body != null)
+            {
+                props.Type = body.GetType().Name;
+            }
+            string strBody = JsonHelper.JsonConvertSerialize(body);
+            var messageBytes = Encoding.UTF8.GetBytes(strBody);
+
+            PublishMessage(exchange ?? QueueNames.Exchange,
+                routingKey: queueName,
+                basicProperties: props, body: messageBytes);
+
         }
         /// <summary>
         /// The queues
