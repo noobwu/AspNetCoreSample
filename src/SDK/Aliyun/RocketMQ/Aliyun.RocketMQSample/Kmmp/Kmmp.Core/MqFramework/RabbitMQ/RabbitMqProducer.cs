@@ -187,6 +187,20 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
             }
         }
         /// <summary>
+        /// Notifies the specified queue name.
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <param name="body">The body.</param>
+        public virtual void Notify(string queueName, object body)
+        {
+            var json = body.ToJson();
+            var messageBytes = json.ToUtf8Bytes();
+
+            PublishMessage(QueueNames.ExchangeTopic,
+                routingKey: queueName,
+                basicProperties: null, body: messageBytes);
+        }
+        /// <summary>
         /// Gets the message.
         /// </summary>
         /// <param name="queueName">Name of the queue.</param>
