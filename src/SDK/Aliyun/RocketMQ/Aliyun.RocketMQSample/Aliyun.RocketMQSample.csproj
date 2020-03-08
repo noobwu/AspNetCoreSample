@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Kmmp\Kmmp.Core\ContentFormat.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\Extension\IntExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\StringExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\QueueNames.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqExtensions.cs" />
