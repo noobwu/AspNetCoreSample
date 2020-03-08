@@ -106,7 +106,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Kmmp\Kmmp.Core\Extension\StringExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\QueueNames.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqExtensions.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqMessageFactory.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqProducer.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\RocketMQOrderReceiver.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\RocketMQOrderPublisher.cs" />
     <Compile Include="Kmmp\Kmmp.DSync.Data\MQ_VipData.cs" />
@@ -174,9 +178,7 @@
       <Name>Aliyun.RocketMQSDK</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>Copy "$(ProjectDir)..\lib\64\*.*" "$(TargetDir)"</PostBuildEvent>
