@@ -12,6 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,6 +96,42 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
         public RabbitMqProducer(RabbitMqMessageFactory msgFactory)
         {
             this.msgFactory = msgFactory;
+        }
+        /// <summary>
+        /// The queues
+        /// </summary>
+        static HashSet<string> Queues = new HashSet<string>();
+
+        /// <summary>
+        /// Gets the message.
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <param name="noAck">if set to <c>true</c> [no ack].</param>
+        /// <returns>BasicGetResult.</returns>
+        public virtual BasicGetResult GetMessage(string queueName, bool noAck)
+        {
+            try
+            {
+                if (!Queues.Contains(queueName))
+                {
+                    Channel.RegisterQueueByName(queueName);
+                    Queues = new HashSet<string>(Queues) { queueName };
+                }
+
+                var basicMsg = Channel.BasicGet(queueName, autoAck: noAck);
+
+                return basicMsg;
+            }
+            catch (OperationInterruptedException ex)
+            {
+                if (ex.Is404())
+                {
+                    Channel.RegisterQueueByName(queueName);
+
+                    return Channel.BasicGet(queueName, autoAck: noAck);
+                }
+                throw;
+            }
         }
         /// <summary>
         /// Disposes this instance.
