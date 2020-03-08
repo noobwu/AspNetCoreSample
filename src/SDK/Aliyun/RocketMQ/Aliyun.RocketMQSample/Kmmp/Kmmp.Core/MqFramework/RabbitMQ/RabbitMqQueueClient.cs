@@ -12,6 +12,10 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
     /// </summary>
     public class RabbitMqQueueClient : RabbitMqProducer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMqQueueClient"/> class.
+        /// </summary>
+        /// <param name="msgFactory">The MSG factory.</param>
         public RabbitMqQueueClient(RabbitMqMessageFactory msgFactory)
        : base(msgFactory) { }
         /// <summary>
@@ -35,6 +39,42 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
                 Thread.Sleep(100);
             }
             return default(T);
+        }
+        /// <summary>
+        /// Gets the asynchronous.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <returns>IMessage&lt;T&gt;.</returns>
+        public virtual T GetAsync<T>(string queueName)
+        {
+            var basicMsg = GetMessage(queueName, noAck: false);
+            return basicMsg.ToMessageBody<T>();
+        }
+
+        /// <summary>
+        /// deliveryTag
+        /// </summary>
+        /// <param name="String">The string.</param>
+        public virtual void Ack(string tag)
+        {
+            var deliveryTag = ulong.Parse(tag);
+            Channel.BasicAck(deliveryTag, multiple: false);
+        }
+        /// <summary>
+        /// Gets the name of the temporary queue.
+        /// </summary>
+        /// <returns>System.String.</returns>
+        public virtual string GetTempQueueName()
+        {
+            var anonMq = Channel.QueueDeclare(
+                queue: QueueNames.GetTempQueueName(),
+                durable: false,
+                exclusive: true,
+                autoDelete: true,
+                arguments: null);
+
+            return anonMq.QueueName;
         }
     }
 }
