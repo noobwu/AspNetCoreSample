@@ -26,7 +26,7 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
     /// <summary>
     /// Class RabbitMqProducer.
     /// </summary>
-    public class RabbitMqProducer
+    public class RabbitMqProducer : IDisposable
     {
         /// <summary>
         /// The MSG factory
@@ -95,6 +95,36 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
         public RabbitMqProducer(RabbitMqMessageFactory msgFactory)
         {
             this.msgFactory = msgFactory;
+        }
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            if (channel != null)
+            {
+                try
+                {
+                    channel.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                channel = null;
+            }
+            if (connection != null)
+            {
+                try
+                {
+                    connection.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                connection = null;
+            }
         }
     }
 }
