@@ -104,6 +104,15 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
         /// </summary>
         /// <param name="queueName">Name of the queue.</param>
         /// <param name="body">The body.</param>
+        public virtual void Publish(string queueName, object body)
+        {
+            Publish(queueName, body, QueueNames.Exchange);
+        }
+        /// <summary>
+        /// Publishes the specified queue name.
+        /// </summary>
+        /// <param name="queueName">Name of the queue.</param>
+        /// <param name="body">The body.</param>
         /// <param name="exchange">The exchange.</param>
         public virtual void Publish(string queueName, object body, string exchange)
         {
