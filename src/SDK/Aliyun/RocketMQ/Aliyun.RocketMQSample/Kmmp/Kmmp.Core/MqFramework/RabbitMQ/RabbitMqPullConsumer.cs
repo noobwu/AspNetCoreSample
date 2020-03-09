@@ -10,13 +10,13 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
     /// <summary>
     /// Class RabbitMqQueueClient.
     /// </summary>
-    public class RabbitMqQueueClient : RabbitMqProducer
+    public class RabbitMqPullConsumer : RabbitMqClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RabbitMqQueueClient"/> class.
         /// </summary>
         /// <param name="msgFactory">The MSG factory.</param>
-        public RabbitMqQueueClient(RabbitMqMessageFactory msgFactory)
+        public RabbitMqPullConsumer(RabbitMqMessageFactory msgFactory)
        : base(msgFactory) { }
         /// <summary>
         /// Gets the specified queue name.

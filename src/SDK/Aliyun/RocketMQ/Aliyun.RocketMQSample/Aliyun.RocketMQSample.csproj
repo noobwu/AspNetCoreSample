@@ -110,10 +110,11 @@
     <Compile Include="Kmmp\Kmmp.Core\Extension\IntExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\StringExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\QueueNames.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqClient.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqMessageFactory.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqProducer.cs" />
-    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqQueueClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqPullConsumer.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Consumers\RocketMQOrderReceiver.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RocketMQ\Producers\RocketMQOrderPublisher.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Utils\HttpUtils.cs" />
