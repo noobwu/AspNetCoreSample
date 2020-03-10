@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kmmp.Core.MqFramework.RabbitMQ;
 
 /// <summary>
 /// The Producer namespace.
@@ -55,10 +56,11 @@ namespace Aliyun.RocketMQSample.Producer
 
             try
             {
-                Console.Title = "KmmpRocketMQPublisherTest";
+                Console.Title = "KmmpRabbitMqProducerTest";
                 //KmmpMQProducerTest();
-                KmmpRocketMQPublisherTest();
+                //KmmpRocketMQPublisherTest();
                 //KmmpRocketMQTransProducerTest();
+                KmmpRabbitMqProducerTest();
             }
             catch (Exception ex)
             {
@@ -67,7 +69,37 @@ namespace Aliyun.RocketMQSample.Producer
 
             Console.ReadKey();
         }
+        /// <summary>
+        /// KMMPs the rabbit mq producer test.
+        /// </summary>
+        static void KmmpRabbitMqProducerTest()
+        {
+            Console.WriteLine($"KmmpRabbitMqProducerTest,开始:{DateTime.Now}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            RabbitMqMessageFactory msgFactory = new RabbitMqMessageFactory("localhost");
+            RabbitMqProducer rabbitMqProducer = new RabbitMqProducer(msgFactory);
+            string queueName = "CateringVipType";
+            var taskList = new List<Task>();
+            for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
+            {
+                // 生产消费
+                var task = Task.Factory.StartNew(() =>
+                {
+                    for (int tempMessageIndex = 1; tempMessageIndex <= MessageCountPerThread; tempMessageIndex++)
+                    {
+                        rabbitMqProducer.Publish(queueName, GetMQVipData());
+                    }
+                }, TaskCreationOptions.LongRunning);
 
+                taskList.Add(task);
+            }
+            Task.WaitAll(taskList.ToArray());
+            stopWatch.Stop();
+
+            Console.WriteLine($"KmmpRabbitMqProducerTest,Count:{ ProducerThreadCount * MessageCountPerThread},结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
+
+        }
         /// <summary>
         /// KMMPs the rocket mq publisher test.
         /// </summary>
