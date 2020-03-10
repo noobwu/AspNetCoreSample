@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kmmp.Core.MqFramework.RabbitMQ;
 
 /// <summary>
 /// The Consumer namespace.
@@ -47,10 +48,11 @@ namespace Aliyun.RocketMQSample.Consumers
         {
             try
             {
-                Console.Title = "KmmpRocketMQReceiverTest";
+                Console.Title = "KmmpRabbitConsumerTest";
                 //KmmpMQReceiverTest();
-                KmmpRocketMQReceiverTest();
+                //KmmpRocketMQReceiverTest();
                 //KmmpRocketMQTransReceiverTest();
+                KmmpRabbitConsumerTest();
 
             }
             catch (Exception ex)
@@ -59,6 +61,35 @@ namespace Aliyun.RocketMQSample.Consumers
             }
 
             Console.ReadKey();
+        }
+        /// <summary>
+        /// Consumers the test.
+        /// </summary>
+        static void KmmpRabbitConsumerTest()
+        {
+            Console.WriteLine($"KmmpRabbitConsumerTest,开始:{DateTime.Now}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            RabbitMqMessageFactory msgFactory = new RabbitMqMessageFactory("localhost");
+            RabbitMqPushConsumer rabbitMqPushConsumer = new RabbitMqPushConsumer(msgFactory);
+            try
+            {
+                rabbitMqPushConsumer.Received += (sender, args) =>
+                {
+                    //var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                    //new SyncVipTypeMqReceiver().Execute(mqData);
+                    //Execute("Kmmp.MqReceiver.DSync.SyncVipTypeMqReceiver,Aliyun.RocketMQSample", args.Body);
+                    Console.WriteLine($"KmmpRabbitConsumerTest,RoutingKey:{args.RoutingKey}");
+                };
+                string queueName = "CateringVipType";
+                rabbitMqPushConsumer.Start(queueName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            stopWatch.Stop();
+            Console.WriteLine($"KmmpRocketMQTransReceiverTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }
         /// <summary>
         /// Consumers the test.
