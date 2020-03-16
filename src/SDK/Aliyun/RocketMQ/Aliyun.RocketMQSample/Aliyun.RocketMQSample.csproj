@@ -110,7 +110,9 @@
     <Compile Include="Kmmp\Kmmp.Core\Extension\IntExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\Extension\StringExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\QueueNames.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\ConnectionChannelPool.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqClient.cs" />
+    <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMQConfig.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqExtensions.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqMessageFactory.cs" />
     <Compile Include="Kmmp\Kmmp.Core\MqFramework\RabbitMQ\RabbitMqProducer.cs" />
