@@ -88,7 +88,7 @@ namespace Aliyun.RocketMQSample.Consumers
                         //var mqData = args.Message as MQ_VipData<Temp_VipType>;
                         //new SyncVipTypeMqReceiver().Execute(mqData);
                         //Execute("Kmmp.MqReceiver.DSync.SyncVipTypeMqReceiver,Aliyun.RocketMQSample", args.Body);
-                        Console.WriteLine($"KmmpRabbitConsumerTest {{count}} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")},RoutingKey:{args.RoutingKey}");
+                        Console.WriteLine($"KmmpRabbitConsumerTest {count} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")},RoutingKey:{args.RoutingKey}");
                     };
                     rabbitMqPushConsumer.Start();
                 }
