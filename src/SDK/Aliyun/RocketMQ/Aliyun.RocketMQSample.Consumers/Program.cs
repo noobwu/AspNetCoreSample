@@ -28,6 +28,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kmmp.Core.MqFramework.RabbitMQ;
+using Kmmp.Core.MqFramework;
 
 /// <summary>
 /// The Consumer namespace.
@@ -39,7 +40,10 @@ namespace Aliyun.RocketMQSample.Consumers
     /// </summary>
     class Program
     {
-
+        /// <summary>
+        /// 线程总数
+        /// </summary>
+        private static readonly int ConsumerThreadCount = 10;
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
@@ -62,6 +66,7 @@ namespace Aliyun.RocketMQSample.Consumers
 
             Console.ReadKey();
         }
+        private static int count = 0;
         /// <summary>
         /// Consumers the test.
         /// </summary>
@@ -71,23 +76,28 @@ namespace Aliyun.RocketMQSample.Consumers
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             RabbitMqMessageFactory msgFactory = new RabbitMqMessageFactory("localhost");
-            RabbitMqPushConsumer rabbitMqPushConsumer = new RabbitMqPushConsumer(msgFactory);
-            try
+            string queueName = new QueueNames("CateringVipType").In;
+            for (int tempThreadIndex = 1; tempThreadIndex <= ConsumerThreadCount; tempThreadIndex++)
             {
-                rabbitMqPushConsumer.Received += (sender, args) =>
+                RabbitMqPushConsumer rabbitMqPushConsumer = new RabbitMqPushConsumer(msgFactory, queueName);
+                try
                 {
-                    //var mqData = args.Message as MQ_VipData<Temp_VipType>;
-                    //new SyncVipTypeMqReceiver().Execute(mqData);
-                    //Execute("Kmmp.MqReceiver.DSync.SyncVipTypeMqReceiver,Aliyun.RocketMQSample", args.Body);
-                    Console.WriteLine($"KmmpRabbitConsumerTest,RoutingKey:{args.RoutingKey}");
-                };
-                string queueName = "CateringVipType";
-                rabbitMqPushConsumer.Start(queueName);
+                    rabbitMqPushConsumer.Received += (sender, args) =>
+                    {
+                        count++;
+                        //var mqData = args.Message as MQ_VipData<Temp_VipType>;
+                        //new SyncVipTypeMqReceiver().Execute(mqData);
+                        //Execute("Kmmp.MqReceiver.DSync.SyncVipTypeMqReceiver,Aliyun.RocketMQSample", args.Body);
+                        Console.WriteLine($"KmmpRabbitConsumerTest {{count}} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")},RoutingKey:{args.RoutingKey}");
+                    };
+                    rabbitMqPushConsumer.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
             stopWatch.Stop();
             Console.WriteLine($"KmmpRocketMQTransReceiverTest,结束, 使用时间{stopWatch.ElapsedMilliseconds}毫秒");
         }

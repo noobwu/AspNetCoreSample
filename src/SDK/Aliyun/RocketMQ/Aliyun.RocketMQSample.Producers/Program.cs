@@ -27,6 +27,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kmmp.Core.MqFramework.RabbitMQ;
+using Kmmp.Core.MqFramework;
 
 /// <summary>
 /// The Producer namespace.
@@ -42,7 +43,7 @@ namespace Aliyun.RocketMQSample.Producer
         /// <summary>
         /// 每线程发送消息数量
         /// </summary>
-        private static readonly int MessageCountPerThread = 2;
+        private static readonly int MessageCountPerThread = 3;
         /// <summary>
         /// 线程总数
         /// </summary>
@@ -79,7 +80,7 @@ namespace Aliyun.RocketMQSample.Producer
             stopWatch.Start();
             RabbitMqMessageFactory msgFactory = new RabbitMqMessageFactory("localhost");
             RabbitMqProducer rabbitMqProducer = new RabbitMqProducer(msgFactory);
-            string queueName = "CateringVipType";
+            string queueName = new QueueNames("CateringVipType").In;
             var taskList = new List<Task>();
             for (int tempThreadIndex = 1; tempThreadIndex <= ProducerThreadCount; tempThreadIndex++)
             {

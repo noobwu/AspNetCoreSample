@@ -68,7 +68,10 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
             string strBody = JsonHelper.JsonConvertSerialize(body);
             var messageBytes = Encoding.UTF8.GetBytes(strBody);
 
-            PublishMessage(exchange ?? QueueNames.Exchange,
+            string exchangeName = exchange ?? QueueNames.Exchange;
+
+            Console.WriteLine($"Rabbit Publish at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")},exchange:{exchangeName},routingKey:{queueName}");
+            PublishMessage(exchangeName,
                 routingKey: queueName,
                 basicProperties: props, body: messageBytes);
 

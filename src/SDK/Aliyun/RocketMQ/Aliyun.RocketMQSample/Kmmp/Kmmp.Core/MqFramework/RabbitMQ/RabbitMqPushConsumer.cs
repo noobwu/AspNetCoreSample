@@ -32,23 +32,24 @@ namespace Kmmp.Core.MqFramework.RabbitMQ
     /// <seealso cref="Kmmp.Core.MqFramework.RabbitMQ.RabbitMqClient" />
     public class RabbitMqPushConsumer : RabbitMqClient
     {
+        private string queueName;
         /// <summary>
         /// Initializes a new instance of the <see cref="RabbitMqQueueClient" /> class.
         /// </summary>
         /// <param name="msgFactory">The MSG factory.</param>
-        public RabbitMqPushConsumer(RabbitMqMessageFactory msgFactory)
+        /// <param name="queueName">Name of the queue.</param>
+        public RabbitMqPushConsumer(RabbitMqMessageFactory msgFactory, string queueName)
        : base(msgFactory)
         {
-
+            this.queueName = queueName;
         }
 
         /// <summary>
         /// 启动
         /// </summary>
-        /// <param name="queueName">Name of the queue.</param>
         /// <exception cref="Exception">没有找到消息监控器</exception>
         /// <exception cref="NullReferenceException">consumer为空</exception>
-        public void Start(string queueName)
+        public void Start()
         {
             try
             {

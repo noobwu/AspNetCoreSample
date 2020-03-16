@@ -4,7 +4,7 @@
 // Created          : 2020-03-08
 //
 // Last Modified By : Administrator
-// Last Modified On : 2020-03-08
+// Last Modified On : 2020-03-16
 // ***********************************************************************
 // <copyright file="QueueNames.cs" company="NoobCore.com">
 //     Copyright ©  2020
@@ -26,7 +26,7 @@ namespace Kmmp.Core.MqFramework
     public static class QueueNames<T>
     {
         /// <summary>
-        /// Initializes static members of the <see cref="QueueNames{T}"/> class.
+        /// Initializes static members of the <see cref="QueueNames{T}" /> class.
         /// </summary>
         static QueueNames()
         {
@@ -158,42 +158,42 @@ namespace Kmmp.Core.MqFramework
         }
 
         /// <summary>
-        /// The message type
+        /// The queue nmae
         /// </summary>
-        private readonly Type messageType;
+        private readonly string queueNmae;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueNames"/> class.
+        /// Initializes a new instance of the <see cref="QueueNames" /> class.
         /// </summary>
-        /// <param name="messageType">Type of the message.</param>
-        public QueueNames(Type messageType)
+        /// <param name="queueNmae">The queue nmae.</param>
+        public QueueNames(string queueNmae)
         {
-            this.messageType = messageType;
+            this.queueNmae = queueNmae;
         }
 
         /// <summary>
         /// Gets the priority.
         /// </summary>
         /// <value>The priority.</value>
-        public string Priority => ResolveQueueNameFn(messageType.Name, ".priorityq");
+        public string Priority => ResolveQueueNameFn(queueNmae, ".priorityq");
 
         /// <summary>
         /// Gets the in.
         /// </summary>
         /// <value>The in.</value>
-        public string In => ResolveQueueNameFn(messageType.Name, ".inq");
+        public string In => ResolveQueueNameFn(queueNmae, ".inq");
 
         /// <summary>
         /// Gets the out.
         /// </summary>
         /// <value>The out.</value>
-        public string Out => ResolveQueueNameFn(messageType.Name, ".outq");
+        public string Out => ResolveQueueNameFn(queueNmae, ".outq");
 
         /// <summary>
         /// Gets the DLQ.
         /// </summary>
         /// <value>The DLQ.</value>
-        public string Dlq => ResolveQueueNameFn(messageType.Name, ".dlq");
+        public string Dlq => ResolveQueueNameFn(queueNmae, ".dlq");
 
         /// <summary>
         /// Gets the name of the temporary queue.
